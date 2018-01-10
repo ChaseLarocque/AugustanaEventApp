@@ -12,26 +12,44 @@ import com.example.augappprototype.R;
  */
 
 public class CategoryButtonListener implements View.OnClickListener {
+
+    /*--Data--*/
     private final MainActivity mainActivity;
+
+    /*--Constructor--*/
     public CategoryButtonListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-    }
+    }//CategoryButtonListener
+
+    /*--Methods--*/
+    /**
+     * onClick(View) --> void
+     * When the category button is clicked it will open a popup that has categories with check
+     * boxes that are automatically checked to start. Calls the closeButtonListener that will
+     * dismiss the dialog when it is clicked
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         final Dialog categoryDialog = new Dialog(mainActivity);
         categoryDialog.setContentView(R.layout.categorypopup);
         categoryDialog.show();
         closeButtonListener(categoryDialog);
-    }
+    }//onClick
 
+    /**
+     * closeButtonListener(Dialog) --> void
+     * Closes the category popup when clicked
+     * @param categoryDialog
+     */
     public void closeButtonListener(final Dialog categoryDialog) {
         Button closeButton = (Button) categoryDialog.findViewById(R.id.closeButton);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 categoryDialog.dismiss();
-            }
+            }//onClick
         });
-    }
-}
+    }//closeButtonListener
+}//CategoryButtonListener
 

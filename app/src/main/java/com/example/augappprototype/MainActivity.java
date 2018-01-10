@@ -1,5 +1,8 @@
 package com.example.augappprototype;
 
+/**
+ * Class Header Here
+ */
 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -19,39 +22,54 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    /*--Methods--*/
+    /**
+     * onCreate(Bundle savedInstanceState) --> void
+     * Calls the convertCalendar and registerListenersForButtons methods so that there is a new on
+     * click listener for them on creation
+     * on creation
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.addEventButton).setOnClickListener(new AddEventListener(this));
-        findViewById(R.id.editEventButton).setOnClickListener(new EditEventButtonListener(this));
-        findViewById(R.id.categoryButton).setOnClickListener(new CategoryButtonListener(this));
         convertCalendar();
+        registerListenersForCalendarUIButtons();
+    }//onCreate
 
-    }
-
+    /**
+     * convertCalendar() --> void
+     * Makes android's calendar view the caldroid calendar
+     * Sets the minimum date to January 1st 2018 and the maximum date to December 31st 2018
+     */
     private void convertCalendar() {
-
         CaldroidFragment caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         caldroidFragment.setArguments(args);
-
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.replace(R.id.calendar1, caldroidFragment);
+        t.replace(R.id.caldroidCalendar, caldroidFragment);
         t.commit();
-
-
-        Date firstDate1 = new Date(1514790000000L);
-        Date firstDate2 = new Date(1546300800000L);
-        caldroidFragment.setMinDate(firstDate1);
-        caldroidFragment.setMaxDate(firstDate2);
-
-
+        Date jan1 = new Date(1514790000000L);
+        Date dec31 = new Date(1546300800000L);
+        caldroidFragment.setMinDate(jan1);
+        caldroidFragment.setMaxDate(dec31);
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
+    }//convertCalendar
 
-    }
-}
+    /**
+     * registerListenersForCalendarUIButtons() --> void
+     * Sets on click listeners for the add event button, edit event button and the category button
+     * on the calendar UI screen
+     */
+    public void registerListenersForCalendarUIButtons() {
+        findViewById(R.id.addEventButton).setOnClickListener(new AddEventListener(this));
+        findViewById(R.id.editEventButton).setOnClickListener
+                (new EditEventButtonListener(this));
+        findViewById(R.id.categoryButton).setOnClickListener
+                (new CategoryButtonListener(this));
+    }//registerListenersForButtons
+}//MainActivity
