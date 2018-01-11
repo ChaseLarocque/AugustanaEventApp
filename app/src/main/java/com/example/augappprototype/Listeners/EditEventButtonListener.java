@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
@@ -24,11 +25,15 @@ public class EditEventButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        final Dialog editEventDialog = new Dialog(mainActivity);
-        editEventDialog.setContentView(R.layout.edit_event);
-        //getLocation();
-        editEventDialog.show();
-        nextEventListener(editEventDialog);
+        if(GuestButtonListener.isGuest)
+            Toast.makeText(mainActivity, "This button is not available on guest mode",
+                    Toast.LENGTH_SHORT).show();
+        else {
+            final Dialog editEventDialog = new Dialog(mainActivity);
+            editEventDialog.setContentView(R.layout.edit_event);
+            editEventDialog.show();
+            nextEventListener(editEventDialog);
+        }
     }
 
 

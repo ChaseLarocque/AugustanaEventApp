@@ -1,8 +1,12 @@
 package com.example.augappprototype;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -26,10 +30,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.addEventButton).setOnClickListener(new AddEventListener(this));
         findViewById(R.id.categoryButton).setOnClickListener(new CategoryButtonListener(this));
         findViewById(R.id.editEventButton).setOnClickListener(new EditEventButtonListener(this));
+        goToMainMenu();
         convertCalendar();
-       // if (isGuest){
-          //  disableButtons();
-     //   }
     }
 
     private void convertCalendar() {
@@ -53,8 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }
-    public void disableButtons(){
-        findViewById(R.id.editEventButton).setEnabled(false);
-        findViewById(R.id.addEventButton).setEnabled(false);
+
+    public void goToMainMenu(){
+        ImageButton back = findViewById(R.id.backbutton);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
+                startActivity(goToMainMenu);
+            }
+        });
     }
 }

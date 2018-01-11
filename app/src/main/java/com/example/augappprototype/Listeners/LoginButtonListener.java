@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.example.augappprototype.LoginScreen;
 import com.example.augappprototype.MainActivity;
+import com.example.augappprototype.MainMenu;
 import com.example.augappprototype.R;
 
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class LoginButtonListener implements View.OnClickListener{
 
     public void confirmLogin(String username, String password){
         if (password.equals(passwords.get(username))){
-            Intent k = new Intent(loginScreen, MainActivity.class);
+            Intent k = new Intent(loginScreen, MainMenu.class);
             loginScreen.startActivity(k);
             GuestButtonListener.isGuest = false;
             if (permissions.get(username).equals("faculty"))

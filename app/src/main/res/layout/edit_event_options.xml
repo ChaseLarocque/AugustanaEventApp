@@ -143,18 +143,15 @@
         android:id="@+id/timechange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="4dp"
         android:text="6:00pm"
         android:textColor="#000000"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/button"
         app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@id/eventDescription"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/eventDescription" />
 
     <ImageView
         android:id="@+id/calendaricon"
@@ -172,13 +169,28 @@
         android:id="@+id/dateOfTheEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="1/12/2018"
         android:textColor="#000000"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
         app:layout_constraintStart_toEndOf="@+id/calendaricon"
-        app:layout_constraintTop_toBottomOf="@id/eventDescription"
+        app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+    <CheckBox
+        android:id="@+id/pushToAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:buttonTint="@color/uofaGold"
+        android:text="Push to all devices?"
+        android:textColor="@color/caldroid_black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateOfTheEvent"
         app:layout_constraintVertical_bias="0.0" />
 
 

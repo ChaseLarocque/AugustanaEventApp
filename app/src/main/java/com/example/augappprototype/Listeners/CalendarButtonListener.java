@@ -63,7 +63,7 @@ public class CalendarButtonListener extends CaldroidListener {
 
     public void filterEvent(final Dialog dialog){
         TextView event1 = dialog.findViewById(R.id.imageButton);
-        if (CategoryButtonListener.filterAthletics == true)
+        if (CategoryButtonListener.filterAthletics == true && LoginButtonListener.facultyOrStudent == "faculty")
             event1.setVisibility(View.GONE);
     }
 
@@ -75,7 +75,7 @@ public class CalendarButtonListener extends CaldroidListener {
 
     public void studentMode(final Dialog dialog){
         TextView event2 = dialog.findViewById(R.id.imageButton2);
-        if (LoginButtonListener.facultyOrStudent == "faculty")
+        if (LoginButtonListener.facultyOrStudent == "faculty" || EditEventButtonListener.showEditedEvent == true)
             event2.setVisibility(View.VISIBLE);
         else
             event2.setVisibility(View.GONE);
