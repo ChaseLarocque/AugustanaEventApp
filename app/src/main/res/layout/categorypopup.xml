@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+    <TextView
+        android:id="@+id/eventBanner"
+        android:layout_width="fill_parent"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/taskbar"
+        android:scaleType="centerCrop"
+        android:text="Filter By Category"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="fill_parent"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/taskbar"
+        android:scaleType="centerCrop"
+        android:text="Close Window"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <CheckBox
+        android:id="@+id/sportsCategory"
+        android:layout_width="131dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="Athletics"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/musicCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <CheckBox
+        android:id="@+id/musicCategory"
+        android:layout_width="178dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="Performance"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/foodCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.231"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/sportsCategory"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <CheckBox
+        android:id="@+id/foodCategory"
+        android:layout_width="113dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="Club"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/academicCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/musicCategory"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginLeft="8dp" />
+
+    <CheckBox
+        android:id="@+id/academicCategory"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="Research/Lecture"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/asaCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.194"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/foodCategory" />
+
+    <CheckBox
+        android:id="@+id/asaCategory"
+        android:layout_width="113dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="ASA"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/closeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.148"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/academicCategory"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginLeft="8dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+
+</android.support.constraint.ConstraintLayout>
