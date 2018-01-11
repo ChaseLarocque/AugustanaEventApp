@@ -15,7 +15,6 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
-
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
