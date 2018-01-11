@@ -3,7 +3,7 @@ package com.example.augappprototype;
 /**
  * MainActivity
  * extends AppCompatActivity
- * Resposinble for displaying the caldroid calendar instead of android's calendar view and
+ * Responsible for displaying the caldroid calendar instead of android's calendar view and
  * also responsible for registering all the buttons on the calendar screen
  *
  * Methods:
@@ -15,11 +15,13 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
+
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.CheckBox;
 
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
@@ -27,11 +29,12 @@ import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
-
 import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    /*--Data--*/
+    private SharedPreferences sharedPreferences;
 
     /*--Methods--*/
     /**
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         convertCalendar();
         registerListenersForCalendarUIButtons();
+
+
     }//onCreate
 
     /**
@@ -83,4 +88,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
+
+
 }//MainActivity
