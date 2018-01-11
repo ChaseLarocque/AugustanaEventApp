@@ -31,8 +31,8 @@ public class CalendarButtonListener extends CaldroidListener {
     public void onSelectDate(Date date, View view) {
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.eventpopup);
+        filterEvent(addEventDialog);
         addEventDialog.show();
-        eventTextview();
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
 
@@ -58,6 +58,13 @@ public class CalendarButtonListener extends CaldroidListener {
         return new Date(date.getYear(), date.getMonth(), date.getDate());
     }
 
+    public void filterEvent(final Dialog dialog){
+        TextView event2 = dialog.findViewById(R.id.imageButton);
+        if (CategoryButtonListener.filterAthletics == true)
+            event2.setVisibility(View.GONE);
+    }
+
+    /**
     public void eventTextview(){
         int countEvents = 0;
         for (Date event: AddEventListener.events.keySet() ) {
@@ -75,7 +82,7 @@ public class CalendarButtonListener extends CaldroidListener {
         Toast.makeText(mainActivity, txt.getText() + "lol",
                 Toast.LENGTH_SHORT).show();
     }
-
+*/
 
 
 }

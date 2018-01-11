@@ -3,6 +3,9 @@ package com.example.augappprototype.Listeners;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
@@ -13,6 +16,8 @@ import com.example.augappprototype.R;
 
 public class CategoryButtonListener implements View.OnClickListener {
     private final MainActivity mainActivity;
+    public static boolean filterAthletics;
+
     public CategoryButtonListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -26,9 +31,16 @@ public class CategoryButtonListener implements View.OnClickListener {
 
     public void closeButtonListener(final Dialog categoryDialog) {
         Button closeButton = (Button) categoryDialog.findViewById(R.id.closeButton);
+        final CheckBox athletics = categoryDialog.findViewById(R.id.athleticsCategory);
+
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (athletics.isChecked()) {
+                    filterAthletics = false;
+                } else {
+                    filterAthletics = true;
+                }
                 categoryDialog.dismiss();
             }
         });

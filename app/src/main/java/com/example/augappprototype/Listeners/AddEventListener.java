@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class AddEventListener implements View.OnClickListener {
     public static HashMap<Date, ArrayList<String>> events = new HashMap<>();
-    ArrayList<String> eventDetails = new ArrayList();
+    public static ArrayList<String> eventDetails = new ArrayList();
     private int day;
     private int month;
     private int year;
