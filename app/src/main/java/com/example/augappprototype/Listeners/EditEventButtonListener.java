@@ -27,14 +27,13 @@ public class EditEventButtonListener implements View.OnClickListener {
     /*--Data--*/
     private final MainActivity mainActivity;
     public static boolean showEditedEvent;
-    public EditEventButtonListener(MainActivity mainActivity) {
-
     /*--Constructor--*/
-    public EditEventButtonListener(MainActivity mainActivity){
-        this.mainActivity = mainActivity;
-    }//EditEventButtonListener
+    public EditEventButtonListener(MainActivity mainActivity) {
+            this.mainActivity = mainActivity;
+        }
 
     /*--Methods--*/
+
     /**
      * onClick(View) --> void
      *
@@ -42,7 +41,7 @@ public class EditEventButtonListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        if(GuestButtonListener.isGuest)
+        if (GuestButtonListener.isGuest)
             Toast.makeText(mainActivity, "This button is not available on guest mode",
                     Toast.LENGTH_SHORT).show();
         else {
@@ -50,10 +49,8 @@ public class EditEventButtonListener implements View.OnClickListener {
             editEventDialog.setContentView(R.layout.edit_event);
             editEventDialog.show();
             nextEventListener(editEventDialog);
-        }
-    }
-
-
+        }//else
+    }//onClick
 
     public void nextEventListener(final Dialog editEvents) {
         ImageButton firstEvent = editEvents.findViewById(R.id.clickableEvent1);
@@ -74,14 +71,14 @@ public class EditEventButtonListener implements View.OnClickListener {
         });
     }
 
-    public void openEditEventDetails(){
+    public void openEditEventDetails() {
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
         editDetailEventDialog.setContentView(R.layout.edit_event_options);
         editDetailEventDialog.show();
         submitEditEventDetails(editDetailEventDialog);
     }
 
-    public void submitEditEventDetails(final Dialog submitEvents){
+    public void submitEditEventDetails(final Dialog submitEvents) {
         Button closeEditEvent = submitEvents.findViewById(R.id.submitEvent);
         closeEditEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +88,9 @@ public class EditEventButtonListener implements View.OnClickListener {
             }
         });
     }
+
 }
+
 
 
 

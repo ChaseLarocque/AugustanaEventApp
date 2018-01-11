@@ -62,10 +62,10 @@ public class LoginButtonListener implements View.OnClickListener{
      * permissions hash map
      */
     public void addName(){
-        permissions.put("paolo", "faculty");
-        permissions.put("zach", "student");
-        passwords.put("vpreyes@ualberta.ca", "123");
-        passwords.put("frithsmi@ualberta.ca", "123");
+        permissions.put("vpreyes", "faculty");
+        permissions.put("frithsmi", "student");
+        passwords.put("vpreyes", "123");
+        passwords.put("frithsmi", "123");
     }//addName
 
     /**

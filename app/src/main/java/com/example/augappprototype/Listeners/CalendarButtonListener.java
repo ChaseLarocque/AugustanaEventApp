@@ -2,6 +2,7 @@ package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,12 +47,13 @@ public class CalendarButtonListener extends CaldroidListener {
      */
     @Override
     public void onSelectDate(Date date, View view) {
-        final Dialog addEventDialog = new Dialog(mainActivity);
-        addEventDialog.setContentView(R.layout.eventpopup);
-        filterEvent(addEventDialog);
-        showEditedEvent(addEventDialog);
-        studentMode(addEventDialog);
-        addEventDialog.show();
+        final Dialog eventPopupDialog = new Dialog(mainActivity);
+        eventPopupDialog.setContentView(R.layout.eventpopup);
+        filterEvent(eventPopupDialog);
+        showEditedEvent(eventPopupDialog);
+        studentMode(eventPopupDialog);
+        closeWindowListener(eventPopupDialog);
+        eventPopupDialog.show();
 
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
@@ -87,6 +89,17 @@ public class CalendarButtonListener extends CaldroidListener {
      */
     public Date convertDate(Date date){
         return new Date(date.getYear(), date.getMonth(), date.getDate());
+    }
+
+    public void closeWindowListener(final Dialog eventPopup){
+        Button closeWindow = eventPopup.findViewById(R.id.closeButton);
+        closeWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eventPopup.dismiss();
+            }
+        });
+
     }
 
     public void filterEvent(final Dialog dialog){
