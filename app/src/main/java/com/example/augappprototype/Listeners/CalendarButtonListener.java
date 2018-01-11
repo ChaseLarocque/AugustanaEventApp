@@ -16,17 +16,34 @@ import java.util.HashMap;
 
 /**
  * Created by Pao on 1/7/2018.
+ * CalendarButtonListener
+ * extends CaldroidListener
+ * Responsible for the events that occur when a date on the calendar is clicked
+ *
+ * Methods:
+ * onSelectDate(Date date, View view)
+ * dayEvents(Date date)
+ * convertDate(Date date)
+ *      Returns the year, month, and day
  */
 
 public class CalendarButtonListener extends CaldroidListener {
+
+    /*--Data--*/
     private final MainActivity mainActivity;
 
-
-
+    /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
         this.mainActivity = mainActivity;
-    }
+    }//CalendarButtonListener
 
+    /*--Methods--*/
+    /**
+     * onSelectDate(Date, View) --> void
+     *
+     * @param date
+     * @param view
+     */
     @Override
     public void onSelectDate(Date date, View view) {
         final Dialog addEventDialog = new Dialog(mainActivity);
@@ -38,7 +55,6 @@ public class CalendarButtonListener extends CaldroidListener {
 
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
-
             String eventDisplay = AddEventListener.events.get(date).get(0);
             String eventDisplay1 = AddEventListener.events.get(date).get(1);
             String eventDisplay2 = AddEventListener.events.get(date).get(2);
@@ -50,13 +66,25 @@ public class CalendarButtonListener extends CaldroidListener {
             ;
     }
 
+    /**
+     * dayEvents(Date) --> boolean
+     * Checks if there are any events in the hash map
+     * @param date
+     * @return
+     */
     public boolean dayEvents(Date date){
-        if (AddEventListener.events.containsKey(date))
+        if (AddEventListener.events.containsKey(date))//events in hash map
             return true;
         else
-            return false;
-    }
+            return false;//no events in hash map
+    }//dayEvents
 
+    /**
+     * convertDate(Date) --> Date
+     * Returns the year, month, and day
+     * @param date
+     * @return
+     */
     public Date convertDate(Date date){
         return new Date(date.getYear(), date.getMonth(), date.getDate());
     }
@@ -79,47 +107,5 @@ public class CalendarButtonListener extends CaldroidListener {
             event2.setVisibility(View.VISIBLE);
         else
             event2.setVisibility(View.GONE);
-    }
-
-
-
-    /**
-    public void eventTextview(){
-        int countEvents = 0;
-        for (Date event: AddEventListener.events.keySet() ) {
-            countEvents += 1;
-        }
-        LinearLayout layout = new LinearLayout(mainActivity);
-        layout.findViewById(R.id.eachEvents);
-
-        final TextView txt = new TextView(mainActivity);
-        txt.findViewById(R.id.event1);
-
-        txt.setText("popcorn");
-        layout.invalidate();
-
-        Toast.makeText(mainActivity, txt.getText() + "lol",
-                Toast.LENGTH_SHORT).show();
-    }
-*/
-
-
-}
-
-/**
-    final TextView[] myTextViews = new TextView[countEvents];
-
-        for (int i = 0; i < countEvents; i++) {
-// create a new textview
-final TextView rowTextView = new TextView(mainActivity);
-
-        // set some properties of rowTextView or something
-        rowTextView.setText("This is row #" + i);
-
-        // add the textview to the linearlayout
-        eventList.addView(rowTextView);
-
-        // save a reference to the textview for later
-        myTextViews[i] = rowTextView;
-        }
-        */
+    }//convertDate
+}//CalendarButtonListener
