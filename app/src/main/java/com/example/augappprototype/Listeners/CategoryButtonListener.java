@@ -9,6 +9,16 @@ import com.example.augappprototype.R;
 
 /**
  * Created by ZachyZachy7 on 2018-01-08.
+ * CategoryButtonListener
+ * implements View.OnClickListener
+ * Responsible for the events that occur when the category button is clicked
+ *
+ * Methods:
+ * onClick(View v)
+ *      Shows a popup consisting of different categories that can be checked or unchecked
+ * closeButtonListener(final Dialog categoryDialog)
+ *      Sets an on click listener for the close button that closes the dialog when clicked
+ *
  */
 
 public class CategoryButtonListener implements View.OnClickListener {

@@ -8,6 +8,13 @@ import com.example.augappprototype.R;
 
 /**
  * Created by Pao on 1/9/2018.
+ * EditEventButtonListener
+ * implements View.OnClickListener
+ * Responsible for the events that occur when the edit event button is clicked
+ *
+ * Methods:
+ * onClick(View v)
+ *
  */
 
 public class EditEventButtonListener implements View.OnClickListener {

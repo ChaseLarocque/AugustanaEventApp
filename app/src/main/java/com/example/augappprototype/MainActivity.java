@@ -1,7 +1,18 @@
 package com.example.augappprototype;
 
 /**
- * Class Header Here
+ * MainActivity
+ * extends AppCompatActivity
+ * Resposinble for displaying the caldroid calendar instead of android's calendar view and
+ * also responsible for registering all the buttons on the calendar screen
+ *
+ * Methods:
+ * onCreate(Bundle savedInstanceState)
+ * convertCalendar()
+ *      Display's caldroid's calendar on the calendar screen and sets an on click listener
+ *      for the calendar buttons
+ * registerListenersForCalendarButtons()
+ *      Sets on click listeners for all buttons on the calendar screen
  */
 
 import android.support.v4.app.FragmentTransaction;
@@ -24,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*--Methods--*/
     /**
-     * onCreate(Bundle savedInstanceState) --> void
+     * onCreate(Bundle) --> void
      * Calls the convertCalendar and registerListenersForButtons methods so that there is a new on
      * click listener for them on creation
      * on creation

@@ -12,6 +12,15 @@ import java.util.HashMap;
 
 /**
  * Created by Pao on 1/7/2018.
+ * CalendarButtonListener
+ * extends CaldroidListener
+ * Responsible for the events that occur when a date on the calendar is clicked
+ *
+ * Methods:
+ * onSelectDate(Date date, View view)
+ * dayEvents(Date date)
+ * convertDate(Date date)
+ *      Returns the year, month, and day
  */
 
 public class CalendarButtonListener extends CaldroidListener {

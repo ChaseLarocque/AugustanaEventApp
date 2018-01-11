@@ -9,6 +9,13 @@ import com.example.augappprototype.MainActivity;
 
 /**
  * Created by Pao on 1/7/2018.
+ * GuestButtonListener
+ * implements View.OnClickListener
+ * Responsible for the events that occur when the guest login button is clicked
+ *
+ * Methods:
+ * onClick(View v)
+ *      Logs in user as a guest and brings them to the main menu
  */
 
 public class GuestButtonListener implements View.OnClickListener{
@@ -24,7 +31,7 @@ public class GuestButtonListener implements View.OnClickListener{
     /*--Methods--*/
     /**
      * Logs the user in as a guest meaning they can view the calendar, and add events to their local
-     * device, but cannot edit any events that are already there
+     * device, but cannot edit any events that are already there. Takes user to main menu
      * @param v
      */
     @Override

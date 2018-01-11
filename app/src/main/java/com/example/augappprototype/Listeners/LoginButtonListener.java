@@ -13,6 +13,21 @@ import java.util.HashMap;
 
 /**
  * Created by Pao on 1/7/2018.
+ * LoginButtonListener
+ * implements View.OnClickListener
+ * Responsible for the events that occur when the login button is clicked
+ *
+ * Methods:
+ * onClick(View v)
+ *      Checks username and password of user and if it is correct, then will take them to main menu
+ *      or if it is not correct, then the login will be failed and the user can try again
+ * addName()
+ *      Adds names and passwords to a hash map and adds names and role to another hash map
+ * confirmLogin(String username, String password)
+ *      Checks if users username matches password and if so logs them in as a student or faculty
+ *      and says login failed if username and password does not match
+ * userNamePasswordToString()
+ *      Changes the users username and password to a string
  */
 
 public class LoginButtonListener implements View.OnClickListener{
