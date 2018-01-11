@@ -40,7 +40,7 @@
     <ImageButton
         android:id="@+id/clickableEvent1"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:background="@drawable/prototypeevent1"
         app:layout_constraintBottom_toTopOf="@+id/imageButton2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,8 @@
     <ImageButton
         android:id="@+id/clickableEvent2"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/prototypeevent2"
         app:layout_constraintBottom_toTopOf="@+id/closeButton"

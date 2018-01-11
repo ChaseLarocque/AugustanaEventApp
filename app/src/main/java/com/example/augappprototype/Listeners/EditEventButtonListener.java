@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class EditEventButtonListener implements View.OnClickListener {
     private final MainActivity mainActivity;
-
+    public static boolean showEditedEvent;
     public EditEventButtonListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -33,9 +33,9 @@ public class EditEventButtonListener implements View.OnClickListener {
 
 
 
-    public void nextEventListener(final Dialog addEvents) {
-        ImageButton firstEvent = addEvents.findViewById(R.id.clickableEvent1);
-        ImageButton secondEvent = addEvents.findViewById(R.id.clickableEvent2);
+    public void nextEventListener(final Dialog editEvents) {
+        ImageButton firstEvent = editEvents.findViewById(R.id.clickableEvent1);
+        ImageButton secondEvent = editEvents.findViewById(R.id.clickableEvent2);
         firstEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,6 +47,7 @@ public class EditEventButtonListener implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 openEditEventDetails();
+                editEvents.dismiss();
             }
         });
     }
@@ -55,6 +56,18 @@ public class EditEventButtonListener implements View.OnClickListener {
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
         editDetailEventDialog.setContentView(R.layout.edit_event_options);
         editDetailEventDialog.show();
+        submitEditEventDetails(editDetailEventDialog);
+    }
+
+    public void submitEditEventDetails(final Dialog submitEvents){
+        Button closeEditEvent = submitEvents.findViewById(R.id.submitEvent);
+        closeEditEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitEvents.dismiss();
+                showEditedEvent = true;
+            }
+        });
     }
 }
 

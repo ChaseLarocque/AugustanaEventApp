@@ -151,7 +151,7 @@ public class AddEventListener implements View.OnClickListener {
                 eventDetails.add(1, eventTitle);
                 eventDetails.add(2, eventDescription);
                 events.put(new Date(year, month, day), eventDetails);
-                Toast.makeText(mainActivity, "lol" + events,
+                Toast.makeText(mainActivity, "Event Added!",
                         Toast.LENGTH_SHORT).show();
                 addEvents.dismiss();
             }
@@ -165,9 +165,4 @@ public class AddEventListener implements View.OnClickListener {
             return "PM";
 
     }
-    public Date convertDate(Date date){
-        return new Date(date.getYear(), date.getMonth(), date.getDate());
-    }
-
-
 }

@@ -32,6 +32,7 @@ public class CalendarButtonListener extends CaldroidListener {
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.eventpopup);
         filterEvent(addEventDialog);
+        showEditedEvent(addEventDialog);
         addEventDialog.show();
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
@@ -39,9 +40,9 @@ public class CalendarButtonListener extends CaldroidListener {
             String eventDisplay = AddEventListener.events.get(date).get(0);
             String eventDisplay1 = AddEventListener.events.get(date).get(1);
             String eventDisplay2 = AddEventListener.events.get(date).get(2);
-            Toast.makeText(mainActivity, "Location: " + eventDisplay + " " + "Event: " +
-                            eventDisplay1 + " " + "Description: " + eventDisplay2,
-                    Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mainActivity, "Location: " + eventDisplay + " " + "Event: " +
+                       //     eventDisplay1 + " " + "Description: " + eventDisplay2,
+                //    Toast.LENGTH_SHORT).show();
         }
         else
             ;
@@ -59,10 +60,18 @@ public class CalendarButtonListener extends CaldroidListener {
     }
 
     public void filterEvent(final Dialog dialog){
-        TextView event2 = dialog.findViewById(R.id.imageButton);
+        TextView event1 = dialog.findViewById(R.id.imageButton);
         if (CategoryButtonListener.filterAthletics == true)
-            event2.setVisibility(View.GONE);
+            event1.setVisibility(View.GONE);
     }
+
+    public void showEditedEvent(final Dialog dialog){
+        TextView event2 = dialog.findViewById(R.id.imageButton2);
+        if (EditEventButtonListener.showEditedEvent == true)
+            event2.setBackgroundResource(R.drawable.prototypeevent3);
+    }
+
+
 
     /**
     public void eventTextview(){
