@@ -92,7 +92,6 @@
         android:id="@+id/eventDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:ems="10"
         android:gravity="top|left"
         android:hint="Event Description"
@@ -100,11 +99,9 @@
         android:maxLength="150"
         android:maxLines="5"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/submitEvent"
         app:layout_constraintLeft_toRightOf="@+id/descriptionIcon"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventLocation"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/eventLocation" />
 
     <ImageView
         android:id="@+id/locationIcon"
@@ -134,35 +131,28 @@
         android:id="@+id/pushToAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textSize="16sp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:buttonTint="@color/uofaGold"
         android:text="Push to all devices?"
         android:textColor="@color/caldroid_black"
-        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescription"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/eventDescription" />
 
     <Button
         android:id="@+id/categoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/uofaGreen"
+        android:layout_marginTop="4dp"
+        android:background="@color/caldroid_transparent"
         android:text=" Select A Category "
-        android:textColor="@color/uofaGold"
-        app:layout_constraintBottom_toTopOf="@+id/submitEvent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/pushToAll"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescription"
+        android:textColor="@color/caldroid_black"
+        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pushToAll"
         app:layout_constraintVertical_bias="0.0" />
 
 
