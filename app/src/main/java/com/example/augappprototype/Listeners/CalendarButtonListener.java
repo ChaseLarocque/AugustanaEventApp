@@ -33,7 +33,9 @@ public class CalendarButtonListener extends CaldroidListener {
         addEventDialog.setContentView(R.layout.eventpopup);
         filterEvent(addEventDialog);
         showEditedEvent(addEventDialog);
+        studentMode(addEventDialog);
         addEventDialog.show();
+
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
 
@@ -69,6 +71,14 @@ public class CalendarButtonListener extends CaldroidListener {
         TextView event2 = dialog.findViewById(R.id.imageButton2);
         if (EditEventButtonListener.showEditedEvent == true)
             event2.setBackgroundResource(R.drawable.prototypeevent3);
+    }
+
+    public void studentMode(final Dialog dialog){
+        TextView event2 = dialog.findViewById(R.id.imageButton2);
+        if (LoginButtonListener.facultyOrStudent == "faculty")
+            event2.setVisibility(View.VISIBLE);
+        else
+            event2.setVisibility(View.GONE);
     }
 
 

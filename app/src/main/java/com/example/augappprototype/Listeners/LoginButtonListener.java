@@ -22,7 +22,7 @@ public class LoginButtonListener implements View.OnClickListener{
     public LoginButtonListener(LoginScreen loginScreen){
         this.loginScreen = loginScreen;
     }
-
+    public static String facultyOrStudent;
 
     @Override
     public void onClick(View v) {
@@ -54,6 +54,7 @@ public class LoginButtonListener implements View.OnClickListener{
             Toast.makeText(loginScreen, "Login Failed!",
                     Toast.LENGTH_LONG).show();
         }
+        facultyOrStudent = permissions.get(username);
     }
 
     public void checkNameInDatabase(){

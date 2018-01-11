@@ -3,6 +3,7 @@ package com.example.augappprototype.Listeners;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -143,6 +144,7 @@ public class AddEventListener implements View.OnClickListener {
 
     public void addEventButtonListener(final Dialog addEvents){
         Button continueButton = addEvents.findViewById(R.id.submitEvent);
+
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,6 +165,5 @@ public class AddEventListener implements View.OnClickListener {
             return "AM";
         else
             return "PM";
-
     }
 }

@@ -131,7 +131,7 @@
         tools:layout_editor_absoluteX="282dp" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/pushToAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
