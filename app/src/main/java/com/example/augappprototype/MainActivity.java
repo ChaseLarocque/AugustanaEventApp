@@ -34,6 +34,22 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     /*--Data--*/
     private SharedPreferences sharedPreferences;
+    private static final String ATHLETICS_CATEGORY_CHECKED_TAG = "athleticsCategoryChecked";
+    private static final String PERFORMANCE_CATEGORY_CHECKED_TAG = "performanceCategoryChecked";
+    private static final String CLUB_CATEGORY_CHECKED_TAG = "clubCategoryChecked";
+    private static final String RESEARCH_CATEGORY_CHECKED_TAG = "researchCategoryChecked";
+    private static final String ASA_CATEGORY_CHECKED_TAG = "asaCategoryChecked";
+    private static final String athleticsKey = "athletics_key";
+    private static final String performanceKey = "performance_key";
+    private static final String clubKey = "club_key";
+    private static final String researchKey = "research_key";
+    private static final String asaKey = "asa_key";
+    public boolean athleticsCategoryChecked = true;
+    public boolean performanceCategoryChecked = true;
+    public boolean clubCategoryChecked = true;
+    public boolean researchCategoryChecked = true;
+    public boolean asaCategoryChecked = true;
+
 
     /*--Methods--*/
     /**
@@ -87,6 +103,31 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
+
+    public void userSettings() {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(ATHLETICS_CATEGORY_CHECKED_TAG, athleticsCategoryChecked);
+        editor.putBoolean(PERFORMANCE_CATEGORY_CHECKED_TAG, performanceCategoryChecked);
+        editor.putBoolean(CLUB_CATEGORY_CHECKED_TAG, clubCategoryChecked);
+        editor.putBoolean(RESEARCH_CATEGORY_CHECKED_TAG, researchCategoryChecked);
+        editor.putBoolean(ASA_CATEGORY_CHECKED_TAG, asaCategoryChecked);
+        editor.commit();
+        athleticsCategoryChecked = sharedPreferences.getBoolean(ATHLETICS_CATEGORY_CHECKED_TAG, true);
+        performanceCategoryChecked = sharedPreferences.getBoolean(PERFORMANCE_CATEGORY_CHECKED_TAG, true);
+        clubCategoryChecked = sharedPreferences.getBoolean(CLUB_CATEGORY_CHECKED_TAG, true);
+        researchCategoryChecked = sharedPreferences.getBoolean(RESEARCH_CATEGORY_CHECKED_TAG, true);
+        asaCategoryChecked = sharedPreferences.getBoolean(ASA_CATEGORY_CHECKED_TAG, true);
+        CheckBox cbAthletics = (CheckBox) findViewById(R.id.athleticsCategory);
+        CheckBox cbPerformance = (CheckBox) findViewById(R.id.performanceCategory);
+        CheckBox cbClub = (CheckBox) findViewById(R.id.clubCategory);
+        CheckBox cbResearch = (CheckBox) findViewById(R.id.researchCategory);
+        CheckBox cbasa = (CheckBox) findViewById(R.id.asaCategory);
+
+
+
+
+    }
 
 
 }//MainActivity
