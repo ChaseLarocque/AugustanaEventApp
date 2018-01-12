@@ -26,11 +26,14 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient googleApiClient;
+    private static final int REQUEST_CODE = 9001;
 
     /*--Methods--*/
 
@@ -87,6 +90,17 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
     private void signIn() {
         Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(intent, REQUEST_CODE);
     } // signIn()
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(googleApiClient)
+                .setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                //updateUI(false);
+            } // onResult(Status)
+        });
+    } // signOut()
 
 }//LoginScreen
