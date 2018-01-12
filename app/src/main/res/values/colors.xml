@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="loginBackground">#A9A9A9</color>
-    <color name="augustanaColor">#DC143C</color>
+    <color name="uofaGreen">#007C41</color>
+    <color name="uofaGold">#FFDB05</color>
     <color name="white">#FFFFFF</color>
+    <color name="augustanaColor">#DC143C</color>
 </resources>

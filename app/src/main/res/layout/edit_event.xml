@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-        <TextView
+    <TextView
         android:id="@+id/eventBanner"
         android:layout_width="fill_parent"
         android:layout_height="73dp"
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
         android:scaleType="centerCrop"
-        android:text="  On This Day"
+        android:text="  Pick Event To Edit"
         android:gravity="left|center"
         android:textColor="@color/uofaGold"
         android:textSize="30sp"
@@ -37,31 +37,29 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <TextView
-        android:id="@+id/imageButton"
+    <ImageButton
+        android:id="@+id/clickableEvent1"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:background="@drawable/prototypeevent1"
         app:layout_constraintBottom_toTopOf="@+id/imageButton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventBanner" />
 
-    <TextView
-        android:id="@+id/imageButton2"
+    <ImageButton
+        android:id="@+id/clickableEvent2"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="-1dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/prototypeevent2"
         app:layout_constraintBottom_toTopOf="@+id/closeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/clickableEvent1" />
 
 
 </android.support.constraint.ConstraintLayout>
