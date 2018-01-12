@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 
 import com.example.augappprototype.Listeners.EventCalendarListener;
 import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
+import com.example.augappprototype.Listeners.SignOutButtonListener;
 
 public class MainMenu extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.newsletterImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
         findViewById(R.id.libraryImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
         findViewById(R.id.websiteImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
-        signoutButtonListener();
+        findViewById(R.id.signout).setOnClickListener(new SignOutButtonListener(this));
     }
 
 
