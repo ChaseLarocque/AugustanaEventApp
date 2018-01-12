@@ -5,23 +5,22 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    <TextView
+
+        <TextView
         android:id="@+id/eventBanner"
         android:layout_width="fill_parent"
         android:layout_height="73dp"
-        android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
         android:scaleType="centerCrop"
-        android:text="On This Day"
+        android:text="  On This Day"
+        android:gravity="left|center"
         android:textColor="@color/uofaGold"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/closeButton"
@@ -38,7 +37,31 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <TextView
+        android:id="@+id/imageButton"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:background="@drawable/prototypeevent1"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner" />
+
+    <TextView
+        android:id="@+id/imageButton2"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-1dp"
+        android:background="@drawable/prototypeevent2"
+        app:layout_constraintBottom_toTopOf="@+id/closeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
 
-
-    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

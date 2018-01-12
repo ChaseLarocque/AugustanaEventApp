@@ -15,6 +15,7 @@
         android:background="@drawable/greentaskbar"
         android:gravity="center|left"
         android:scaleType="centerCrop"
+
         android:text="  Edit Event Details"
         android:textColor="@color/uofaGold"
         android:textSize="30sp"
@@ -47,7 +48,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
         android:scaleType="centerCrop"
-        android:text="Add Event"
+        android:text="Edit Event"
         android:textColor="@color/uofaGold"
         android:textSize="15sp"
         app:layout_constraintHorizontal_bias="1.0"
@@ -65,14 +66,16 @@
 
     <EditText
         android:id="@+id/eventTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:ems="10"
-        android:maxLength="30"
-        android:inputType="textPersonName"
         android:hint="Event Title"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:inputType="textPersonName"
+        android:maxLength="30"
+        android:text="Choir Performance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventBanner" />
 
     <EditText
@@ -84,6 +87,7 @@
         android:inputType="textPersonName"
         android:maxLength="30"
         android:hint="Event Location"
+        android:text="Performing Arts Centre"
         app:layout_constraintLeft_toRightOf="@+id/locationIcon"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventTitle" />
@@ -99,11 +103,10 @@
         android:maxLength="150"
         android:maxLines="5"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/closeWindow"
+        android:text="The Augustana choir will perform at the Performing Arts Centre"
         app:layout_constraintLeft_toRightOf="@+id/descriptionIcon"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventLocation"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/eventLocation" />
 
     <ImageView
         android:id="@+id/locationIcon"
@@ -121,13 +124,84 @@
         android:id="@+id/descriptionIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/eventDescription"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/eventDescription"
-        app:layout_constraintBottom_toBottomOf="@id/eventDescription"
         app:layout_constraintTop_toBottomOf="@id/eventLocation"
-        app:layout_constraintVertical_bias="0.476"
-        app:srcCompat="@drawable/descriptiongold"
-        tools:layout_editor_absoluteX="282dp" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/descriptiongold" />
+
+    <ImageView
+        android:id="@+id/button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/timegold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/timechange" />
+
+    <TextView
+        android:id="@+id/timechange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:text="6:00pm"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+    <ImageView
+        android:id="@+id/calendaricon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+
+        android:layout_marginLeft="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dateOfTheEvent"
+        app:layout_constraintStart_toEndOf="@+id/timechange"
+        app:layout_constraintTop_toTopOf="@+id/dateOfTheEvent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/calendaricongold" />
+
+    <TextView
+        android:id="@+id/dateOfTheEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1/12/2018"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/calendaricon"
+        app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+
+    <CheckBox
+        android:id="@+id/pushToAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:buttonTint="@color/uofaGold"
+        android:text="Push to all devices?"
+        android:textColor="@color/caldroid_black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateOfTheEvent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@color/caldroid_transparent"
+        android:text=" Select A Category "
+        android:textColor="@color/caldroid_black"
+        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pushToAll"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </android.support.constraint.ConstraintLayout>

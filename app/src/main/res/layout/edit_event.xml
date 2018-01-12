@@ -6,70 +6,60 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <ImageView
+    <TextView
         android:id="@+id/eventBanner"
         android:layout_width="fill_parent"
         android:layout_height="73dp"
-        android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
-        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        android:scaleType="centerCrop"
+        android:text="  Pick Event To Edit"
+        android:gravity="left|center"
+        android:textColor="@color/uofaGold"
+        android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/closeWindow"
-        android:layout_width="0dp"
+        android:id="@+id/closeButton"
+        android:layout_width="fill_parent"
         android:layout_height="73dp"
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
-        android:onClick="closeWindowListener"
         android:scaleType="centerCrop"
         android:text="Close Window"
         android:textColor="@color/uofaGold"
-        android:textSize="15sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/guideline" />
-
-    <Button
-        android:id="@+id/continueButton"
-        android:layout_width="0dp"
-        android:layout_height="73dp"
-        android:adjustViewBounds="true"
-        android:background="@drawable/greentaskbar"
-        android:scaleType="centerCrop"
-        android:text="Continue"
-        android:textColor="@color/uofaGold"
-        android:textSize="15sp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <ImageButton
+        android:id="@+id/clickableEvent1"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:background="@drawable/prototypeevent1"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text=" Choose Event To Edit"
-        android:gravity="left|center"
-        app:layout_constraintBottom_toBottomOf="@id/eventBanner"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
-        android:textColor="@color/uofaGold"
-        android:textSize="30sp"/>
-
+    <ImageButton
+        android:id="@+id/clickableEvent2"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/prototypeevent2"
+        app:layout_constraintBottom_toTopOf="@+id/closeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clickableEvent1" />
 
 
 </android.support.constraint.ConstraintLayout>
