@@ -15,21 +15,29 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
-
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+
+
 import com.example.augappprototype.Listeners.AddEventListener;
-import com.example.augappprototype.Listeners.BackButtonListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.roomorama.caldroid.CaldroidFragment;
+
+
 import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    boolean isGuest = GuestButtonListener.isGuest;
+
 
     /*--Methods--*/
     /**
@@ -45,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         convertCalendar();
         registerListenersForCalendarUIButtons();
+        goToMainMenu();
     }//onCreate
 
     /**
@@ -69,6 +78,17 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
 
+    public void goToMainMenu(){
+        ImageButton back = findViewById(R.id.backbutton);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
+                startActivity(goToMainMenu);
+            }
+        });
+    }
+
     /**
      * registerListenersForCalendarUIButtons() --> void
      * Sets on click listeners for the add event button, edit event button and the category button
@@ -80,6 +100,5 @@ public class MainActivity extends AppCompatActivity {
                 (new EditEventButtonListener(this));
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
-        findViewById(R.id.backbutton).setOnClickListener((new BackButtonListener(this)));
     }//registerListenersForButtons
 }//MainActivity
