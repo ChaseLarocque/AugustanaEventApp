@@ -15,7 +15,7 @@ import com.example.augappprototype.R;
 public class SignOutButtonListener implements View.OnClickListener {
     private MainMenu mainMenu;
 
-    public void SignOutButtonListener(MainMenu mainMenu){
+    public SignOutButtonListener(MainMenu mainMenu){
         this.mainMenu = mainMenu;
     }
 
