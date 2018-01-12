@@ -36,7 +36,20 @@ import java.util.HashMap;
  *      dismiss the popup, adding the event
  * saveEventDate(DatePicker datePicker)
  *      Stores the date that the user entered
- *
+ * saveEventTime(TimePicker timePicker)
+ *      Stores the time the user selected
+ * saveEventDetails(EditText title, EditText location, EditText description)
+ *      Converts the event details the user entered to a string
+ * openEventTime()
+ *      Displays the popup for the user to select a time
+ * openEventDetails()
+ *      Opens the popup for the event details
+ * addEventButtonListener(final Dialog addEvents)
+ *      Stores the details the user has entered
+ * checkAmorPm(int hourOfDay)
+ *      Checks if the time the user entered is AM or PM
+ * selectCategoryListener(Dialog eventDetails)
+ *      Opens the select category popup
  */
 
 public class AddEventListener implements View.OnClickListener {
@@ -176,8 +189,7 @@ public class AddEventListener implements View.OnClickListener {
 
     /**
      * saveEventDetails(EditText, EditText, EditText) --> void
-     * Stores the event title, location, and description that the user enters on the event details
-     * screen
+     * Converts event details to a string
      * @param title
      * @param location
      * @param description

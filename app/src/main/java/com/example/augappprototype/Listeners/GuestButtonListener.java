@@ -44,8 +44,4 @@ public class GuestButtonListener extends MainActivity implements View.OnClickLis
         Intent goToMainMenu = new Intent(loginScreen, MainMenu.class);
         loginScreen.startActivity(goToMainMenu);
     }//onClick
-
-
-
-
-}
+}//GuestButtonListener
