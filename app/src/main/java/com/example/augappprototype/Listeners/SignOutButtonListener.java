@@ -10,29 +10,28 @@ import com.example.augappprototype.R;
 
 /**
  * Created by Pao on 1/12/2018.
+ * SignOutButtonListener
+ * implements View.OnClickListener
+ * Responsible for the events that occur when the sign out button is clicked
+ *
+ * Methods:
+ * onClick(View v)
+ *      on click will take the user back to the login screen
  */
 
 public class SignOutButtonListener implements View.OnClickListener {
+    /*--Data--*/
     private MainMenu mainMenu;
 
+    /*--Constructor--*/
     public SignOutButtonListener(MainMenu mainMenu){
         this.mainMenu = mainMenu;
     }
 
-
+    /*--Methods--*/
     @Override
     public void onClick(View view) {
-        signoutButtonListener();
-    }
-
-    public void signoutButtonListener(){
-        ImageButton signout = mainMenu.findViewById(R.id.signout);
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToLogin = new Intent(mainMenu, LoginScreen.class);
-                mainMenu.startActivity(goToLogin);
-            }
-        });
-    }
-}
+        Intent goToLogin = new Intent(mainMenu, LoginScreen.class);
+        mainMenu.startActivity(goToLogin);
+    }//onClick
+}//SignOutButtonListener

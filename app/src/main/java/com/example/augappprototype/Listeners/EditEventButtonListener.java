@@ -20,28 +20,36 @@ import java.util.Date;
  *
  * Methods:
  * onClick(View v)
- *
+ *      on click if user is guest it will say button not available on guest mode, otherwise it will
+ *      bring up the edit event dialog that will prompt the user to choose an event to edit
+ * nextEventListener(final Dialog editEvents)
+ *      when user clicks on an event they want to edit, it displays the event details
+ * openEditEventDetails()
+ *      opens the event details popup so the user can edit the event
+ * submitEditEventDetails(final Dialog submitEvents)
+ *      closes the event details popup when clicked
  */
-
 public class EditEventButtonListener implements View.OnClickListener {
     /*--Data--*/
     private final MainActivity mainActivity;
     public static boolean showEditedEvent;
+
     /*--Constructor--*/
     public EditEventButtonListener(MainActivity mainActivity) {
             this.mainActivity = mainActivity;
         }
 
     /*--Methods--*/
-
     /**
      * onClick(View) --> void
-     *
+     * If user is a guest then a toast message will popup saying this button is not available on
+     * guest mode, otherwise it will bring up the edit event dialog prompting the user to choose an
+     * event to edit
      * @param v
      */
     @Override
     public void onClick(View v) {
-        if (GuestButtonListener.isGuest)
+        if (GuestButtonListener.isGuest)//edit or add event button is not usable
             Toast.makeText(mainActivity, "This button is not available on guest mode",
                     Toast.LENGTH_SHORT).show();
         else {
@@ -52,6 +60,12 @@ public class EditEventButtonListener implements View.OnClickListener {
         }//else
     }//onClick
 
+    /**
+     * nextEventListener(Dialog) --> void
+     * When the user selects an event they want to edit, it will bring up the event details,
+     * where the user can edit the event details
+     * @param editEvents
+     */
     public void nextEventListener(final Dialog editEvents) {
         ImageButton firstEvent = editEvents.findViewById(R.id.clickableEvent1);
         ImageButton secondEvent = editEvents.findViewById(R.id.clickableEvent2);
@@ -61,7 +75,6 @@ public class EditEventButtonListener implements View.OnClickListener {
                 openEditEventDetails();
             }
         });
-
         secondEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,31 +82,36 @@ public class EditEventButtonListener implements View.OnClickListener {
                 editEvents.dismiss();
             }
         });
-    }
+    }//nextEventListener
 
+    /**
+     * openEditEventDetails() --> void
+     * Displays a popup of the event details and allows the user to edit the details that have
+     * changed
+     */
     public void openEditEventDetails() {
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
         editDetailEventDialog.setContentView(R.layout.edit_event_options);
         editDetailEventDialog.show();
         submitEditEventDetails(editDetailEventDialog);
-    }
+    }//openEditEventDetails
 
+    /**
+     * submitEditEventDetails(Dialog) --> void
+     * Closes the popup for event details which submits the edit
+     * @param submitEvents
+     */
     public void submitEditEventDetails(final Dialog submitEvents) {
         Button closeEditEvent = submitEvents.findViewById(R.id.submitEvent);
         closeEditEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitEvents.dismiss();
-                showEditedEvent = true;
+                showEditedEvent = true;//shows choir event on student mode
             }
         });
-    }
-
-}
-
-
-
-
+    }//submitEditEventDetails
+}//EditEventButtonListener
 
 
 /*

@@ -18,6 +18,38 @@ import java.util.HashMap;
 
 /**
  * Created by Pao on 1/7/2018.
+ * AddEventListener
+ * implements View.OnClickListener
+ * Responsible for all the popups that are displayed when the user is adding an event such as the
+ * select date popup, the select time popup and then the enter event details popup.
+ *
+ * Methods:
+ * onClick(View v)
+ *      On click will either say not available to guests if in guest mode or bring up the select
+ *      date popup if in student or faculty mode.
+ * selectDate()
+ *      Displays a popup that allows the user to select a date with a scroll bar
+ * closeWindowListener(final Dialog addEvents)
+ *      Dismisses the popup dialog that is on the screen when clicked
+ * continueButtonListener(final Dialog addEvents)
+ *      When clicked, will either go to the select time popup, enter event details popup, or
+ *      dismiss the popup, adding the event
+ * saveEventDate(DatePicker datePicker)
+ *      Stores the date that the user entered
+ * saveEventTime(TimePicker timePicker)
+ *      Stores the time the user selected
+ * saveEventDetails(EditText title, EditText location, EditText description)
+ *      Converts the event details the user entered to a string
+ * openEventTime()
+ *      Displays the popup for the user to select a time
+ * openEventDetails()
+ *      Opens the popup for the event details
+ * addEventButtonListener(final Dialog addEvents)
+ *      Stores the details the user has entered
+ * checkAmorPm(int hourOfDay)
+ *      Checks if the time the user entered is AM or PM
+ * selectCategoryListener(Dialog eventDetails)
+ *      Opens the select category popup
  */
 
 public class AddEventListener implements View.OnClickListener {
@@ -49,19 +81,18 @@ public class AddEventListener implements View.OnClickListener {
     /**
      * onClick(View) --> void
      * Calls the selectDate method when clicked which will bring up a scroll bar where the user
-     * can select a day, month, and year.
+     * can select a day, month, and year. If in guest mode it will not be clickable and will
+     * display a message saying Button is not available in guest mode
      * @param v
      */
     @Override
     public void onClick(View v) {
-        if(GuestButtonListener.isGuest)
+        if(GuestButtonListener.isGuest)//guests cannot add events
             Toast.makeText(mainActivity, "This button is not available on guest mode",
                     Toast.LENGTH_SHORT).show();
         else
-            selectDate();
-
-
-    }
+            selectDate();//students and faculty will be brought up to the select date popup
+    }//onClick
 
     /**
      * selectDate() --> void
@@ -73,19 +104,17 @@ public class AddEventListener implements View.OnClickListener {
         /**
         eventDetails.add(0, "Augustana");
         eventDetails.add(1, "Basketball Game");
-        eventDetails.add(2, "Dennis Didusenko gonna dunk on mfers");
+        eventDetails.add(2, "The Augustana Vikings will take on the GPRC Wolves");
         events.put(new Date(118, 0, 1), eventDetails);
         Toast.makeText(mainActivity, "Event Added",
                 Toast.LENGTH_SHORT).show();
          */
-
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventpopup);
         addEventDialog.show();
         step = "date";
         closeWindowListener(addEventDialog);
         continueButtonListener(addEventDialog);
-
     }//selectDate
 
     /**
@@ -103,8 +132,14 @@ public class AddEventListener implements View.OnClickListener {
                 addEvents.dismiss();
             }
         });
-    }
+    }//closeWindowListener
 
+    /**
+     * continueButtonListener(Dialog) --> void
+     * Clicking the continue button throughout the event details will take the user to the select
+     * time popup, the enter event details popup or close the dialog
+     * @param addEvents
+     */
     public void continueButtonListener(final Dialog addEvents){
         Button continueButton = addEvents.findViewById(R.id.continueAdd);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +161,6 @@ public class AddEventListener implements View.OnClickListener {
                 }//else
                 else
                     addEvents.dismiss();
-
             }//onClick
         });
     }//continueButtonListener
@@ -155,8 +189,7 @@ public class AddEventListener implements View.OnClickListener {
 
     /**
      * saveEventDetails(EditText, EditText, EditText) --> void
-     * Stores the event title, location, and description that the user enters on the event details
-     * screen
+     * Converts event details to a string
      * @param title
      * @param location
      * @param description
@@ -233,6 +266,12 @@ public class AddEventListener implements View.OnClickListener {
             return "PM";
     }//checkAmOrPm
 
+    /**
+     * selectCategoryDetails(Dialog) --> void
+     * On click will bring up a popup of all the categories where the user will select what category
+     * their event fits under
+     * @param eventDetails
+     */
     public void selectCategoryListener(Dialog eventDetails){
         Button category = eventDetails.findViewById(R.id.categoryButton);
         category.setOnClickListener(new View.OnClickListener() {
@@ -244,5 +283,5 @@ public class AddEventListener implements View.OnClickListener {
                 categoryDialog.show();
             }
         });
-    }
+    }//selectCategoryListener
 }//AddEventListener
