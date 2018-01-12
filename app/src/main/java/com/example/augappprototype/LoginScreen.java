@@ -19,11 +19,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.example.augappprototype.Listeners.LoginButtonListener;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -33,6 +36,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient googleApiClient;
+    private TextView email;
+    private TextView name;
     private static final int REQUEST_CODE = 9001;
 
     /*--Methods--*/
@@ -102,5 +107,27 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             } // onResult(Status)
         });
     } // signOut()
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        if(result.isSuccess()){
+            GoogleSignInAccount account = result.getSignInAccount();
+            String userName = account.getDisplayName();
+            String userEmail = account.getEmail();
+            name.setText(userName);
+            email.setText(userEmail);
+            // Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+            // updateUI(true);
+        } else {
+            // updateUI(false);
+        } // else
+    } // handleSignInResult(GoogleSignInResult)
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, requestCode, data);
+        if(requestCode == REQUEST_CODE){
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        } // if
+    } // onActivityResult(int, int, Intent)
 
 }//LoginScreen
