@@ -154,7 +154,5 @@
         app:layout_constraintLeft_toRightOf="@id/backbutton"
         app:layout_constraintRight_toLeftOf="@id/categoryButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logoblack2" />
-
-
+        app:srcCompat="@mipmap/logoblack2" />
 </android.support.constraint.ConstraintLayout>

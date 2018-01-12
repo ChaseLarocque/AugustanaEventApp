@@ -1,6 +1,8 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.support.constraint.ConstraintLayout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -59,21 +61,18 @@ public class CalendarButtonListener extends CaldroidListener {
     public void onSelectDate(Date date, View view) {
         final Dialog eventPopupDialog = new Dialog(mainActivity);
         eventPopupDialog.setContentView(R.layout.eventpopup);
-        filterEvent(eventPopupDialog);
-        showEditedEvent(eventPopupDialog);
-        studentMode(eventPopupDialog);
         closeWindowListener(eventPopupDialog);
         eventPopupDialog.show();
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
-            String eventDisplay = AddEventListener.events.get(date).get(0);
-            String eventDisplay1 = AddEventListener.events.get(date).get(1);
-            String eventDisplay2 = AddEventListener.events.get(date).get(2);
+            addTextViewForDetails(eventPopupDialog);
             //Toast.makeText(mainActivity, "Location: " + eventDisplay + " " + "Event: " +
-                       //     eventDisplay1 + " " + "Description: " + eventDisplay2,
-                //    Toast.LENGTH_SHORT).show();
+            //                eventDisplay1 + " " + "Description: " + eventDisplay2,
+            //        Toast.LENGTH_SHORT).show();
         }//if
         else
+            Toast.makeText(mainActivity, "No Events On This Day",
+                    Toast.LENGTH_SHORT).show();
             ;
     }//onSelectDate
 
@@ -113,46 +112,16 @@ public class CalendarButtonListener extends CaldroidListener {
                 eventPopup.dismiss();
             }
         });
-
     }//closeWindowListener
 
-    /**
-     * filterEvent(Dialog) --> void
-     * When the athletics category is set to unchecked, then the basketball event will not be shown
-     * in faculty mode
-     * @param dialog
-     */
-    public void filterEvent(final Dialog dialog){
-        TextView event1 = dialog.findViewById(R.id.imageButton);
-        if (CategoryButtonListener.filterAthletics == true
-                && LoginButtonListener.facultyOrStudent == "faculty")
-            event1.setVisibility(View.GONE);
-    }//filterEvent
-
-    /**
-     * showEditedEvent(Dialog) --> void
-     * Shows the edited choir event that was changed to Faith and Life Chapel instead of Performing
-     * Arts Centre
-     * @param dialog
-     */
-    public void showEditedEvent(final Dialog dialog){
-        TextView event2 = dialog.findViewById(R.id.imageButton2);
-        if (EditEventButtonListener.showEditedEvent == true)
-            event2.setBackgroundResource(R.drawable.prototypeevent3);
-    }//showEditedEvent
-
-    /**
-     * studentMode(Dialog) --> void
-     * Shows only the basketball game if showEditedEvent is false, but shows the choir event if
-     * showEditedEvent is true or user is logged in as faculty
-     * @param dialog
-     */
-    public void studentMode(final Dialog dialog){
-        TextView event2 = dialog.findViewById(R.id.imageButton2);
-        if (LoginButtonListener.facultyOrStudent == "faculty"
-                || EditEventButtonListener.showEditedEvent == true)
-            event2.setVisibility(View.VISIBLE);
-        else
-            event2.setVisibility(View.GONE);
-    }//studentMode
+    public void addTextViewForDetails(Dialog eventPopup){
+        LinearLayout eventList = eventPopup.findViewById(R.id.layoutEvents);
+        for(int i = 0; i < 3; i++ )
+        {
+            TextView textView = new TextView(mainActivity);
+            textView.setText(AddEventListener.eventDetails.get(i));
+            textView.setGravity(Gravity.LEFT);
+            eventList.addView(textView);
+        }
+    }
 }//CalendarButtonListener

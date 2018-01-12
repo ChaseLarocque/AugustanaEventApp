@@ -12,15 +12,15 @@
         android:layout_height="73dp"
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
+        android:gravity="left|center"
         android:scaleType="centerCrop"
         android:text="  On This Day"
-        android:gravity="left|center"
         android:textColor="@color/uofaGold"
         android:textSize="30sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+            app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/closeButton"
@@ -37,31 +37,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <TextView
-        android:id="@+id/imageButton"
-        android:layout_width="fill_parent"
-        android:layout_height="150dp"
-        android:background="@drawable/prototypeevent1"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventBanner" />
-
-    <TextView
-        android:id="@+id/imageButton2"
-        android:layout_width="fill_parent"
-        android:layout_height="150dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="-1dp"
-        android:background="@drawable/prototypeevent2"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/closeButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner">
+
+        <LinearLayout
+            android:id="@+id/layoutEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -87,10 +87,10 @@ public class AddEventListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        if(GuestButtonListener.isGuest)//guests cannot add events
-            Toast.makeText(mainActivity, "This button is not available on guest mode",
-                    Toast.LENGTH_SHORT).show();
-        else
+      //  if(GuestButtonListener.isGuest)//guests cannot add events
+      //      Toast.makeText(mainActivity, "This button is not available on guest mode",
+      //              Toast.LENGTH_SHORT).show();
+      //  else
             selectDate();//students and faculty will be brought up to the select date popup
     }//onClick
 

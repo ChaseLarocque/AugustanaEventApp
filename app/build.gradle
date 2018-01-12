@@ -30,6 +30,6 @@ dependencies {
     compile 'me.grantland:autofittextview:0.2.+'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:gridlayout-v7:26.+'
-    compile 'com.google.android.gms:play-services-auth:11.6.0'
+    compile 'com.google.android.gms:play-services-base:11.6.0'
 }
 apply plugin: 'com.google.gms.google-services'
