@@ -15,6 +15,7 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -37,13 +38,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     /*--Data--*/
-    private SharedPreferences sharedPreferences = null;
-    boolean myBoolVariable = false;
-    private static final String athleticsKey = "athletics_key";
-    private static final String performanceKey = "performance_key";
-    private static final String clubKey = "club_key";
-    private static final String researchKey = "research_key";
-    private static final String asaKey = "asa_key";
+
 
 
 
@@ -61,25 +56,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        sharedPreferences = getSharedPreferences("zach", MODE_PRIVATE);
-        CheckBox athletics = (CheckBox) findViewById(R.id.athleticsCategory);
-        CheckBox performance = (CheckBox) findViewById(R.id.performanceCategory);
-        CheckBox club = (CheckBox) findViewById(R.id.clubCategory);
-        CheckBox research = (CheckBox) findViewById(R.id.researchCategory);
-        CheckBox asa = (CheckBox) findViewById(R.id.asaCategory);
-        Map<String, CheckBox> checkboxMap = new HashMap();
-        checkboxMap.put(athleticsKey, athletics);
-        checkboxMap.put(performanceKey, performance);
-        checkboxMap.put(clubKey, club);
-        checkboxMap.put(researchKey, research);
-        checkboxMap.put(asaKey, asa);
-        loadInitialValues(checkboxMap);
-        setupCheckedChangeListener(checkboxMap);
-
-
-
-
-
     }//onCreate
 
     /**
@@ -119,23 +95,5 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public void loadInitialValues(Map<String, CheckBox>checkBoxMap) {
-        for (Map.Entry<String, CheckBox> checkboxEntry: checkBoxMap.entrySet()) {
-            Boolean checked = sharedPreferences.getBoolean(checkboxEntry.getKey(), true);
-            checkboxEntry.getValue().setChecked(checked);
-        }//for
-    }
 
-    public void setupCheckedChangeListener(Map<String, CheckBox> checkboxMap) {
-        for (final Map.Entry<String, CheckBox> checkboxEntry: checkboxMap.entrySet()) {
-            checkboxEntry.getValue().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    final SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(checkboxEntry.getKey(), isChecked);
-                    editor.apply();
-                }
-            });
-        }
-    }
 }//MainActivity

@@ -2,12 +2,19 @@ package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ZachyZachy7 on 2018-01-08.
@@ -27,6 +34,12 @@ public class CategoryButtonListener implements View.OnClickListener {
 
     /*--Data--*/
     private final MainActivity mainActivity;
+    private final String athleticsKey = "athleticsKey";
+    private final String performanceKey = "performanceKey";
+    private final String clubKey = "clubKey";
+    private final String researchKey = "researchKey";
+    private final String asaKey = "asaKey";
+
 
     /*--Constructor--*/
     public CategoryButtonListener(MainActivity mainActivity) {
@@ -47,6 +60,7 @@ public class CategoryButtonListener implements View.OnClickListener {
         categoryDialog.setContentView(R.layout.categorypopup);
         categoryDialog.show();
         closeButtonListener(categoryDialog);
+        saveCheckBox(categoryDialog);
     }//onClick
 
     /**
@@ -63,5 +77,37 @@ public class CategoryButtonListener implements View.OnClickListener {
             }//onClick
         });
     }//closeButtonListener
+
+
+    public void saveCheckBox(final Dialog categoryDialog) {
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
+        final CheckBox athletics = (CheckBox)categoryDialog.findViewById(R.id.athleticsCategory);
+        final CheckBox performance = (CheckBox)categoryDialog.findViewById(R.id.performanceCategory);
+        final CheckBox club = (CheckBox)categoryDialog.findViewById(R.id.clubCategory);
+        final CheckBox research = (CheckBox)categoryDialog.findViewById(R.id.researchCategory);
+        final CheckBox asa = (CheckBox)categoryDialog.findViewById(R.id.asaCategory);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
+        Map<String, CheckBox> checkBoxMap = new HashMap();
+        checkBoxMap.put(athleticsKey, athletics);
+        checkBoxMap.put(performanceKey, performance);
+        checkBoxMap.put(clubKey, club);
+        checkBoxMap.put(researchKey, research);
+        checkBoxMap.put(asaKey, asa);
+        for (Map.Entry<String, CheckBox> checkboxEntry: checkBoxMap.entrySet()) {
+            Boolean checked = sharedPreferences.getBoolean(checkboxEntry.getKey(), true);
+            checkboxEntry.getValue().setChecked(checked);
+        }//for
+        for (final Map.Entry<String, CheckBox> checkboxEntry: checkBoxMap.entrySet()) {
+            checkboxEntry.getValue().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    final SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(checkboxEntry.getKey(), isChecked);
+                    editor.apply();
+                }//onCheckedChange
+            });
+        }//for
+
+    }//saveCheckBox
 }//CategoryButtonListener
 
