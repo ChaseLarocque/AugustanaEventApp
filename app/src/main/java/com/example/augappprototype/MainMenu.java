@@ -23,14 +23,5 @@ public class MainMenu extends AppCompatActivity {
         signoutButtonListener();
     }
 
-    public void signoutButtonListener(){
-        ImageButton signout = findViewById(R.id.signout);
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToLogin = new Intent(MainMenu.this, LoginScreen.class);
-                startActivity(goToLogin);
-            }
-        });
-    }
+
 }
