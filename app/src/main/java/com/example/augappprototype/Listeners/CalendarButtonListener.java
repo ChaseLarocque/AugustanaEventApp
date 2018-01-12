@@ -116,12 +116,20 @@ public class CalendarButtonListener extends CaldroidListener {
 
     public void addTextViewForDetails(Dialog eventPopup){
         LinearLayout eventList = eventPopup.findViewById(R.id.layoutEvents);
-        for(int i = 0; i < 3; i++ )
-        {
+        for(int i = 0; i < 3; i++ ) {
             TextView textView = new TextView(mainActivity);
-            textView.setText(AddEventListener.eventDetails.get(i));
-            textView.setGravity(Gravity.LEFT);
-            eventList.addView(textView);
+            if (i == 0) {
+                textView.setText("Event Title: " + AddEventListener.eventDetails.get(i));
+                eventList.addView(textView);
+            }
+            else if (i == 1){
+                textView.setText("Event Location: " + AddEventListener.eventDetails.get(i));
+                eventList.addView(textView);
+            }
+            else{
+                textView.setText("Event Description: " + AddEventListener.eventDetails.get(i));
+                eventList.addView(textView);
+            }
         }
     }
 }//CalendarButtonListener
