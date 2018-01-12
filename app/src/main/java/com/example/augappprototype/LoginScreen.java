@@ -13,14 +13,19 @@ package com.example.augappprototype;
  *      Sets on click listeners for every button on the login screen
  */
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.example.augappprototype.Listeners.LoginButtonListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
-public class LoginScreen extends AppCompatActivity {
+public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
+    GoogleApiClient.OnConnectionFailedListener{
 
     /*--Methods--*/
     /**
@@ -45,4 +50,23 @@ public class LoginScreen extends AppCompatActivity {
         findViewById(R.id.continueAsGuestButton).setOnClickListener
                 (new GuestButtonListener(this));
     }//registerListenersForLoginScreenButtons
+
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.googleLoginButton:
+                signIn();
+                break;
+        } // switch(View)
+    } // onClick(View)
+
+  @Override
+  public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+  } // onConnectionFailed(ConnectionResult)
+    private void signIn() {
+
+    } // signIn()
+
 }//LoginScreen
