@@ -27,6 +27,16 @@ import java.util.HashMap;
  * onClick(View v)
  *      On click will either say not available to guests if in guest mode or bring up the select
  *      date popup if in student or faculty mode.
+ * selectDate()
+ *      Displays a popup that allows the user to select a date with a scroll bar
+ * closeWindowListener(final Dialog addEvents)
+ *      Dismisses the popup dialog that is on the screen when clicked
+ * continueButtonListener(final Dialog addEvents)
+ *      When clicked, will either go to the select time popup, enter event details popup, or
+ *      dismiss the popup, adding the event
+ * saveEventDate(DatePicker datePicker)
+ *      Stores the date that the user entered
+ *
  */
 
 public class AddEventListener implements View.OnClickListener {
@@ -64,11 +74,11 @@ public class AddEventListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        if(GuestButtonListener.isGuest)
+        if(GuestButtonListener.isGuest)//guests cannot add events
             Toast.makeText(mainActivity, "This button is not available on guest mode",
                     Toast.LENGTH_SHORT).show();
         else
-            selectDate();
+            selectDate();//students and faculty will be brought up to the select date popup
     }//onClick
 
     /**

@@ -18,13 +18,19 @@ import com.example.augappprototype.Listeners.SignOutButtonListener;
  *
  * Methods:
  * onCreate(Bundle savedInstanceState)
- *      calls the registerMenuButtons method that sets on click listeners for all buttons on the
+ *      calls the registerMenuButtons method that sets on click listeners for all buttons in the
  *      main menu
  * registerMenuButtons()
  *      sets on click listeners for all buttons on the main menu
  */
 public class MainMenu extends AppCompatActivity {
-
+    /*--Methods--*/
+    /**
+     * onCreate(Bundle) --> void
+     * Calls the registerMenuButtons method that sets on click listeners for all buttons in the
+     * main menu
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +38,10 @@ public class MainMenu extends AppCompatActivity {
         registerMenuButtons();
     }//onCreate
 
+    /**
+     * registerMenuButtons() --> void
+     * Sets on click listeners for all the buttons that are in the main menu
+     */
     public void registerMenuButtons() {
         findViewById(R.id.eventsCalendarImage).setOnClickListener
                 (new EventCalendarListener(this));
