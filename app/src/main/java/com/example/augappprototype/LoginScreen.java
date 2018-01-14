@@ -178,5 +178,5 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         }
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
-    }
+    } // checkPermissions(String)
 }//LoginScreen
