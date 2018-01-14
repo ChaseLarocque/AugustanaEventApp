@@ -16,16 +16,17 @@ package com.example.augappprototype;
  */
 
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.BackButtonListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
-import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.roomorama.caldroid.CaldroidFragment;
+
 import java.util.Calendar;
 import java.util.Date;
 

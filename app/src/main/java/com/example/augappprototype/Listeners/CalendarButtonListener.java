@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,9 +63,9 @@ public class CalendarButtonListener extends CaldroidListener {
         final Dialog eventPopupDialog = new Dialog(mainActivity);
         eventPopupDialog.setContentView(R.layout.eventpopup);
         closeWindowListener(eventPopupDialog);
-        eventPopupDialog.show();
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
+            eventPopupDialog.show();
             addTextViewForDetails(eventPopupDialog);
             //Toast.makeText(mainActivity, "Location: " + eventDisplay + " " + "Event: " +
             //                eventDisplay1 + " " + "Description: " + eventDisplay2,
@@ -83,7 +84,7 @@ public class CalendarButtonListener extends CaldroidListener {
      * @return
      */
     public boolean dayEvents(Date date){
-        if (AddEventListener.events.containsKey(date))//events in hash map
+        if (AddEventListener.allEvents.containsKey(date))//events in hash map
             return true;
         else
             return false;//no events in hash map
@@ -115,21 +116,29 @@ public class CalendarButtonListener extends CaldroidListener {
     }//closeWindowListener
 
     public void addTextViewForDetails(Dialog eventPopup){
-        LinearLayout eventList = eventPopup.findViewById(R.id.layoutEvents);
-        for(int i = 0; i < 3; i++ ) {
-            TextView textView = new TextView(mainActivity);
-            if (i == 0) {
-                textView.setText("Event Title: " + AddEventListener.eventDetails.get(i));
-                eventList.addView(textView);
-            }
-            else if (i == 1){
-                textView.setText("Event Location: " + AddEventListener.eventDetails.get(i));
-                eventList.addView(textView);
-            }
-            else{
-                textView.setText("Event Description: " + AddEventListener.eventDetails.get(i));
-                eventList.addView(textView);
+        ScrollView eventsInDay = new ScrollView(mainActivity);
+        eventsInDay = eventPopup.findViewById(R.id.allEvents);
+        LinearLayout eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        for (int x = 0; x < AddEventListener.events.size(); x++) {
+            for(int y = 0; y < 3; y++ ) {
+                TextView textView = new TextView(mainActivity);
+                if (y == 0) {
+                    textView.setText("Event Title: " + AddEventListener.events.get(x).get(y));
+                    eventList.addView(textView);
+                }
+                else if (y == 1){
+                    textView.setText("Event Location: " + AddEventListener.events.get(x).get(y));
+                    eventList.addView(textView);
+                }
+                else{
+                    textView.setText("Event Description: " + AddEventListener.events.get(x).get(y));
+                    eventList.addView(textView);
+                }
             }
         }
+        eventsInDay.addView(eventList);
     }
 }//CalendarButtonListener

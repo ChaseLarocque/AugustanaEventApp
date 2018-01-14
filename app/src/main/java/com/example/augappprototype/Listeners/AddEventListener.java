@@ -1,6 +1,7 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,8 +57,9 @@ import java.util.HashMap;
 public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
-    public static HashMap<Date, ArrayList<String>> events = new HashMap<>();
-    public static ArrayList<String> eventDetails = new ArrayList();
+    public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
+    public static HashMap<Integer, ArrayList<String>> events = new HashMap<>();
+
     private int day;
     private int month;
     private int year;
@@ -242,16 +245,29 @@ public class AddEventListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
-                eventDetails.add(0, eventTitle);
-                eventDetails.add(1, eventLocation);
-                eventDetails.add(2, eventDescription);
-                events.put(new Date(year, month, day), eventDetails);
-                Toast.makeText(mainActivity, "Event Added!",
+                saveEvent(new Date(year, month, day));
+                Toast.makeText(mainActivity, "Event Added!" + allEvents,
                         Toast.LENGTH_SHORT).show();
                 addEvents.dismiss();
             }
         });
     }//addEventButtonListener
+
+    public void saveEvent(Date eventDate) {
+        ArrayList<String> eventDetails = new ArrayList();
+        eventDetails.add(0, eventTitle);
+        eventDetails.add(1, eventLocation);
+        eventDetails.add(2, eventDescription);
+        if (allEvents.containsKey(eventDate))//events in hash map
+            events.put(events.size(), eventDetails);
+        else {
+            events.put(events.size(), eventDetails);
+            allEvents.put(eventDate, events);
+            Toast.makeText(mainActivity, "FAIL",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     /**
      * checkAmOrPm(int) --> String
