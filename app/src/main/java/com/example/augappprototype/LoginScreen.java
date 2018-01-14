@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.GuestButtonListener;
@@ -36,6 +37,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.HashMap;
+
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -47,6 +50,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
+    HashMap<String, String> permissions = new HashMap<>();
 
     /*--Methods--*/
 
@@ -60,7 +64,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
-
+        addName();
         registerListenersForLoginScreenButtons();
 
         profileSection = (LinearLayout) findViewById(R.id.profile_section);
@@ -129,6 +133,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
+            checkPermissions(userEmail);
             Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
             updateUI(true);
         } else {
@@ -154,4 +159,24 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             handleSignInResult(result);
         } // if
     } // onActivityResult(int, int, Intent)
+
+    public void addName(){
+        permissions.put("psczeng@gmail.com", "faculty");
+        permissions.put("vpreyes@ualberta.ca", "faculty");
+        permissions.put("cwlarocq@ualberta.ca", "faculty");
+        permissions.put("frithsmi@ualberta.ca", "faculty");
+    }//addName
+
+    public void checkPermissions(String email){
+        if (permissions.containsKey(email)) {
+                Toast.makeText(this, "faculty",
+                        Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(this, "student",
+                    Toast.LENGTH_LONG).show();
+        }
+        Intent goToMenu = new Intent(this, MainMenu.class);
+        this.startActivity(goToMenu);
+    }
 }//LoginScreen
