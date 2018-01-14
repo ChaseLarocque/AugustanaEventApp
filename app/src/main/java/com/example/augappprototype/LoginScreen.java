@@ -19,8 +19,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.example.augappprototype.Listeners.LoginButtonListener;
 import com.google.android.gms.auth.api.Auth;
@@ -28,6 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -35,7 +39,11 @@ import com.google.android.gms.common.api.Status;
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private Button signOutButton;
     private GoogleApiClient googleApiClient;
+    private ImageView profilePicture;
+    private LinearLayout profileSection;
+    private SignInButton signInButton;
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
@@ -52,11 +60,23 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+
         registerListenersForLoginScreenButtons();
 
+        profileSection = (LinearLayout) findViewById(R.id.profile_section);
+        signOutButton = (Button) findViewById(R.id.logout_button);
+        signInButton = (SignInButton) findViewById(R.id.login_button);
+        name = (TextView) findViewById(R.id.name);
+        email = (TextView) findViewById(R.id.email);
+        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+
+        signInButton.setOnClickListener(this);
+        signOutButton.setOnClickListener(this);
+        profileSection.setVisibility(View.GONE);
+
         GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions
-                        .DEFAULT_SIGN_IN).requestEmail().build();
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
                 this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
     }//onCreate
@@ -71,23 +91,18 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
                 (new GuestButtonListener(this));
     }//registerListenersForLoginScreenButtons
 
-    /**
-     *
-     * @param v
-     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.googleLoginButton:
+            case R.id.login_button:
                 signIn();
+                break;
+            case R.id.logout_button:
+                signOut();
                 break;
         } // switch(View)
     } // onClick(View)
 
-    /**
-     *
-     * @param connectionResult
-     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -99,12 +114,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // signIn()
 
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient)
-                .setResultCallback(new ResultCallback<Status>() {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                //updateUI(false);
-            } // onResult(Status)
+                updateUI(false);
+            }
         });
     } // signOut()
 
@@ -115,19 +129,29 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
-            // Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
-            // updateUI(true);
+            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+            updateUI(true);
         } else {
-            // updateUI(false);
+            updateUI(false);
         } // else
     } // handleSignInResult(GoogleSignInResult)
 
+    private void updateUI(boolean isLogin) {
+        if(isLogin) {
+            profileSection.setVisibility(View.VISIBLE);
+            signInButton.setVisibility(View.GONE);
+        } else {
+            profileSection.setVisibility(View.GONE);
+            signInButton.setVisibility(View.VISIBLE);
+        } // else
+    } // updateUI
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, requestCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } // if
     } // onActivityResult(int, int, Intent)
-
 }//LoginScreen
