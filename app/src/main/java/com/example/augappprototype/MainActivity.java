@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    LoginScreen l = new LoginScreen();
+    LoginScreen loginScreen;
 
     TextView mOutputText;
 
@@ -88,8 +89,10 @@ public class MainActivity extends AppCompatActivity {
         goToMainMenu();
         registerListenersForCalendarUIButtons();
         goToMainMenu();
-        mOutputText = findViewById(R.id.testText);
-
+        loginScreen = new LoginScreen();
+        Toast.makeText(this, "This is a toast", Toast.LENGTH_LONG).show();
+        //mOutputText = findViewById(R.id.testText);
+        //mOutputText.setText(loginScreen.mCredential.getSelectedAccountName());
 
 
     }//onCreate

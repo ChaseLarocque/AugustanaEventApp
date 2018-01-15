@@ -13,7 +13,9 @@ package com.example.augappprototype;
  * Sets on click listeners for every button on the login screen
  */
 
+import android.*;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -59,8 +61,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, EasyPermissions.PermissionCallbacks {
 
     private Button signOutButton;
     private GoogleApiClient googleApiClient;
@@ -76,6 +81,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+
     TextView mOutputText;
 
     HashMap<String, String> permissions = new HashMap<>();
@@ -107,11 +114,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         profileSection.setVisibility(View.GONE);
         mOutputText = findViewById(R.id.testText2);
 
-
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
         new LoginScreen.MakeRequestTask(mCredential).execute();
+        Toast.makeText(this, mCredential.getSelectedAccountName(), Toast.LENGTH_LONG).show();
 
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
@@ -134,7 +141,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                signIn();
+              //  chooseAccount();
                 break;
             case R.id.logout_button:
                 signOut();
@@ -218,6 +225,53 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
     } // checkPermissions(String)
+
+    /**
+     * Attempts to set the account used with the API credentials. If an account
+     * name was previously saved it will use that one; otherwise an account
+     * picker dialog will be shown to the user. Note that the setting the
+     * account to use with the credentials object requires the app to have the
+     * GET_ACCOUNTS permission, which is requested here if it is not already
+     * present. The AfterPermissionGranted annotation indicates that this
+     * function will be rerun automatically whenever the GET_ACCOUNTS permission
+     * is granted.
+     */
+    @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
+    private void chooseAccount() {
+        if (EasyPermissions.hasPermissions(
+                this, android.Manifest.permission.GET_ACCOUNTS)) {
+            String accountName = getPreferences(Context.MODE_PRIVATE)
+                    .getString(PREF_ACCOUNT_NAME, null);
+            checkPermissions(mCredential.getSelectedAccountName());
+
+            if (accountName != null) {
+                mCredential.setSelectedAccountName(accountName);
+               // getResultsFromApi();
+            } else {
+                // Start a dialog from which the user can choose an account
+                startActivityForResult(
+                        mCredential.newChooseAccountIntent(),
+                        REQUEST_ACCOUNT_PICKER);
+            }
+        } else {
+            // Request the GET_ACCOUNTS permission via a user dialog
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    android.Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
+    }
 
 
     //***************
@@ -342,5 +396,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
                     REQUEST_GOOGLE_PLAY_SERVICES);
             dialog.show();
         }
+
     }
 }//LoginScreen
