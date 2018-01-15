@@ -37,6 +37,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
@@ -50,7 +51,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
-    HashMap<String, String> permissions = new HashMap<>();
+    ArrayList<String> permissions = new ArrayList<String>();
 
     /*--Methods--*/
 
@@ -161,14 +162,14 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onActivityResult(int, int, Intent)
 
     public void addName(){
-        permissions.put("shichun1@ualberta.ca", "faculty");
-        permissions.put("vpreyes@ualberta.ca", "faculty");
-        permissions.put("cwlarocq@ualberta.ca", "faculty");
-        permissions.put("frithsmi@ualberta.ca", "faculty");
+        permissions.add("shichun1@ualberta.ca");
+        permissions.add("vpreyes@ualberta.ca");
+        permissions.add("cwlarocq@ualberta.ca");
+        permissions.add("frithsmi@ualberta.ca");
     }//addName
 
     public void checkPermissions(String email){
-        if (permissions.containsKey(email)) {
+        if (permissions.contains(email)) {
                 Toast.makeText(this, "faculty",
                         Toast.LENGTH_LONG).show();
         }
