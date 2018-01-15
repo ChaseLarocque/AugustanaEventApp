@@ -16,6 +16,7 @@ package com.example.augappprototype;
  */
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    CaldroidFragment caldroidFragment = new CaldroidFragment();
+
 
     /*--Methods--*/
     /**
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         convertCalendar();
+        updateCalendar();
         registerListenersForCalendarUIButtons();
     }//onCreate
 
@@ -54,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
      * Sets the minimum date to January 1st 2018 and the maximum date to December 31st 2018
      */
     private void convertCalendar() {
-        CaldroidFragment caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
@@ -83,4 +86,57 @@ public class MainActivity extends AppCompatActivity {
                 (new CategoryButtonListener(this));
         findViewById(R.id.backbutton).setOnClickListener((new BackButtonListener(this)));
     }//registerListenersForButtons
+
+    public void setEventCount(Date day){
+        switch (AddEventListener.allEvents.get(day).size()){
+            case(1):
+                Drawable count1 = getResources().getDrawable(R.drawable.count1);
+                caldroidFragment.setBackgroundDrawableForDate(count1, day);
+                break;
+            case(2):
+                Drawable count2 = getResources().getDrawable(R.drawable.count2);
+                caldroidFragment.setBackgroundDrawableForDate(count2, day);
+                break;
+            case(3):
+                Drawable count3 = getResources().getDrawable(R.drawable.count3);
+                caldroidFragment.setBackgroundDrawableForDate(count3, day);
+                break;
+            case(4):
+                Drawable count4 = getResources().getDrawable(R.drawable.count4);
+                caldroidFragment.setBackgroundDrawableForDate(count4, day);
+                break;
+            case(5):
+                Drawable count5 = getResources().getDrawable(R.drawable.count5);
+                caldroidFragment.setBackgroundDrawableForDate(count5, day);
+                break;
+            case(6):
+                Drawable count6 = getResources().getDrawable(R.drawable.count6);
+                caldroidFragment.setBackgroundDrawableForDate(count6, day);
+                break;
+            case(7):
+                Drawable count7 = getResources().getDrawable(R.drawable.count7);
+                caldroidFragment.setBackgroundDrawableForDate(count7, day);
+                break;
+            case(8):
+                Drawable count8 = getResources().getDrawable(R.drawable.count8);
+                caldroidFragment.setBackgroundDrawableForDate(count8, day);
+                break;
+            case(9):
+                Drawable count9 = getResources().getDrawable(R.drawable.count9);
+                caldroidFragment.setBackgroundDrawableForDate(count9, day);
+                break;
+            case(10):
+                Drawable count10 = getResources().getDrawable(R.drawable.count10);
+                caldroidFragment.setBackgroundDrawableForDate(count10, day);
+                break;
+
+        }
+        caldroidFragment.refreshView();
+    }
+
+    public void updateCalendar(){
+        for (Date daysWithEvents : AddEventListener.allEvents.keySet()){
+            setEventCount(daysWithEvents);
+        }
+    }
 }//MainActivity

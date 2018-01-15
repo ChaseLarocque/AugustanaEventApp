@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 import com.roomorama.caldroid.CaldroidListener;
@@ -45,6 +46,7 @@ public class CalendarButtonListener extends CaldroidListener {
 
     /*--Data--*/
     private final MainActivity mainActivity;
+    LinearLayout eventList;
 
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
@@ -66,15 +68,13 @@ public class CalendarButtonListener extends CaldroidListener {
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
             eventPopupDialog.show();
-            addTextViewForDetails(eventPopupDialog);
-            //Toast.makeText(mainActivity, "Location: " + eventDisplay + " " + "Event: " +
-            //                eventDisplay1 + " " + "Description: " + eventDisplay2,
-            //        Toast.LENGTH_SHORT).show();
+            addTextViewForDetails(eventPopupDialog, date);
+            Toast.makeText(mainActivity, "lol" + AddEventListener.allEvents,
+                    Toast.LENGTH_LONG).show();
         }//if
         else
             Toast.makeText(mainActivity, "No Events On This Day",
                     Toast.LENGTH_SHORT).show();
-            ;
     }//onSelectDate
 
     /**
@@ -106,35 +106,39 @@ public class CalendarButtonListener extends CaldroidListener {
      * @param eventPopup
      */
     public void closeWindowListener(final Dialog eventPopup){
+        final LinearLayout parentLayout = eventPopup.findViewById(R.id.parentLayout);
         Button closeWindow = eventPopup.findViewById(R.id.closeButton);
         closeWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                parentLayout.removeView(eventList);
                 eventPopup.dismiss();
             }
         });
     }//closeWindowListener
 
-    public void addTextViewForDetails(Dialog eventPopup){
-        ScrollView eventsInDay = new ScrollView(mainActivity);
-        eventsInDay = eventPopup.findViewById(R.id.allEvents);
-        LinearLayout eventList = new LinearLayout(mainActivity);
+    public void addTextViewForDetails(Dialog eventPopup, Date date){
+        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.allEvents);
+        eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        for (int x = 0; x < AddEventListener.events.size(); x++) {
+        for (int x = 0; x < AddEventListener.allEvents.get(date).size(); x++) {
             for(int y = 0; y < 3; y++ ) {
                 TextView textView = new TextView(mainActivity);
                 if (y == 0) {
-                    textView.setText("Event Title: " + AddEventListener.events.get(x).get(y));
+                    textView.setText("Event Title: "
+                            + AddEventListener.allEvents.get(date).get(x).get(y));
                     eventList.addView(textView);
                 }
                 else if (y == 1){
-                    textView.setText("Event Location: " + AddEventListener.events.get(x).get(y));
+                    textView.setText("Event Location: "
+                            + AddEventListener.allEvents.get(date).get(x).get(y));
                     eventList.addView(textView);
                 }
                 else{
-                    textView.setText("Event Description: " + AddEventListener.events.get(x).get(y));
+                   textView.setText("Event Description: "
+                           + AddEventListener.allEvents.get(date).get(x).get(y));
                     eventList.addView(textView);
                 }
             }

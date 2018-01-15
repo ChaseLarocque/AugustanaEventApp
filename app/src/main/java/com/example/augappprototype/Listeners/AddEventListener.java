@@ -58,7 +58,6 @@ public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
     public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
-    public static HashMap<Integer, ArrayList<String>> events = new HashMap<>();
 
     private int day;
     private int month;
@@ -246,8 +245,8 @@ public class AddEventListener implements View.OnClickListener {
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
                 saveEvent(new Date(year, month, day));
-                Toast.makeText(mainActivity, "Event Added!" + allEvents,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, "Event Added!",
+                        Toast.LENGTH_LONG).show();
                 addEvents.dismiss();
             }
         });
@@ -255,17 +254,19 @@ public class AddEventListener implements View.OnClickListener {
 
     public void saveEvent(Date eventDate) {
         ArrayList<String> eventDetails = new ArrayList();
+        HashMap<Integer, ArrayList<String>> events = new HashMap<>();
+
         eventDetails.add(0, eventTitle);
         eventDetails.add(1, eventLocation);
         eventDetails.add(2, eventDescription);
-        if (allEvents.containsKey(eventDate))//events in hash map
-            events.put(events.size(), eventDetails);
+        if (allEvents.containsKey(eventDate)) {//events in hash map
+            allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
+        }
         else {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
-            Toast.makeText(mainActivity, "FAIL",
-                    Toast.LENGTH_SHORT).show();
         }
+        mainActivity.setEventCount(eventDate);
     }
 
 
