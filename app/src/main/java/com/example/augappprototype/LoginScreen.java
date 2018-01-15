@@ -161,7 +161,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onActivityResult(int, int, Intent)
 
     public void addName(){
-        permissions.put("psczeng@gmail.com", "faculty");
+        permissions.put("shichun1@ualberta.ca", "faculty");
         permissions.put("vpreyes@ualberta.ca", "faculty");
         permissions.put("cwlarocq@ualberta.ca", "faculty");
         permissions.put("frithsmi@ualberta.ca", "faculty");
