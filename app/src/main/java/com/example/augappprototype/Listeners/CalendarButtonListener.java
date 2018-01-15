@@ -118,59 +118,64 @@ public class CalendarButtonListener extends CaldroidListener {
         });
     }//closeWindowListener
 
-    public void addButtonsForEvents(Dialog eventPopup, Date date) {
+    public void addButtonsForEvents(final Dialog eventPopup, final Date date) {
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.allEvents);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        for (int x = 0; x < AddEventListener.allEvents.get(date).size(); x++) {
+        for (int counter = 0; counter < AddEventListener.allEvents.get(date).size(); counter++) {
                 Button eachEvent = new Button(mainActivity);
-                eachEvent.setText(AddEventListener.allEvents.get(date).get(x).get(0));
+                eachEvent.setText(AddEventListener.allEvents.get(date).get(counter).get(0));
                 eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
                 eachEvent.setTextSize(20);
                 eachEvent.setLayoutParams(new LinearLayout
                         .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
+            final int finalCounter = counter;
+            eachEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        eventPopup.setContentView(R.layout.eventpopup_details);
+                        addTextViewForDetails(eventPopup, date, finalCounter);
+                    }
+                });
                 eventList.addView(eachEvent);
         }
         eventsInDay.addView(eventList);
     }
 
 
-    public void addTextViewForDetails(Dialog eventPopup, Date date){
+    public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        for (int x = 0; x < AddEventListener.allEvents.get(date).size(); x++) {
             for(int y = 0; y < 3; y++ ) {
                 TextView textView = new TextView(mainActivity);
                 if (y == 0) {
                     textView.setText("Event Title: "
-                            + AddEventListener.allEvents.get(date).get(x).get(y));
+                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
                 }
                 else if (y == 1){
                     textView.setText("Event Location: "
-                            + AddEventListener.allEvents.get(date).get(x).get(y));
+                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
                 }
                 else{
                    textView.setText("Event Description: "
-                           + AddEventListener.allEvents.get(date).get(x).get(y));
+                           + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
                 }
             }
-        }
         eventsInDay.addView(eventList);
     }
 
     public void dateForBanner(Dialog eventPopup, Date date){
         List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
                 "June", "July", "August", "September", "October", "November", "December");
-
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);
         dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
                 date.getDate() + ", " + (date.getYear() + 1900));
