@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:id="@+id/parentLayout">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:id="@+id/parentLayout">
 
-    <TextView
+        <TextView
         android:id="@+id/eventBanner"
         android:layout_width="fill_parent"
         android:layout_height="73dp"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.bskim.maxheightscrollview.widgets.MaxHeightScrollView
-        android:id="@+id/allEvents"
+        android:id="@+id/eventDetails"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         app:maxHeight="300dp">

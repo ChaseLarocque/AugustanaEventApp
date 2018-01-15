@@ -29,6 +29,8 @@ import java.util.Date;
  * submitEditEventDetails(final Dialog submitEvents)
  *      closes the event details popup when clicked
  */
+
+
 public class EditEventButtonListener implements View.OnClickListener {
     /*--Data--*/
     private final MainActivity mainActivity;
@@ -56,7 +58,7 @@ public class EditEventButtonListener implements View.OnClickListener {
             final Dialog editEventDialog = new Dialog(mainActivity);
             editEventDialog.setContentView(R.layout.edit_event);
             editEventDialog.show();
-            nextEventListener(editEventDialog);
+           // nextEventListener(editEventDialog);
         }//else
     }//onClick
 
@@ -66,23 +68,23 @@ public class EditEventButtonListener implements View.OnClickListener {
      * where the user can edit the event details
      * @param editEvents
      */
-    public void nextEventListener(final Dialog editEvents) {
-        ImageButton firstEvent = editEvents.findViewById(R.id.clickableEvent1);
-        ImageButton secondEvent = editEvents.findViewById(R.id.clickableEvent2);
-        firstEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEditEventDetails();
-            }
-        });
-        secondEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEditEventDetails();
-                editEvents.dismiss();
-            }
-        });
-    }//nextEventListener
+  //  public void nextEventListener(final Dialog editEvents) {
+        //ImageButton firstEvent = editEvents.findViewById(R.id.clickableEvent1);
+        //ImageButton secondEvent = editEvents.findViewById(R.id.clickableEvent2);
+        //firstEvent.setOnClickListener(new View.OnClickListener() {
+           // @Override
+            //public void onClick(View view) {
+             //   openEditEventDetails();
+          //  }
+        //});
+        //secondEvent.setOnClickListener(new View.OnClickListener() {
+          //  @Override
+          //  public void onClick(View view) {
+             //   openEditEventDetails();
+             //   editEvents.dismiss();
+            //}
+       // });
+   // }//nextEventListener
 
     /**
      * openEditEventDetails() --> void

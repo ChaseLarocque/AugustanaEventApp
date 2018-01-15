@@ -16,8 +16,10 @@ import com.example.augappprototype.R;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Pao on 1/7/2018.
@@ -67,8 +69,9 @@ public class CalendarButtonListener extends CaldroidListener {
         closeWindowListener(eventPopupDialog);
         Date converted = convertDate(date);
         if (dayEvents(converted) == true) {
+            dateForBanner(eventPopupDialog, date);
+            addButtonsForEvents(eventPopupDialog, date);
             eventPopupDialog.show();
-            addTextViewForDetails(eventPopupDialog, date);
             Toast.makeText(mainActivity, "lol" + AddEventListener.allEvents,
                     Toast.LENGTH_LONG).show();
         }//if
@@ -106,19 +109,37 @@ public class CalendarButtonListener extends CaldroidListener {
      * @param eventPopup
      */
     public void closeWindowListener(final Dialog eventPopup){
-        final LinearLayout parentLayout = eventPopup.findViewById(R.id.parentLayout);
         Button closeWindow = eventPopup.findViewById(R.id.closeButton);
         closeWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentLayout.removeView(eventList);
                 eventPopup.dismiss();
             }
         });
     }//closeWindowListener
 
-    public void addTextViewForDetails(Dialog eventPopup, Date date){
+    public void addButtonsForEvents(Dialog eventPopup, Date date) {
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.allEvents);
+        eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        for (int x = 0; x < AddEventListener.allEvents.get(date).size(); x++) {
+                Button eachEvent = new Button(mainActivity);
+                eachEvent.setText(AddEventListener.allEvents.get(date).get(x).get(0));
+                eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
+                eachEvent.setTextSize(20);
+                eachEvent.setLayoutParams(new LinearLayout
+                        .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+                eventList.addView(eachEvent);
+        }
+        eventsInDay.addView(eventList);
+    }
+
+
+    public void addTextViewForDetails(Dialog eventPopup, Date date){
+        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -144,5 +165,14 @@ public class CalendarButtonListener extends CaldroidListener {
             }
         }
         eventsInDay.addView(eventList);
+    }
+
+    public void dateForBanner(Dialog eventPopup, Date date){
+        List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
+                "June", "July", "August", "September", "October", "November", "December");
+
+        TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);
+        dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
+                date.getDate() + ", " + (date.getYear() + 1900));
     }
 }//CalendarButtonListener
