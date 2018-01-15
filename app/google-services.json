@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "861244740259",
+    "project_id": "augappprototype2"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861244740259:android:43aa3b2fd24a16fe",
+        "android_client_info": {
+          "package_name": "com.example.augappprototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "861244740259-f4efebt2pl7oth2btqamaq6h2gflpq76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.augappprototype",
+            "certificate_hash": "576d83eaf47a8ec42eb48db1ecf62c63cb796c09"
+          }
+        },
+        {
+          "client_id": "861244740259-7g3cu4q2omhkc7sbh90ubi1usdrj3q6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjuXTUn7E0r7npi3fUUjJ_w47k_QokEM4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
