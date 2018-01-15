@@ -73,6 +73,11 @@ public class AddEventListener implements View.OnClickListener {
     String eventTitle;
     String eventDescription;
     String eventLocation;
+    String athleticsCategory;
+    String performanceCategory;
+    String clubCategory;
+    String researchCategory;
+    String asaCategory;
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -259,6 +264,11 @@ public class AddEventListener implements View.OnClickListener {
         eventDetails.add(0, eventTitle);
         eventDetails.add(1, eventLocation);
         eventDetails.add(2, eventDescription);
+        eventDetails.add(3, athleticsCategory);
+        eventDetails.add(4, performanceCategory);
+        eventDetails.add(5, clubCategory);
+        eventDetails.add(6, researchCategory);
+        eventDetails.add(7, asaCategory);
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
         }
