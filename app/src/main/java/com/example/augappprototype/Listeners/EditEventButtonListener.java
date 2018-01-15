@@ -3,14 +3,19 @@ package com.example.augappprototype.Listeners;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Pao on 1/9/2018.
@@ -34,7 +39,9 @@ import java.util.Date;
 public class EditEventButtonListener implements View.OnClickListener {
     /*--Data--*/
     private final MainActivity mainActivity;
-    public static boolean showEditedEvent;
+    LinearLayout eventList;
+    List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
+            "June", "July", "August", "September", "October", "November", "December");
 
     /*--Constructor--*/
     public EditEventButtonListener(MainActivity mainActivity) {
@@ -51,15 +58,10 @@ public class EditEventButtonListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        if (GuestButtonListener.isGuest)//edit or add event button is not usable
-            Toast.makeText(mainActivity, "This button is not available on guest mode",
-                    Toast.LENGTH_SHORT).show();
-        else {
             final Dialog editEventDialog = new Dialog(mainActivity);
             editEventDialog.setContentView(R.layout.edit_event);
             editEventDialog.show();
-           // nextEventListener(editEventDialog);
-        }//else
+            nextEventListener(editEventDialog);
     }//onClick
 
     /**
@@ -68,57 +70,90 @@ public class EditEventButtonListener implements View.OnClickListener {
      * where the user can edit the event details
      * @param editEvents
      */
-  //  public void nextEventListener(final Dialog editEvents) {
-        //ImageButton firstEvent = editEvents.findViewById(R.id.clickableEvent1);
-        //ImageButton secondEvent = editEvents.findViewById(R.id.clickableEvent2);
-        //firstEvent.setOnClickListener(new View.OnClickListener() {
-           // @Override
-            //public void onClick(View view) {
-             //   openEditEventDetails();
-          //  }
-        //});
-        //secondEvent.setOnClickListener(new View.OnClickListener() {
-          //  @Override
-          //  public void onClick(View view) {
-             //   openEditEventDetails();
-             //   editEvents.dismiss();
-            //}
-       // });
-   // }//nextEventListener
+    public void nextEventListener(final Dialog editEvents) {
+        MaxHeightScrollView eventsInDay = editEvents.findViewById(R.id.allEvents);
+        eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        datesIntoButtons();
+        eventsInDay.addView(eventList);
+    }//nextEventListener
+
+    public void datesIntoButtons(){
+        for (final Date key : AddEventListener.allEvents.keySet()) {
+            Button eachEvent = new Button(mainActivity);
+            eachEvent.setText(monthNames.get(key.getMonth()) + " " +
+                    key.getDate() + ", " + (key.getYear() + 1900));
+            eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
+            eachEvent.setTextSize(20);
+            eachEvent.setLayoutParams(new LinearLayout
+                    .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            eachEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openEditEventDetails(key);
+                }
+            });
+            eventList.addView(eachEvent);
+        }
+    }
 
     /**
      * openEditEventDetails() --> void
      * Displays a popup of the event details and allows the user to edit the details that have
      * changed
      */
-    public void openEditEventDetails() {
+    public void openEditEventDetails(Date date) {
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
-        editDetailEventDialog.setContentView(R.layout.edit_event_options);
+        editDetailEventDialog.setContentView(R.layout.eventpopup);
+        MaxHeightScrollView eventsInDay = editDetailEventDialog.findViewById(R.id.allEvents);
         editDetailEventDialog.show();
-        submitEditEventDetails(editDetailEventDialog);
+        eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        TextView eventBanner = editDetailEventDialog.findViewById(R.id.eventBanner);
+        eventBanner.setText(monthNames.get(date.getMonth()) + " " +
+                date.getDate() + ", " + (date.getYear() + 1900));
+        eventsIntoButtons(date);
+        eventsInDay.addView(eventList);
     }//openEditEventDetails
+
+    public void eventsIntoButtons(final Date date){
+        for (final int key : AddEventListener.allEvents.get(date).keySet()) {
+            Button eachEvent = new Button(mainActivity);
+            eachEvent.setText(AddEventListener.allEvents.get(date).get(key).get(0));
+            eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
+            eachEvent.setTextSize(20);
+            eachEvent.setLayoutParams(new LinearLayout
+                    .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            eachEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    submitEditEventDetails(date, key);
+
+                }
+            });
+            eventList.addView(eachEvent);
+        }
+    }
 
     /**
      * submitEditEventDetails(Dialog) --> void
      * Closes the popup for event details which submits the edit
-     * @param submitEvents
      */
-    public void submitEditEventDetails(final Dialog submitEvents) {
-        Button closeEditEvent = submitEvents.findViewById(R.id.submitEvent);
-        closeEditEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitEvents.dismiss();
-                showEditedEvent = true;//shows choir event on student mode
-            }
-        });
+    public void submitEditEventDetails(Date date, int eventID) {
+        Dialog editEventDetails = new Dialog(mainActivity);
+        editEventDetails.setContentView(R.layout.edit_event_options);
+        EditText title = editEventDetails.findViewById(R.id.eventTitle);
+        EditText location = editEventDetails.findViewById(R.id.eventLocation);
+        EditText description = editEventDetails.findViewById(R.id.eventDescription);
+        title.setText(AddEventListener.allEvents.get(date).get(eventID).get(0));
+        location.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
+        description.setText(AddEventListener.allEvents.get(date).get(eventID).get(2));
+        editEventDetails.show();
     }//submitEditEventDetails
 }//EditEventButtonListener
-
-
-/*
-    public void getLocation(){
-        TextView location = mainActivity.findViewById(R.id.getLocation);
-        // location.setText(AddEventListener.eventDetails.get(0));
-    }
-    */

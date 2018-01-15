@@ -138,6 +138,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             updateUI(true);
         } else {
             updateUI(false);
+            Toast.makeText(this, "lol" + result.getStatus(),
+                    Toast.LENGTH_LONG).show();
         } // else
     } // handleSignInResult(GoogleSignInResult)
 

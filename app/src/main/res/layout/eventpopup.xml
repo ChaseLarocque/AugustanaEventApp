@@ -16,7 +16,6 @@
         android:background="@drawable/greentaskbar"
         android:gravity="left|center"
         android:scaleType="centerCrop"
-        android:text="  On This Day"
         android:textColor="@color/uofaGold"
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"

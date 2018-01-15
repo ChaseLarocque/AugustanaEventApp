@@ -49,6 +49,8 @@ public class CalendarButtonListener extends CaldroidListener {
     /*--Data--*/
     private final MainActivity mainActivity;
     LinearLayout eventList;
+    List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
+            "June", "July", "August", "September", "October", "November", "December");
 
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
@@ -174,8 +176,6 @@ public class CalendarButtonListener extends CaldroidListener {
     }
 
     public void dateForBanner(Dialog eventPopup, Date date){
-        List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
-                "June", "July", "August", "September", "October", "November", "December");
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);
         dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
                 date.getDate() + ", " + (date.getYear() + 1900));
