@@ -155,4 +155,15 @@
         android:layout_marginRight="50dp"
         android:layout_marginLeft="50dp"
         android:id="@+id/login_button"></com.google.android.gms.common.SignInButton>
+
+    <TextView
+        android:id="@+id/testText2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="188dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="36dp" />
 </android.support.constraint.ConstraintLayout>
