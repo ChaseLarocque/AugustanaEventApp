@@ -38,7 +38,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -51,7 +50,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
-    ArrayList<String> permissions = new ArrayList<String>();
+    ArrayList<String> whiteList = new ArrayList<String>();
 
     /*--Methods--*/
 
@@ -81,6 +80,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+//        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+  //              .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
+    //            .requestEmail()
+      //          .build();
 
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
                 this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
@@ -162,21 +166,20 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onActivityResult(int, int, Intent)
 
     public void addName(){
-        permissions.add("shichun1@ualberta.ca");
-        permissions.add("vpreyes@ualberta.ca");
-        permissions.add("cwlarocq@ualberta.ca");
-        permissions.add("frithsmi@ualberta.ca");
-    }//addName
+        whiteList.add("shichun1@ualberta.ca");
+        whiteList.add("vpreyes@ualberta.ca");
+        whiteList.add("cwlarocq@ualberta.ca");
+        whiteList.add("frithsmi@ualberta.ca");
+    } // addName()
 
     public void checkPermissions(String email){
-        if (permissions.contains(email)) {
+        if (whiteList.contains(email)) {
                 Toast.makeText(this, "faculty",
                         Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(this, "student",
                     Toast.LENGTH_LONG).show();
-        }
+        } // else
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
     } // checkPermissions(String)
