@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 
+
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
@@ -34,6 +35,22 @@ import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.ExponentialBackOff;
+
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.client.util.DateTime;
+
 
 public class MainActivity extends AppCompatActivity {
     boolean isGuest = GuestButtonListener.isGuest;
@@ -54,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         convertCalendar();
         registerListenersForCalendarUIButtons();
         goToMainMenu();
+
     }//onCreate
 
     /**
@@ -101,4 +119,17 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
+
+//***********************
+
+
+
+
+
+
+
+
+
+
+
 }//MainActivity
