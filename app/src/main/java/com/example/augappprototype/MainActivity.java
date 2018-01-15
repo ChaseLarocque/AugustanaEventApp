@@ -25,6 +25,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    TextView mOutputText = findViewById(R.id.testText);
 
 
     /*--Methods--*/
@@ -203,11 +205,10 @@ public class MainActivity extends AppCompatActivity {
         //(which would end up being eventStrings.
         protected void onPostExecute(List<String> output) {
             if (output == null || output.size() == 0) {
-
             } else {
-                //
-                //output.add(0, "Data retrieved using the Google Calendar API:");
-                //mOutputText.setText(TextUtils.join("\n", output));
+                mOutputText.setText("No results returned.");
+                output.add(0, "Data retrieved using the Google Calendar API:");
+                mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    
+
                 }
             } else {
 
