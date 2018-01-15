@@ -85,6 +85,7 @@ public class AddEventListener implements View.OnClickListener {
         step = "date";
         closeWindowListener(addEventDialog);
         continueButtonListener(addEventDialog);
+
     }//selectDate
 
     /**
@@ -188,6 +189,7 @@ public class AddEventListener implements View.OnClickListener {
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventdetails);
         addEventDialog.show();
+        selectCategoryListener(addEventDialog);
         addEventButtonListener(addEventDialog);
         closeWindowListener(addEventDialog);
         locationBox = addEventDialog.findViewById(R.id.eventLocation);
@@ -211,7 +213,7 @@ public class AddEventListener implements View.OnClickListener {
                 eventDetails.add(1, eventTitle);
                 eventDetails.add(2, eventDescription);
                 events.put(new Date(year, month, day), eventDetails);
-                Toast.makeText(mainActivity, "lol" + events,
+                Toast.makeText(mainActivity, "Event Added!",
                         Toast.LENGTH_SHORT).show();
                 addEvents.dismiss();
             }
@@ -230,4 +232,17 @@ public class AddEventListener implements View.OnClickListener {
         else
             return "PM";
     }//checkAmOrPm
+
+    public void selectCategoryListener(Dialog eventDetails){
+        Button category = eventDetails.findViewById(R.id.categoryButton);
+        category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog categoryDialog = new Dialog(mainActivity);
+                categoryDialog.setContentView(R.layout.addeventcategory);
+                closeWindowListener(categoryDialog);
+                categoryDialog.show();
+            }
+        });
+    }
 }//AddEventListener
