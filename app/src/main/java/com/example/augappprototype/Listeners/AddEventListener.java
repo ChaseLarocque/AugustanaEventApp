@@ -73,6 +73,7 @@ public class AddEventListener implements View.OnClickListener {
     String eventTitle;
     String eventDescription;
     String eventLocation;
+    String eventTime;
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -158,6 +159,8 @@ public class AddEventListener implements View.OnClickListener {
                 else if (step == "time"){
                     saveEventTime(eventTime);
                     addEvents.dismiss();
+                    Toast.makeText(mainActivity, "lol" + minute,
+                            Toast.LENGTH_SHORT).show();
                     openEventDetails();
                     step = "details";
                 }//else
@@ -187,6 +190,11 @@ public class AddEventListener implements View.OnClickListener {
         minute = timePicker.getCurrentMinute();
         hour = timePicker.getCurrentHour();
         amOrPm = checkAmOrPm(hour);
+        if (hour > 12) {
+            hour = (timePicker.getCurrentHour() - 12);
+            amOrPm = checkAmOrPm(hour + 12);
+        }
+        eventTime = hour + ":" + minute + " " + amOrPm;
     }//saveEventTime
 
     /**
@@ -257,8 +265,10 @@ public class AddEventListener implements View.OnClickListener {
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
 
         eventDetails.add(0, eventTitle);
-        eventDetails.add(1, eventLocation);
-        eventDetails.add(2, eventDescription);
+        eventDetails.add(1, eventTime);
+        eventDetails.add(2, eventLocation);
+        eventDetails.add(3, eventDescription);
+
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
         }
