@@ -59,8 +59,6 @@ public class CalendarButtonListener extends CaldroidListener {
     boolean asaCategory = false;
     int numEvents;
 
-
-
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
         this.mainActivity = mainActivity;
@@ -199,39 +197,52 @@ public class CalendarButtonListener extends CaldroidListener {
                 date.getDate() + ", " + (date.getYear() + 1900));
     }
 
+    /**
+     * checkCategoryPicked(Date, int) --> void
+     * Checks the category the user selected and then sets that category to true or false
+     * @param date
+     * @param counter
+     */
     public void checkCategoryUserPicked (Date date, int counter) {
         if (AddEventListener.allEvents.get(date).get(counter).get(4) == "yes") {
             athleticsCategory = true;
-        }
+        }//if
         else {
             athleticsCategory = false;
-        }
+        }//else
         if (AddEventListener.allEvents.get(date).get(counter).get(5) == "yes"){
             performanceCategory = true;
-        }
+        }//if
         else {
             performanceCategory = false;
-        }
+        }//else
         if (AddEventListener.allEvents.get(date).get(counter).get(6) == "yes") {
             clubCategory = true;
-        }
+        }//if
         else {
             clubCategory = false;
-        }
+        }//else
         if (AddEventListener.allEvents.get(date).get(counter).get(7) == "yes") {
             researchCategory = true;
-        }
+        }//if
         else {
             researchCategory = false;
-        }
+        }//else
         if (AddEventListener.allEvents.get(date).get(counter).get(8) == "yes") {
             asaCategory = true;
-        }
+        }//if
         else {
             asaCategory = false;
-        }
-    }
+        }//else
+    }//checkCategoryUserPicked
 
+    /**
+     * filterCategory(Button) --> void
+     * Hides the event if the user has that category unchecked and the event is that category that
+     * they have unchecked. Also decreases the number of events shown on that day by decreasing
+     * the drawable that displays on the calendar
+     * @param eachEvent
+     */
     public void filterCategory(Button eachEvent) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
         if (athleticsCategory == true && sharedPreferences.getBoolean("athleticsKey", true))
@@ -247,6 +258,6 @@ public class CalendarButtonListener extends CaldroidListener {
         else {
             eachEvent.setVisibility(View.GONE);
             numEvents--;
-        }
-    }
+        }//else
+    }//filterCategory
 }//CalendarButtonListener

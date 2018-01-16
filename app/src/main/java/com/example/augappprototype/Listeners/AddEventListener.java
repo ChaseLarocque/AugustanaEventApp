@@ -313,57 +313,97 @@ public class AddEventListener implements View.OnClickListener {
         });
     }//selectCategoryListener
 
+    /**
+     * checkedCategoryAthletics(Dialog) --> void
+     * Checks if the athletics category was checked by the user and then stores a string yes or no
+     * into an array list
+     * @param eventDetailsDialog
+     */
     public void checkedCategoryAthletics(Dialog eventDetailsDialog) {
         final CheckBox athletics = (CheckBox) eventDetailsDialog.findViewById(R.id.athleticsCategory);
         if (athletics.isChecked() == true) {
             checked = "yes";
-        } else {
+        }//if
+        else {
             checked = "no";
-        }
+        }//else
         categorySelected.add(0, checked);
-    }
+    }//checkedCategoryAthletics
 
+    /**
+     * checkedCategoryPerformance(Dialog) --> void
+     * Checks if the performance category was checked by the user and then stores a string yes or no
+     * in an array list
+     * @param eventDetailsDialog
+     */
     public void checkedCategoryPerformance(Dialog eventDetailsDialog) {
         final CheckBox performance = (CheckBox) eventDetailsDialog.findViewById(R.id.performanceCategory);
         if (performance.isChecked() == true) {
             checked = "yes";
-        } else {
+        } //if
+        else {
             checked = "no";
-        }
+        }//else
         categorySelected.add(1, checked);
-    }
+    }//checkedCategoryPerformance
 
+    /**
+     * checkedCategoryClub(Dialog) --> void
+     * Checks if the club category was checked by the user and then stores a string yes or no
+     * in an array list
+     * @param eventDetailsDialog
+     */
     public void checkedCategoryClub(Dialog eventDetailsDialog) {
         final CheckBox club = (CheckBox) eventDetailsDialog.findViewById(R.id.clubCategory);
         if (club.isChecked() == true) {
             checked = "yes";
-        } else {
+        } //if
+        else {
             checked = "no";
-        }
+        }//else
         categorySelected.add(2, checked);
-    }
+    }//checkedCategoryClub
 
+    /**
+     * checkedCategoryResearch(Dialog) --> void
+     * Checks if the research category was checked by the user and then stores a string yes or no
+     * in an array list
+     * @param eventDetailsDialog
+     */
     public void checkedCategoryResearch(Dialog eventDetailsDialog) {
         final CheckBox research = (CheckBox) eventDetailsDialog.findViewById(R.id.researchCategory);
         if (research.isChecked() == true) {
             checked = "yes";
-        } else {
+        }//if
+        else {
             checked = "no";
-        }
+        }//else
         categorySelected.add(3, checked);
-    }
+    }//checkedCategoryResearch
 
+    /**
+     * checkedCategoryAsa(Dialog) --> void
+     * Checks if the asa category was checked by the user and then stores a string yes or no
+     * in an array list
+     * @param eventDetailsDialog
+     */
     public void checkedCategoryAsa(Dialog eventDetailsDialog) {
         final CheckBox asa = (CheckBox) eventDetailsDialog.findViewById(R.id.asaCategory);
 
         if (asa.isChecked() == true) {
             checked = "yes";
-        } else {
+        }//if
+        else {
             checked = "no";
-        }
+        }//else
         categorySelected.add(4, checked);
-    }
+    }//checkedCategoryAsa
 
+    /**
+     * confirmCategoryListener(Dialog) --> void
+     * Stores the category or categories the user has selected when they click confirm category
+     * @param categoryDialog
+     */
     public void confirmCategoryListener(final Dialog categoryDialog) {
         Button confirmCategory = (Button)categoryDialog.findViewById(R.id.closeWindow);
         confirmCategory.setOnClickListener(new View.OnClickListener() {
@@ -375,8 +415,7 @@ public class AddEventListener implements View.OnClickListener {
                 checkedCategoryResearch(categoryDialog);
                 checkedCategoryAsa(categoryDialog);
                 categoryDialog.dismiss();
-            }
+            }//onClick
         });
-    }
-
+    }//confirmCategoryListener
 }//AddEventListener

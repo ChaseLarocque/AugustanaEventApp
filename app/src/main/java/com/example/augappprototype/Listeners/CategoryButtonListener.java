@@ -79,7 +79,13 @@ public class CategoryButtonListener implements View.OnClickListener {
         });
     }//closeButtonListener
 
-
+    /**
+     * saveCheckBox(Dialog) --> void
+     * Stores all the different category checkbox's into a hash map with a string as the key
+     * and the checkbox as a value. It then saves the state of the checkbox with shared
+     * preferences.
+     * @param categoryDialog
+     */
     public void saveCheckBox(final Dialog categoryDialog) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
         final CheckBox athletics = (CheckBox)categoryDialog.findViewById(R.id.athleticsCategory);
@@ -107,7 +113,6 @@ public class CategoryButtonListener implements View.OnClickListener {
                 }//onCheckedChange
             });
         }//for
-
     }//saveCheckBox
 }//CategoryButtonListener
 

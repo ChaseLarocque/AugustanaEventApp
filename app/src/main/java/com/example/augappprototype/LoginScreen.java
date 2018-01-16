@@ -13,7 +13,9 @@ package com.example.augappprototype;
  * Sets on click listeners for every button on the login screen
  */
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -136,6 +138,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             checkPermissions(userEmail);
             Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
             updateUI(true);
+
         } else {
             updateUI(false);
         } // else
@@ -178,5 +181,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         }
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
+        SharedPreferences sharedPreferences = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("activity_executed", true);
+        editor.commit();
     } // checkPermissions(String)
 }//LoginScreen
