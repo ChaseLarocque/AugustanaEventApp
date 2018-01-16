@@ -1,10 +1,13 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -49,6 +52,14 @@ public class CalendarButtonListener extends CaldroidListener {
     /*--Data--*/
     private final MainActivity mainActivity;
     LinearLayout eventList;
+    boolean athleticsCategory = false;
+    boolean performanceCategory = false;
+    boolean clubCategory = false;
+    boolean researchCategory = false;
+    boolean asaCategory = false;
+    int numEvents;
+
+
 
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
@@ -72,7 +83,7 @@ public class CalendarButtonListener extends CaldroidListener {
             dateForBanner(eventPopupDialog, date);
             addButtonsForEvents(eventPopupDialog, date);
             eventPopupDialog.show();
-            Toast.makeText(mainActivity, "lol" + AddEventListener.allEvents,
+            Toast.makeText(mainActivity, "lol" + numEvents,
                     Toast.LENGTH_LONG).show();
         }//if
         else
@@ -119,6 +130,7 @@ public class CalendarButtonListener extends CaldroidListener {
     }//closeWindowListener
 
     public void addButtonsForEvents(final Dialog eventPopup, final Date date) {
+        numEvents = AddEventListener.allEvents.get(date).size();
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.allEvents);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
@@ -126,12 +138,14 @@ public class CalendarButtonListener extends CaldroidListener {
         eventList.setOrientation(LinearLayout.VERTICAL);
         for (int counter = 0; counter < AddEventListener.allEvents.get(date).size(); counter++) {
                 Button eachEvent = new Button(mainActivity);
+                eachEvent.setId(counter);
                 eachEvent.setText(AddEventListener.allEvents.get(date).get(counter).get(0));
                 eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
                 eachEvent.setTextSize(20);
                 eachEvent.setLayoutParams(new LinearLayout
                         .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
+                checkCategoryUserPicked(date, counter);
             final int finalCounter = counter;
             eachEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -140,9 +154,13 @@ public class CalendarButtonListener extends CaldroidListener {
                         addTextViewForDetails(eventPopup, date, finalCounter);
                     }
                 });
+
                 eventList.addView(eachEvent);
+                filterCategory(eachEvent);
         }
+
         eventsInDay.addView(eventList);
+        mainActivity.setEventCount(date, numEvents);
     }
 
 
@@ -179,5 +197,56 @@ public class CalendarButtonListener extends CaldroidListener {
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);
         dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
                 date.getDate() + ", " + (date.getYear() + 1900));
+    }
+
+    public void checkCategoryUserPicked (Date date, int counter) {
+        if (AddEventListener.allEvents.get(date).get(counter).get(4) == "yes") {
+            athleticsCategory = true;
+        }
+        else {
+            athleticsCategory = false;
+        }
+        if (AddEventListener.allEvents.get(date).get(counter).get(5) == "yes"){
+            performanceCategory = true;
+        }
+        else {
+            performanceCategory = false;
+        }
+        if (AddEventListener.allEvents.get(date).get(counter).get(6) == "yes") {
+            clubCategory = true;
+        }
+        else {
+            clubCategory = false;
+        }
+        if (AddEventListener.allEvents.get(date).get(counter).get(7) == "yes") {
+            researchCategory = true;
+        }
+        else {
+            researchCategory = false;
+        }
+        if (AddEventListener.allEvents.get(date).get(counter).get(8) == "yes") {
+            asaCategory = true;
+        }
+        else {
+            asaCategory = false;
+        }
+    }
+
+    public void filterCategory(Button eachEvent) {
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
+        if (athleticsCategory == true && sharedPreferences.getBoolean("athleticsKey", true))
+            eachEvent.setVisibility(View.VISIBLE);
+        else if (performanceCategory == true && sharedPreferences.getBoolean("performanceKey", true))
+            eachEvent.setVisibility(View.VISIBLE);
+        else if (clubCategory == true && sharedPreferences.getBoolean("clubKey", true))
+            eachEvent.setVisibility(View.VISIBLE);
+        else if (researchCategory == true && sharedPreferences.getBoolean("researchKey", true))
+            eachEvent.setVisibility(View.VISIBLE);
+        else if (asaCategory == true && sharedPreferences.getBoolean("asaKey", true))
+            eachEvent.setVisibility(View.VISIBLE);
+        else {
+            eachEvent.setVisibility(View.GONE);
+            numEvents--;
+        }
     }
 }//CalendarButtonListener

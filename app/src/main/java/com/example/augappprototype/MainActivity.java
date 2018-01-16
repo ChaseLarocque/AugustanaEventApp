@@ -16,6 +16,7 @@ package com.example.augappprototype;
  */
 
 
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -87,8 +88,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.backbutton).setOnClickListener((new BackButtonListener(this)));
     }//registerListenersForButtons
 
-    public void setEventCount(Date day){
-        switch (AddEventListener.allEvents.get(day).size()){
+    public void setEventCount(Date day, int filter){
+        switch (filter){
+            case(0):
+                ColorDrawable transparent = new ColorDrawable(getResources()
+                        .getColor(R.color.caldroid_transparent));
+                caldroidFragment.setBackgroundDrawableForDate(transparent, day);
+                break;
             case(1):
                 Drawable count1 = getResources().getDrawable(R.drawable.count1);
                 caldroidFragment.setBackgroundDrawableForDate(count1, day);
@@ -136,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateCalendar(){
         for (Date daysWithEvents : AddEventListener.allEvents.keySet()){
-            setEventCount(daysWithEvents);
+            setEventCount(daysWithEvents, 0);
         }
     }
 }//MainActivity

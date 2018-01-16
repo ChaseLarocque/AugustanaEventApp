@@ -44,6 +44,7 @@ public class CategoryButtonListener implements View.OnClickListener {
     /*--Constructor--*/
     public CategoryButtonListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+
     }//CategoryButtonListener
 
     /*--Methods--*/
@@ -69,7 +70,7 @@ public class CategoryButtonListener implements View.OnClickListener {
      * @param categoryDialog
      */
     public void closeButtonListener(final Dialog categoryDialog) {
-        Button closeButton = (Button) categoryDialog.findViewById(R.id.closeButton);
+        final Button closeButton = (Button) categoryDialog.findViewById(R.id.closeButton);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +87,6 @@ public class CategoryButtonListener implements View.OnClickListener {
         final CheckBox club = (CheckBox)categoryDialog.findViewById(R.id.clubCategory);
         final CheckBox research = (CheckBox)categoryDialog.findViewById(R.id.researchCategory);
         final CheckBox asa = (CheckBox)categoryDialog.findViewById(R.id.asaCategory);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
         Map<String, CheckBox> checkBoxMap = new HashMap();
         checkBoxMap.put(athleticsKey, athletics);
         checkBoxMap.put(performanceKey, performance);

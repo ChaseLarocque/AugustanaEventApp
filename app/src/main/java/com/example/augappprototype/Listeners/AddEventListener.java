@@ -1,10 +1,13 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -58,7 +61,6 @@ public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
     public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
-
     private int day;
     private int month;
     private int year;
@@ -73,11 +75,8 @@ public class AddEventListener implements View.OnClickListener {
     String eventTitle;
     String eventDescription;
     String eventLocation;
-    String athleticsCategory;
-    String performanceCategory;
-    String clubCategory;
-    String researchCategory;
-    String asaCategory;
+    ArrayList<String> categorySelected = new ArrayList<>();
+    String checked;
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -137,6 +136,8 @@ public class AddEventListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 addEvents.dismiss();
+                Toast.makeText(mainActivity, " " + categorySelected,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }//closeWindowListener
@@ -260,15 +261,15 @@ public class AddEventListener implements View.OnClickListener {
     public void saveEvent(Date eventDate) {
         ArrayList<String> eventDetails = new ArrayList();
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
-
         eventDetails.add(0, eventTitle);
         eventDetails.add(1, eventLocation);
         eventDetails.add(2, eventDescription);
-        eventDetails.add(3, athleticsCategory);
-        eventDetails.add(4, performanceCategory);
-        eventDetails.add(5, clubCategory);
-        eventDetails.add(6, researchCategory);
-        eventDetails.add(7, asaCategory);
+        eventDetails.add(3, "Time");
+        eventDetails.add(4, categorySelected.get(0));
+        eventDetails.add(5, categorySelected.get(1));
+        eventDetails.add(6, categorySelected.get(2));
+        eventDetails.add(7, categorySelected.get(3));
+        eventDetails.add(8, categorySelected.get(4));
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
         }
@@ -276,9 +277,8 @@ public class AddEventListener implements View.OnClickListener {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
         }
-        mainActivity.setEventCount(eventDate);
+        mainActivity.setEventCount(eventDate, allEvents.get(eventDate).size());
     }
-
 
     /**
      * checkAmOrPm(int) --> String
@@ -306,9 +306,77 @@ public class AddEventListener implements View.OnClickListener {
             public void onClick(View view) {
                 final Dialog categoryDialog = new Dialog(mainActivity);
                 categoryDialog.setContentView(R.layout.addeventcategory);
-                closeWindowListener(categoryDialog);
+                categorySelected = new ArrayList<>();
+                confirmCategoryListener(categoryDialog);
                 categoryDialog.show();
             }
         });
     }//selectCategoryListener
+
+    public void checkedCategoryAthletics(Dialog eventDetailsDialog) {
+        final CheckBox athletics = (CheckBox) eventDetailsDialog.findViewById(R.id.athleticsCategory);
+        if (athletics.isChecked() == true) {
+            checked = "yes";
+        } else {
+            checked = "no";
+        }
+        categorySelected.add(0, checked);
+    }
+
+    public void checkedCategoryPerformance(Dialog eventDetailsDialog) {
+        final CheckBox performance = (CheckBox) eventDetailsDialog.findViewById(R.id.performanceCategory);
+        if (performance.isChecked() == true) {
+            checked = "yes";
+        } else {
+            checked = "no";
+        }
+        categorySelected.add(1, checked);
+    }
+
+    public void checkedCategoryClub(Dialog eventDetailsDialog) {
+        final CheckBox club = (CheckBox) eventDetailsDialog.findViewById(R.id.clubCategory);
+        if (club.isChecked() == true) {
+            checked = "yes";
+        } else {
+            checked = "no";
+        }
+        categorySelected.add(2, checked);
+    }
+
+    public void checkedCategoryResearch(Dialog eventDetailsDialog) {
+        final CheckBox research = (CheckBox) eventDetailsDialog.findViewById(R.id.researchCategory);
+        if (research.isChecked() == true) {
+            checked = "yes";
+        } else {
+            checked = "no";
+        }
+        categorySelected.add(3, checked);
+    }
+
+    public void checkedCategoryAsa(Dialog eventDetailsDialog) {
+        final CheckBox asa = (CheckBox) eventDetailsDialog.findViewById(R.id.asaCategory);
+
+        if (asa.isChecked() == true) {
+            checked = "yes";
+        } else {
+            checked = "no";
+        }
+        categorySelected.add(4, checked);
+    }
+
+    public void confirmCategoryListener(final Dialog categoryDialog) {
+        Button confirmCategory = (Button)categoryDialog.findViewById(R.id.closeWindow);
+        confirmCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkedCategoryAthletics(categoryDialog);
+                checkedCategoryPerformance(categoryDialog);
+                checkedCategoryClub(categoryDialog);
+                checkedCategoryResearch(categoryDialog);
+                checkedCategoryAsa(categoryDialog);
+                categoryDialog.dismiss();
+            }
+        });
+    }
+
 }//AddEventListener
