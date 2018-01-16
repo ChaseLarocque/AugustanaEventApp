@@ -3,6 +3,7 @@ package com.example.augappprototype.Listeners;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -174,16 +175,16 @@ public class EditEventButtonListener implements View.OnClickListener {
     }
     public void openEditEventTimeDialog (final Dialog eventDetails, final Date date, final int eventID){
         final Button editTimeButton = eventDetails.findViewById(R.id.timechange);
+        editTimeButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
         editTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editEventTime(date, eventID);
+                editEventTime(eventDetails, date, eventID);
             }
         });
-
     }
 
-    public void editEventTime(final Date date, final int eventID) {
+    public void editEventTime(final Dialog editEventDetails, final Date date, final int eventID) {
         final Dialog editTimeDialog = new Dialog(mainActivity);
         editTimeDialog.setContentView(R.layout.addeventtime);
         editTimeDialog.show();
@@ -195,6 +196,8 @@ public class EditEventButtonListener implements View.OnClickListener {
                 AddEventListener.allEvents.get(date).get(eventID)
                         .set(1, convertTimeToString(eventTime));
                 editTimeDialog.dismiss();
+                Button timeChange = editEventDetails.findViewById(R.id.timechange);
+                timeChange.setText(convertTimeToString(eventTime));
             }
         });
     }
@@ -205,8 +208,35 @@ public class EditEventButtonListener implements View.OnClickListener {
             return ((timePicker.getCurrentHour() - 12) + ":" + doubleDigitMinute + "pm");
         else if (timePicker.getCurrentHour() == 0)
             return ((timePicker.getCurrentHour() + 12) + ":" + doubleDigitMinute + "am");
+        else if (timePicker.getCurrentHour() == 12)
+            return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "pm");
         else
             return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "am");
+    }
+
+    public void openEditEventDateDialog (final Dialog eventDetails, final Date date, final int eventID){
+        final Button editDateButton = eventDetails.findViewById(R.id.dateOfTheEvent);
+        editDateButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
+        editDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editEventDate(eventDetails, date, eventID);
+            }
+        });
+    }
+
+    public void editEventDate(final Dialog editEventDetails, final Date date, final int eventID) {
+        final Dialog editDateDialog = new Dialog(mainActivity);
+        editDateDialog.setContentView(R.layout.addeventpopup);
+        editDateDialog.show();
+        final DatePicker eventDate = editDateDialog.findViewById(R.id.datePicker);
+        Button continueButton = editDateDialog.findViewById(R.id.continueButton);
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
