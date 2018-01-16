@@ -16,8 +16,10 @@ package com.example.augappprototype;
  */
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,9 +92,10 @@ public class MainActivity extends AppCompatActivity {
         registerListenersForCalendarUIButtons();
         goToMainMenu();
         gsia = new GoogleSignInAPI();
+        mOutputText = findViewById(R.id.testText);
         new MakeRequestTask(gsia.mCredential).execute();
 
-        Toast.makeText(this, gsia.mCredential.getSelectedAccountName() + " yay", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, gsia.mCredential.getSelectedAccountName() + " yay", Toast.LENGTH_LONG).show();
         //mOutputText = findViewById(R.id.testText);
         //mOutputText.setText(loginScreen.mCredential.getSelectedAccountName());
 
@@ -150,15 +153,18 @@ public class MainActivity extends AppCompatActivity {
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
+
         MakeRequestTask(GoogleAccountCredential credential) {
+
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Augustana Events App")
+                    .setApplicationName("AugAppPrototype2")
                     .build();
         }
 
@@ -170,12 +176,13 @@ public class MainActivity extends AppCompatActivity {
         protected List<String> doInBackground(Void... params) {
             try {
                 return getDataFromApi();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 mLastError = e;
                 cancel(true);
                 return null;
             }
         }
+
 
         /**
          * Fetch a list of the next 10 events from the primary calendar.
@@ -194,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     .execute();
             List<Event> items = events.getItems();
 
+
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null) {
@@ -203,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), start));
+
             }
             return eventStrings;
         }
@@ -215,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<String> output) {
-
+            Toast.makeText(MainActivity.this, output.get(0), Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -231,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    //                   mOutputText.setText("The following error occurred:\n"
-                    //                           + mLastError.getMessage());
+                                       Toast.makeText(MainActivity.this, "The following error occurred:\n"
+                                               + mLastError.getMessage(),Toast.LENGTH_LONG).show();
                 }
             } else {
                 //               mOutputText.setText("Request cancelled.");
