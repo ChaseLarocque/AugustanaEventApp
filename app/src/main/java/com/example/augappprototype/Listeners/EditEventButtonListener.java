@@ -44,6 +44,7 @@ public class EditEventButtonListener implements View.OnClickListener {
     LinearLayout eventList;
     List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
             "June", "July", "August", "September", "October", "November", "December");
+    Date eventDate;
 
     /*--Constructor--*/
     public EditEventButtonListener(MainActivity mainActivity) {
@@ -148,11 +149,13 @@ public class EditEventButtonListener implements View.OnClickListener {
      * Closes the popup for event details which submits the edit
      */
     public void openEditEventDetails(Date date, int eventID) {
+        eventDate = date;
         Dialog editEventDetails = new Dialog(mainActivity);
         editEventDetails.setContentView(R.layout.edit_event_options);
         editEventDetails.show();
         submitEditEventDetails(editEventDetails, date, eventID);
         openEditEventTimeDialog(editEventDetails, date, eventID);
+        openEditEventDateDialog(editEventDetails, date);
     }//submitEditEventDetails
 
     public void submitEditEventDetails(final Dialog eventDetails, final Date date, final int eventID){
@@ -166,9 +169,12 @@ public class EditEventButtonListener implements View.OnClickListener {
         submitNewDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEventListener.allEvents.get(date).get(eventID).set(0, title.getText().toString());
-                AddEventListener.allEvents.get(date).get(eventID).set(2, location.getText().toString());
-                AddEventListener.allEvents.get(date).get(eventID).set(3, description.getText().toString());
+                AddEventListener.allEvents.get(eventDate).get(eventID)
+                        .set(0, title.getText().toString());
+                AddEventListener.allEvents.get(eventDate).get(eventID)
+                        .set(2, location.getText().toString());
+                AddEventListener.allEvents.get(eventDate).get(eventID)
+                        .set(3, description.getText().toString());
                 eventDetails.dismiss();
             }
         });
@@ -193,7 +199,7 @@ public class EditEventButtonListener implements View.OnClickListener {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEventListener.allEvents.get(date).get(eventID)
+                AddEventListener.allEvents.get(eventDate).get(eventID)
                         .set(1, convertTimeToString(eventTime));
                 editTimeDialog.dismiss();
                 Button timeChange = editEventDetails.findViewById(R.id.timechange);
@@ -214,27 +220,39 @@ public class EditEventButtonListener implements View.OnClickListener {
             return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "am");
     }
 
-    public void openEditEventDateDialog (final Dialog eventDetails, final Date date, final int eventID){
+    public void openEditEventDateDialog (final Dialog eventDetails, final Date date){
         final Button editDateButton = eventDetails.findViewById(R.id.dateOfTheEvent);
-        editDateButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
+        editDateButton.setText((eventDate.getMonth() + 1) + "/" +  eventDate.getDate()
+                + "/" +  (eventDate.getYear() + 1900));
         editDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editEventDate(eventDetails, date, eventID);
+                editEventDate(eventDetails, date);
             }
         });
     }
 
-    public void editEventDate(final Dialog editEventDetails, final Date date, final int eventID) {
+    public void editEventDate(final Dialog editEventDetails, final Date date) {
         final Dialog editDateDialog = new Dialog(mainActivity);
         editDateDialog.setContentView(R.layout.addeventpopup);
         editDateDialog.show();
-        final DatePicker eventDate = editDateDialog.findViewById(R.id.datePicker);
+        final DatePicker eventDatePicker = editDateDialog.findViewById(R.id.datePicker);
+
+        Toast.makeText(mainActivity, "" + date.getYear() + date.getMonth() + date.getDate(),
+                Toast.LENGTH_LONG).show();
+        eventDatePicker.updateDate(date.getYear() + 1900, date.getMonth(), date.getDate());
         Button continueButton = editDateDialog.findViewById(R.id.continueButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                eventDate = new Date((eventDatePicker.getYear() - 1900),
+                        eventDatePicker.getMonth(), eventDatePicker.getDayOfMonth());
+                AddEventListener.allEvents.put(eventDate, AddEventListener.allEvents.get(date));
+                AddEventListener.allEvents.remove(date);
+                Button dateChange = editEventDetails.findViewById(R.id.dateOfTheEvent);
+                dateChange.setText((eventDate.getMonth() + 1) + "/" +  eventDate.getDate()
+                        + "/" +  (eventDate.getYear() + 1900));
+                editDateDialog.dismiss();
             }
         });
     }
