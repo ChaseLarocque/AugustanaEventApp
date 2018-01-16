@@ -95,7 +95,9 @@ public class GoogleSignInAPI extends AppCompatActivity
             mOutputText.setText("No network connection available.");
         } else {
             Toast.makeText(this, mCredential.getSelectedAccountName(), Toast.LENGTH_LONG).show();
-            new MakeRequestTask(mCredential).execute();
+            Intent intent_name = new Intent();
+            intent_name.setClass(getApplicationContext(),MainMenu.class);
+            startActivity(intent_name);
         }
     }
 
@@ -278,100 +280,5 @@ public class GoogleSignInAPI extends AppCompatActivity
         dialog.show();
     }
 
-    /**
-     * An asynchronous task that handles the Google Calendar API call.
-     * Placing the API calls in their own task ensures the UI stays responsive.
-     */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-        private com.google.api.services.calendar.Calendar mService = null;
-        private Exception mLastError = null;
 
-        MakeRequestTask(GoogleAccountCredential credential) {
-            HttpTransport transport = AndroidHttp.newCompatibleTransport();
-            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            mService = new com.google.api.services.calendar.Calendar.Builder(
-                    transport, jsonFactory, credential)
-                    .setApplicationName("Augustana Events App")
-                    .build();
-        }
-
-        /**
-         * Background task to call Google Calendar API.
-         * @param params no parameters needed for this task.
-         */
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-                return getDataFromApi();
-            } catch (Exception e) {
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
-        }
-
-        /**
-         * Fetch a list of the next 10 events from the primary calendar.
-         * @return List of Strings describing returned events.
-         * @throws IOException
-         */
-        private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
-            List<String> eventStrings = new ArrayList<String>();
-            Events events = mService.events().list("csc320augapp@gmail.com")
-                    .setMaxResults(10)
-                    .setTimeMin(now)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
-            List<Event> items = events.getItems();
-
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
-                    start = event.getStart().getDate();
-                }
-                eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
-            }
-            return eventStrings;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            Intent intent_name = new Intent();
-            intent_name.setClass(getApplicationContext(),MainMenu.class);
-            startActivity(intent_name);
-        }
-
-        @Override
-        protected void onPostExecute(List<String> output) {
-
-        }
-
-        @Override
-        protected void onCancelled() {
-//            mProgress.hide();
-            if (mLastError != null) {
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            MainActivity.REQUEST_AUTHORIZATION);
-                } else {
- //                   mOutputText.setText("The following error occurred:\n"
- //                           + mLastError.getMessage());
-                }
-            } else {
- //               mOutputText.setText("Request cancelled.");
-            }
-        }
-    }
 }
