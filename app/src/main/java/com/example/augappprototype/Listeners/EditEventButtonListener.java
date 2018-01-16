@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
@@ -133,7 +134,7 @@ public class EditEventButtonListener implements View.OnClickListener {
             eachEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    submitEditEventDetails(date, key);
+                    openEditEventDetails(date, key);
 
                 }
             });
@@ -145,15 +146,68 @@ public class EditEventButtonListener implements View.OnClickListener {
      * submitEditEventDetails(Dialog) --> void
      * Closes the popup for event details which submits the edit
      */
-    public void submitEditEventDetails(Date date, int eventID) {
+    public void openEditEventDetails(Date date, int eventID) {
         Dialog editEventDetails = new Dialog(mainActivity);
         editEventDetails.setContentView(R.layout.edit_event_options);
-        EditText title = editEventDetails.findViewById(R.id.eventTitle);
-        EditText location = editEventDetails.findViewById(R.id.eventLocation);
-        EditText description = editEventDetails.findViewById(R.id.eventDescription);
-        title.setText(AddEventListener.allEvents.get(date).get(eventID).get(0));
-        location.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
-        description.setText(AddEventListener.allEvents.get(date).get(eventID).get(2));
         editEventDetails.show();
+        submitEditEventDetails(editEventDetails, date, eventID);
+        openEditEventTimeDialog(editEventDetails, date, eventID);
     }//submitEditEventDetails
+
+    public void submitEditEventDetails(final Dialog eventDetails, final Date date, final int eventID){
+        Button submitNewDetails = eventDetails.findViewById(R.id.submitEvent);
+        final EditText title = eventDetails.findViewById(R.id.eventTitle);
+        final EditText location = eventDetails.findViewById(R.id.eventLocation);
+        final EditText description = eventDetails.findViewById(R.id.eventDescription);
+        title.setText(AddEventListener.allEvents.get(date).get(eventID).get(0));
+        location.setText(AddEventListener.allEvents.get(date).get(eventID).get(2));
+        description.setText(AddEventListener.allEvents.get(date).get(eventID).get(3));
+        submitNewDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddEventListener.allEvents.get(date).get(eventID).set(0, title.getText().toString());
+                AddEventListener.allEvents.get(date).get(eventID).set(2, location.getText().toString());
+                AddEventListener.allEvents.get(date).get(eventID).set(3, description.getText().toString());
+                eventDetails.dismiss();
+            }
+        });
+    }
+    public void openEditEventTimeDialog (final Dialog eventDetails, final Date date, final int eventID){
+        final Button editTimeButton = eventDetails.findViewById(R.id.timechange);
+        editTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editEventTime(date, eventID);
+            }
+        });
+
+    }
+
+    public void editEventTime(final Date date, final int eventID) {
+        final Dialog editTimeDialog = new Dialog(mainActivity);
+        editTimeDialog.setContentView(R.layout.addeventtime);
+        editTimeDialog.show();
+        final TimePicker eventTime = editTimeDialog.findViewById(R.id.timePicker);
+        Button continueButton = editTimeDialog.findViewById(R.id.continueButton);
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddEventListener.allEvents.get(date).get(eventID)
+                        .set(1, convertTimeToString(eventTime));
+                editTimeDialog.dismiss();
+            }
+        });
+    }
+
+    public String convertTimeToString(TimePicker timePicker){
+        String doubleDigitMinute = String.format("%02d", timePicker.getCurrentMinute());
+        if (timePicker.getCurrentHour() > 12)
+            return ((timePicker.getCurrentHour() - 12) + ":" + doubleDigitMinute + "pm");
+        else if (timePicker.getCurrentHour() == 0)
+            return ((timePicker.getCurrentHour() + 12) + ":" + doubleDigitMinute + "am");
+        else
+            return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "am");
+    }
+
+
 }//EditEventButtonListener

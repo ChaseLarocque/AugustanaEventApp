@@ -144,7 +144,7 @@ public class AddEventListener implements View.OnClickListener {
      * @param addEvents
      */
     public void continueButtonListener(final Dialog addEvents){
-        Button continueButton = addEvents.findViewById(R.id.continueAdd);
+        Button continueButton = addEvents.findViewById(R.id.continueButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
         DatePicker eventDate = addEvents.findViewById(R.id.datePicker);
         TimePicker eventTime = addEvents.findViewById(R.id.timePicker);
@@ -188,13 +188,21 @@ public class AddEventListener implements View.OnClickListener {
      */
     public void saveEventTime(TimePicker timePicker){
         minute = timePicker.getCurrentMinute();
+        String doubleDigitMinute = String.format("%02d", minute);
         hour = timePicker.getCurrentHour();
-        amOrPm = checkAmOrPm(hour);
         if (hour > 12) {
             hour = (timePicker.getCurrentHour() - 12);
-            amOrPm = checkAmOrPm(hour + 12);
+            amOrPm = "PM";
         }
-        eventTime = hour + ":" + minute + " " + amOrPm;
+        else if (hour == 0){
+            hour = (timePicker.getCurrentHour() + 12);
+            amOrPm = "AM";
+        }
+        else{
+            hour = timePicker.getCurrentHour();
+            amOrPm = "AM";
+        }
+        eventTime = hour + ":" + doubleDigitMinute + " " + amOrPm;
     }//saveEventTime
 
     /**
@@ -280,18 +288,6 @@ public class AddEventListener implements View.OnClickListener {
     }
 
 
-    /**
-     * checkAmOrPm(int) --> String
-     * Checks if the time the user selected is in the AM or the PM
-     * @param hourOfDay
-     * @return String
-     */
-    private String checkAmOrPm(int hourOfDay){
-        if (hourOfDay < 12)
-            return "AM";
-        else
-            return "PM";
-    }//checkAmOrPm
 
     /**
      * selectCategoryDetails(Dialog) --> void
