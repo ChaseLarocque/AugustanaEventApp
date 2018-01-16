@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    LoginScreen loginScreen;
+    GoogleSignInAPI gsia;
 
     TextView mOutputText;
 
@@ -89,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
         goToMainMenu();
         registerListenersForCalendarUIButtons();
         goToMainMenu();
-        loginScreen = new LoginScreen();
-        Toast.makeText(this, "This is a toast", Toast.LENGTH_LONG).show();
+        gsia = new GoogleSignInAPI();
+
+        Toast.makeText(this, gsia.mCredential.getSelectedAccountName() + " yay", Toast.LENGTH_LONG).show();
         //mOutputText = findViewById(R.id.testText);
         //mOutputText.setText(loginScreen.mCredential.getSelectedAccountName());
 

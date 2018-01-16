@@ -80,21 +80,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         email = (TextView) findViewById(R.id.email);
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
 
-        mOutputText = findViewById(R.id.testTextView);
+       // mOutputText = findViewById(R.id.testTextView);
         signInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
         profileSection.setVisibility(View.GONE);
 
-       // GoogleSignInOptions signInOptions =
-         //       new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
-//        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        //              .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
-        //            .requestEmail()
-        //          .build();
-
-      //  googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
-        //        this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
     }//onCreate
 
     /**

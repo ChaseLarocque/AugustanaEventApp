@@ -50,7 +50,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class GoogleSignInAPI extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks {
-    GoogleAccountCredential mCredential;
+    static GoogleAccountCredential mCredential;
     TextView mOutputText;
     private Button mCallApiButton;
     ProgressDialog mProgress;
@@ -77,7 +77,7 @@ public class GoogleSignInAPI extends AppCompatActivity
         getResultsFromApi();
     }
 
-    
+
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -291,7 +291,7 @@ public class GoogleSignInAPI extends AppCompatActivity
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("Google Calendar API Android Quickstart")
+                    .setApplicationName("Augustana Events App")
                     .build();
         }
 
@@ -343,19 +343,14 @@ public class GoogleSignInAPI extends AppCompatActivity
 
         @Override
         protected void onPreExecute() {
-//            mOutputText.setText("");
-//            mProgress.show();
+            Intent intent_name = new Intent();
+            intent_name.setClass(getApplicationContext(),MainMenu.class);
+            startActivity(intent_name);
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
-            //mProgress.hide();
-            if (output == null || output.size() == 0) {
-//                mOutputText.setText("No results returned.");
-            } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
-//                mOutputText.setText(TextUtils.join("\n", output));
-            }
+
         }
 
         @Override
