@@ -157,13 +157,14 @@
         android:id="@+id/login_button"></com.google.android.gms.common.SignInButton>
 
     <TextView
-        android:id="@+id/testText2"
+        android:id="@+id/testTextView"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="188dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="36dp" />
+        android:layout_marginLeft="24dp" />
+
 </android.support.constraint.ConstraintLayout>
