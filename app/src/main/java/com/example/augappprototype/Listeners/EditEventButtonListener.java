@@ -15,6 +15,7 @@ import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,8 @@ public class EditEventButtonListener implements View.OnClickListener {
     List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
             "June", "July", "August", "September", "October", "November", "December");
     Date eventDate;
+    String newEventTime;
+
 
     /*--Constructor--*/
     public EditEventButtonListener(MainActivity mainActivity) {
@@ -109,6 +112,7 @@ public class EditEventButtonListener implements View.OnClickListener {
      * changed
      */
     public void openEditEventDetails(Date date) {
+        eventDate = new Date();
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
         editDetailEventDialog.setContentView(R.layout.eventpopup);
         MaxHeightScrollView eventsInDay = editDetailEventDialog.findViewById(R.id.allEvents);
@@ -169,16 +173,38 @@ public class EditEventButtonListener implements View.OnClickListener {
         submitNewDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(0, title.getText().toString());
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(2, location.getText().toString());
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(3, description.getText().toString());
+
+                moveEventToNewDate(eventDetails, date, eventID);
                 eventDetails.dismiss();
             }
         });
     }
+
+    public void moveEventToNewDate(Dialog editEventDetails, Date currentEventDate, int oldEventID){
+        int newEventID = 0;
+        final EditText title = editEventDetails.findViewById(R.id.eventTitle);
+        final EditText location = editEventDetails.findViewById(R.id.eventLocation);
+        final EditText description = editEventDetails.findViewById(R.id.eventDescription);
+        if (currentEventDate != eventDate) {
+            for (int counter = 0; counter < numEventsInDay; counter++) {
+                if (counter != oldEventID)
+                    newEventID = counter + 1;
+            }
+            AddEventListener.allEvents.get(eventDate).get(eventDate)
+                    .set(0, title.getText().toString());
+            AddEventListener.allEvents.get(eventDate).get(eventDate)
+                    .set(1, newEventTime);
+            AddEventListener.allEvents.get(eventDate).get(eventDate)
+                    .set(2, location.getText().toString());
+            AddEventListener.allEvents.get(eventDate).get(eventDate)
+                    .set(3, description.getText().toString());
+
+            AddEventListener.allEvents.get(currentEventDate).put(newEventID,
+                    AddEventListener.allEvents.get(currentEventDate).get(oldEventID));
+        }
+    }
+
+
     public void openEditEventTimeDialog (final Dialog eventDetails, final Date date, final int eventID){
         final Button editTimeButton = eventDetails.findViewById(R.id.timechange);
         editTimeButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
@@ -199,11 +225,10 @@ public class EditEventButtonListener implements View.OnClickListener {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(1, convertTimeToString(eventTime));
-                editTimeDialog.dismiss();
+                newEventTime = convertTimeToString(eventTime);
                 Button timeChange = editEventDetails.findViewById(R.id.timechange);
                 timeChange.setText(convertTimeToString(eventTime));
+                editTimeDialog.dismiss();
             }
         });
     }
@@ -247,8 +272,6 @@ public class EditEventButtonListener implements View.OnClickListener {
             public void onClick(View v) {
                 eventDate = new Date((eventDatePicker.getYear() - 1900),
                         eventDatePicker.getMonth(), eventDatePicker.getDayOfMonth());
-                AddEventListener.allEvents.put(eventDate, AddEventListener.allEvents.get(date));
-                AddEventListener.allEvents.remove(date);
                 Button dateChange = editEventDetails.findViewById(R.id.dateOfTheEvent);
                 dateChange.setText((eventDate.getMonth() + 1) + "/" +  eventDate.getDate()
                         + "/" +  (eventDate.getYear() + 1900));
@@ -256,6 +279,4 @@ public class EditEventButtonListener implements View.OnClickListener {
             }
         });
     }
-
-
 }//EditEventButtonListener
