@@ -128,8 +128,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         gsi = new GoogleSignInAPI();
         Intent intent = new Intent(this, GoogleSignInAPI.class);
         startActivity(intent);
-        //Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        //startActivityForResult(intent, REQUEST_CODE);
     } // signIn()
 
     private void signOut() {
