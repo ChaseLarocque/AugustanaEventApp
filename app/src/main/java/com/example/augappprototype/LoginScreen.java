@@ -128,7 +128,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             name.setText(userName);
             email.setText(userEmail);
             checkPermissions(userEmail);
-            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+            if(account.getPhotoUrl() != null) {
+                Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+            } else {
+                Glide.with(this).load("https://i.stack.imgur.com/34AD2.jpg").into(profilePicture);
+            }
             updateUI(true);
         } else {
             updateUI(false);
