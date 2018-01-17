@@ -65,7 +65,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
         addName();
-        registerListenersForLoginScreenButtons();
 
         profileSection = (LinearLayout) findViewById(R.id.profile_section);
         signOutButton = (Button) findViewById(R.id.logout_button);
@@ -89,16 +88,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
                 this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
     }//onCreate
-
-    /**
-     * registerListenersForLoginScreenButtons() --> void
-     * Sets on click listeners for the Login button and the Guest Login Button on the Login screen
-     */
-    public void registerListenersForLoginScreenButtons() {
-        findViewById(R.id.loginButton).setOnClickListener(new LoginButtonListener(this));
-        findViewById(R.id.continueAsGuestButton).setOnClickListener
-                (new GuestButtonListener(this));
-    }//registerListenersForLoginScreenButtons
 
     @Override
     public void onClick(View v) {
