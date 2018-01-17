@@ -14,6 +14,7 @@ import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class CalendarButtonListener extends CaldroidListener {
     LinearLayout eventList;
     List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
             "June", "July", "August", "September", "October", "November", "December");
+    int eventYear;
+    int eventMonth;
+    int eventDay;
 
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
@@ -155,13 +159,20 @@ public class CalendarButtonListener extends CaldroidListener {
         eventList.setOrientation(LinearLayout.VERTICAL);
         for (Event event : mainActivity.items) {
             TextView textView = new TextView(mainActivity);
-            textView.setText("");
+            convertEventDateTime(event);
+            textView.setText(monthNames.get(eventMonth) + " "+ eventDay + ", " + eventYear);
             eventList.addView(textView);
+
         }
         eventsInDay.addView(eventList);
     }
 
-
+    public void convertEventDateTime(Event eachEvent){
+        String eventDetails = eachEvent.getStart().getDateTime().toString();
+        eventYear = Integer.parseInt(eventDetails.substring(0,4));
+        eventMonth = Integer.parseInt(eventDetails.substring(5,6));
+        eventDay = Integer.parseInt(eventDetails.substring(8,9));
+    }
 /*
     public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
