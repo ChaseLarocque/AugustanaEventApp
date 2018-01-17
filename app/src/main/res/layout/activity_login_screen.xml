@@ -21,90 +21,39 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="131dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button"
-        android:text="@string/login"
-        android:textColor="@color/uofaGold"
-        android:backgroundTint="@color/uofaGreen"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userPassword" />
-
     <TextView
         android:id="@+id/augAppLoginView"
         android:layout_width="128dp"
         android:layout_height="68dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="91dp"
         android:gravity="center"
         android:text="@string/augapp_login"
         android:textColor="@color/uofaGreen"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/userEmail"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <EditText
-        android:id="@+id/userEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/uofaGreen"
-        android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/userPassword"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <EditText
-        android:id="@+id/userPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.584" />
+        app:layout_constraintTop_toBottomOf="@+id/uniLogo" />
 
     <ImageView
         android:id="@+id/uniLogo"
         android:layout_width="307dp"
         android:layout_height="134dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@id/augAppLoginView"
         app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.186"
         app:srcCompat="@drawable/logogreen" />
 
     <LinearLayout
         android:id="@+id/profile_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.884">
+        app:layout_constraintTop_toBottomOf="@+id/augAppLoginView">
 
         <ImageView
             android:id="@+id/profile_picture"
@@ -126,7 +75,7 @@
                 android:gravity="center"
                 android:text="Name Display Here"
                 android:textSize="18dp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/email"
@@ -136,23 +85,27 @@
                 android:gravity="center"
                 android:text="Email Display Here"
                 android:textSize="12dp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/logout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Log out from Google"></Button>
+                android:text="Log out from Google"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <com.google.android.gms.common.SignInButton
-        android:layout_width="match_parent"
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
-        android:id="@+id/login_button"></com.google.android.gms.common.SignInButton>
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/augAppLoginView"
+        android:layout_marginRight="8dp" />
 </android.support.constraint.ConstraintLayout>
