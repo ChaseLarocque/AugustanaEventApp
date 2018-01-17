@@ -71,7 +71,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         signInButton = (SignInButton) findViewById(R.id.login_button);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
-        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        profilePicture = (ImageView) findViewById(R.id.profile_image);
 
         signInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
@@ -127,13 +127,13 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
-            checkPermissions(userEmail);
             if(account.getPhotoUrl() != null) {
                 Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
             } else {
                 Glide.with(this).load("https://i.stack.imgur.com/34AD2.jpg").into(profilePicture);
-            }
+            } // else
             updateUI(true);
+            checkPermissions(userEmail);
         } else {
             updateUI(false);
         } // else
