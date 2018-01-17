@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.google.api.services.calendar.model.Event;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
@@ -126,20 +127,19 @@ public class CalendarButtonListener extends CaldroidListener {
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        for (int counter = 0; counter < AddEventListener.allEvents.get(date).size(); counter++) {
+        for (Event event : mainActivity.items) {
                 Button eachEvent = new Button(mainActivity);
-                eachEvent.setText(AddEventListener.allEvents.get(date).get(counter).get(0));
+                eachEvent.setText(event.getSummary());
                 eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
                 eachEvent.setTextSize(20);
                 eachEvent.setLayoutParams(new LinearLayout
                         .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT));
-            final int finalCounter = counter;
             eachEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         eventPopup.setContentView(R.layout.eventpopup_details);
-                        addTextViewForDetails(eventPopup, date, finalCounter);
+                        addTextViewForDetails(eventPopup);
                     }
                 });
                 eventList.addView(eachEvent);
@@ -147,7 +147,22 @@ public class CalendarButtonListener extends CaldroidListener {
         eventsInDay.addView(eventList);
     }
 
+    public void addTextViewForDetails(Dialog eventPopup) {
+        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
+        eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        for (Event event : mainActivity.items) {
+            TextView textView = new TextView(mainActivity);
+            textView.setText("");
+            eventList.addView(textView);
+        }
+        eventsInDay.addView(eventList);
+    }
 
+
+/*
     public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
         eventList = new LinearLayout(mainActivity);
@@ -179,6 +194,7 @@ public class CalendarButtonListener extends CaldroidListener {
             }
         eventsInDay.addView(eventList);
     }
+    */
 
     public void dateForBanner(Dialog eventPopup, Date date){
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);

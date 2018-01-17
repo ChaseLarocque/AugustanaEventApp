@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     GoogleSignInAPI gsia;
+    public static List<Event> items;
 
     TextView mOutputText;
 
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                     .setTimeMin(new DateTime("2016-04-17T17:10:00+06:00"))
                     .setSingleEvents(true)
                     .execute();
-            List<Event> items = events.getItems();
+            items = events.getItems();
 
 
             for (Event event : items) {
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<String> output) {
             mOutputText.setText("Grabbed " + output.size() + " things");
-            Toast.makeText(MainActivity.this, output.size(), Toast.LENGTH_LONG).show();
+          //  Toast.makeText(MainActivity.this, output.size(), Toast.LENGTH_LONG).show();
 
         }
 
@@ -276,10 +277,10 @@ public class MainActivity extends AppCompatActivity {
 
         Event event = new Event()
                 .setSummary("popcorn")
-                .setLocation("Dhaka")
+                .setLocation("alligator")
                 .setDescription("New Event 1");
 
-        DateTime startDateTime = new DateTime("2016-04-17T18:10:00+06:00");
+        DateTime startDateTime = new DateTime("2017-04-17T18:10:00+06:00");
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime);
         event.setStart(start);
