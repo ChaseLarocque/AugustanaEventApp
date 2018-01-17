@@ -195,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("csc320augapp@gmail.com")
                     .setMaxResults(10)
-
                     .setOrderBy("startTime")
+                    .setTimeMin(new DateTime("2016-04-17T17:10:00+06:00"))
                     .setSingleEvents(true)
                     .execute();
             List<Event> items = events.getItems();
@@ -224,8 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<String> output) {
-            for (String s : output)
-                mOutputText.setText(s);
+            mOutputText.setText(output.get(0));
 
         }
 
@@ -285,14 +284,12 @@ public class MainActivity extends AppCompatActivity {
 
             DateTime startDateTime = new DateTime("2016-04-17T18:10:00+06:00");
             EventDateTime start = new EventDateTime()
-                    .setDateTime(startDateTime)
-                    .setTimeZone("Asia/Dhaka");
+                    .setDateTime(startDateTime);
             event.setStart(start);
 
-            DateTime endDateTime = new DateTime("2016-04-17T18:40:00+06:00");
+            DateTime endDateTime = new DateTime("2017-04-17T18:40:00+06:00");
             EventDateTime end = new EventDateTime()
-                    .setDateTime(endDateTime)
-                    .setTimeZone("Asia/Dhaka");
+                    .setDateTime(endDateTime);
             event.setEnd(end);
 
             String calendarId = "csc320augapp@gmail.com";
@@ -303,6 +300,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         *
+         */
         @Override
         protected void onPreExecute(){
             Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_LONG).show();
