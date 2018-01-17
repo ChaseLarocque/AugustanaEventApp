@@ -30,7 +30,6 @@ public class MainMenu extends AppCompatActivity {
                 .setOnClickListener(new AugustanaWebsiteListener(this));
         findViewById(R.id.signout)
                 .setOnClickListener(new SignOutButtonListener(this));
-    }
+    } // onCreate(Bundle)
 
-
-}
+} // MainMenu
