@@ -11,20 +11,20 @@ import com.example.augappprototype.MainMenu;
  * Created by Peter Zeng on 2018-01-17.
  */
 
-public class AugustanaWebsiteListener implements View.OnClickListener{
+public class AugustanaLibraryListener implements View.OnClickListener{
 
     private final MainMenu mainMenu;
 
-    public AugustanaWebsiteListener(MainMenu mainMenu){
+    public AugustanaLibraryListener(MainMenu mainMenu){
         this.mainMenu = mainMenu;
-    } // AugustanaWebsiteListener(MainMenu)
+    } // AugustanaLibraryListener(MainMenu)
 
     @Override
     public void onClick(View v) {
-        String url = "http://augustana.su.ualberta.ca/";
+        String url = "https://www.library.ualberta.ca/augustana";
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         mainMenu.startActivity(intent);
     } // onClick(View)
-} // AugustanaWebsiteListener
+} // AugustanaLibraryListener

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.example.augappprototype.Listeners.AugustanaLibraryListener;
 import com.example.augappprototype.Listeners.AugustanaWebsiteListener;
 import com.example.augappprototype.Listeners.EventCalendarListener;
 import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
@@ -20,7 +21,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         findViewById(R.id.eventsCalendarImage).setOnClickListener(new EventCalendarListener(this));
         findViewById(R.id.newsletterImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
-        findViewById(R.id.libraryImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
+        findViewById(R.id.libraryImage).setOnClickListener(new AugustanaLibraryListener(this));
         findViewById(R.id.websiteImage).setOnClickListener(new AugustanaWebsiteListener(this));
         findViewById(R.id.signout).setOnClickListener(new SignOutButtonListener(this));
     }
