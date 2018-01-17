@@ -15,8 +15,10 @@ import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,10 +43,13 @@ import java.util.List;
 public class EditEventButtonListener implements View.OnClickListener {
     /*--Data--*/
     private final MainActivity mainActivity;
-    LinearLayout eventList;
-    List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
-            "June", "July", "August", "September", "October", "November", "December");
-    Date eventDate;
+    private LinearLayout eventList;
+    private List<String> monthNames = Arrays.asList("January", "February", "March", "April",
+            "May", "June", "July", "August", "September", "October", "November", "December");
+    private Date eventDate;
+    private int newEventID;
+    private String newEventTime;
+    private boolean dateWasChanged;
 
     /*--Constructor--*/
     public EditEventButtonListener(MainActivity mainActivity) {
@@ -73,7 +78,7 @@ public class EditEventButtonListener implements View.OnClickListener {
      * where the user can edit the event details
      * @param editEvents
      */
-    public void nextEventListener(final Dialog editEvents) {
+    private void nextEventListener(final Dialog editEvents) {
         MaxHeightScrollView eventsInDay = editEvents.findViewById(R.id.allEvents);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
@@ -83,7 +88,7 @@ public class EditEventButtonListener implements View.OnClickListener {
         eventsInDay.addView(eventList);
     }//nextEventListener
 
-    public void datesIntoButtons(){
+    private void datesIntoButtons(){
         for (final Date key : AddEventListener.allEvents.keySet()) {
             Button eachEvent = new Button(mainActivity);
             eachEvent.setText(monthNames.get(key.getMonth()) + " " +
@@ -108,7 +113,7 @@ public class EditEventButtonListener implements View.OnClickListener {
      * Displays a popup of the event details and allows the user to edit the details that have
      * changed
      */
-    public void openEditEventDetails(Date date) {
+    private void openEditEventDetails(Date date) {
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
         editDetailEventDialog.setContentView(R.layout.eventpopup);
         MaxHeightScrollView eventsInDay = editDetailEventDialog.findViewById(R.id.allEvents);
@@ -124,7 +129,7 @@ public class EditEventButtonListener implements View.OnClickListener {
         eventsInDay.addView(eventList);
     }//openEditEventDetails
 
-    public void eventsIntoButtons(final Date date){
+    private void eventsIntoButtons(final Date date){
         for (final int key : AddEventListener.allEvents.get(date).keySet()) {
             Button eachEvent = new Button(mainActivity);
             eachEvent.setText(AddEventListener.allEvents.get(date).get(key).get(0));
@@ -148,17 +153,17 @@ public class EditEventButtonListener implements View.OnClickListener {
      * submitEditEventDetails(Dialog) --> void
      * Closes the popup for event details which submits the edit
      */
-    public void openEditEventDetails(Date date, int eventID) {
+    private void openEditEventDetails(Date date, int eventID) {
         eventDate = date;
         Dialog editEventDetails = new Dialog(mainActivity);
         editEventDetails.setContentView(R.layout.edit_event_options);
         editEventDetails.show();
         submitEditEventDetails(editEventDetails, date, eventID);
         openEditEventTimeDialog(editEventDetails, date, eventID);
-        openEditEventDateDialog(editEventDetails, date);
+        openEditEventDateDialog(editEventDetails, date, eventID);
     }//submitEditEventDetails
 
-    public void submitEditEventDetails(final Dialog eventDetails, final Date date, final int eventID){
+    private void submitEditEventDetails(final Dialog eventDetails, final Date date, final int eventID){
         Button submitNewDetails = eventDetails.findViewById(R.id.submitEvent);
         final EditText title = eventDetails.findViewById(R.id.eventTitle);
         final EditText location = eventDetails.findViewById(R.id.eventLocation);
@@ -169,17 +174,20 @@ public class EditEventButtonListener implements View.OnClickListener {
         submitNewDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(0, title.getText().toString());
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(2, location.getText().toString());
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(3, description.getText().toString());
+                if (dateWasChanged)
+                    makeNewKey(date, eventID, eventDate);
+                AddEventListener.allEvents.get(eventDate).get(newEventID).set(0, title.getText().toString());
+                AddEventListener.allEvents.get(eventDate).get(newEventID).set(1, newEventTime);
+                AddEventListener.allEvents.get(eventDate).get(newEventID).set(2, location.getText().toString());
+                AddEventListener.allEvents.get(eventDate).get(newEventID).set(3, description.getText().toString());
+                deleteDatesWithNoEvents();
+                mainActivity.updateCalendar();
+                Toast.makeText(mainActivity, "Event Edited!", Toast.LENGTH_LONG).show();
                 eventDetails.dismiss();
             }
         });
     }
-    public void openEditEventTimeDialog (final Dialog eventDetails, final Date date, final int eventID){
+    private void openEditEventTimeDialog(final Dialog eventDetails, final Date date, final int eventID){
         final Button editTimeButton = eventDetails.findViewById(R.id.timechange);
         editTimeButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
         editTimeButton.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +198,7 @@ public class EditEventButtonListener implements View.OnClickListener {
         });
     }
 
-    public void editEventTime(final Dialog editEventDetails, final Date date, final int eventID) {
+    private void editEventTime(final Dialog editEventDetails, final Date date, final int eventID) {
         final Dialog editTimeDialog = new Dialog(mainActivity);
         editTimeDialog.setContentView(R.layout.addeventtime);
         editTimeDialog.show();
@@ -199,8 +207,7 @@ public class EditEventButtonListener implements View.OnClickListener {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddEventListener.allEvents.get(eventDate).get(eventID)
-                        .set(1, convertTimeToString(eventTime));
+                initializeNewTime(convertTimeToString(eventTime));
                 editTimeDialog.dismiss();
                 Button timeChange = editEventDetails.findViewById(R.id.timechange);
                 timeChange.setText(convertTimeToString(eventTime));
@@ -208,7 +215,7 @@ public class EditEventButtonListener implements View.OnClickListener {
         });
     }
 
-    public String convertTimeToString(TimePicker timePicker){
+    private String convertTimeToString(TimePicker timePicker){
         String doubleDigitMinute = String.format("%02d", timePicker.getCurrentMinute());
         if (timePicker.getCurrentHour() > 12)
             return ((timePicker.getCurrentHour() - 12) + ":" + doubleDigitMinute + "pm");
@@ -220,19 +227,19 @@ public class EditEventButtonListener implements View.OnClickListener {
             return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "am");
     }
 
-    public void openEditEventDateDialog (final Dialog eventDetails, final Date date){
+    private void openEditEventDateDialog(final Dialog eventDetails, final Date date, final int currentEventID){
         final Button editDateButton = eventDetails.findViewById(R.id.dateOfTheEvent);
         editDateButton.setText((eventDate.getMonth() + 1) + "/" +  eventDate.getDate()
                 + "/" +  (eventDate.getYear() + 1900));
         editDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editEventDate(eventDetails, date);
+                editEventDate(eventDetails, date, currentEventID);
             }
         });
     }
 
-    public void editEventDate(final Dialog editEventDetails, final Date date) {
+    private void editEventDate(final Dialog editEventDetails, final Date date, final int currentEventID) {
         final Dialog editDateDialog = new Dialog(mainActivity);
         editDateDialog.setContentView(R.layout.addeventpopup);
         editDateDialog.show();
@@ -247,8 +254,14 @@ public class EditEventButtonListener implements View.OnClickListener {
             public void onClick(View v) {
                 eventDate = new Date((eventDatePicker.getYear() - 1900),
                         eventDatePicker.getMonth(), eventDatePicker.getDayOfMonth());
-                AddEventListener.allEvents.put(eventDate, AddEventListener.allEvents.get(date));
-                AddEventListener.allEvents.remove(date);
+
+                if (eventDate.equals(date))
+                    dateWasChanged = false;
+                else
+                    dateWasChanged = true;
+                Toast.makeText(mainActivity, date + "/" + eventDate,
+                        Toast.LENGTH_LONG).show();
+                initializeNewDate(eventDate, dateWasChanged);
                 Button dateChange = editEventDetails.findViewById(R.id.dateOfTheEvent);
                 dateChange.setText((eventDate.getMonth() + 1) + "/" +  eventDate.getDate()
                         + "/" +  (eventDate.getYear() + 1900));
@@ -257,5 +270,36 @@ public class EditEventButtonListener implements View.OnClickListener {
         });
     }
 
+    private void makeNewKey(Date oldEventDate, int oldEventID, Date newEventDate){
+        HashMap<Integer, ArrayList<String>> events = new HashMap<>();
+        if (AddEventListener.allEvents.containsKey(newEventDate)) {
+            newEventID = 0;
+            while(AddEventListener.allEvents.get(newEventDate).containsKey(newEventID))
+                newEventID++;
+            AddEventListener.allEvents.get(newEventDate).put(newEventID,
+                    AddEventListener.allEvents.get(oldEventDate).remove(oldEventID));
+        }
+        else{
+            AddEventListener.allEvents.put(newEventDate, events);
+            AddEventListener.allEvents.get(newEventDate)
+                    .put(0, AddEventListener.allEvents.get(oldEventDate).get(oldEventID));
+            AddEventListener.allEvents.get(oldEventDate).remove(oldEventID);
+        }
+    }
 
+    private void initializeNewDate(Date date, boolean editedDate){
+        eventDate = date;
+        dateWasChanged = editedDate;
+    }
+
+    private void initializeNewTime(String time){
+        newEventTime = time;
+    }
+
+    private void deleteDatesWithNoEvents(){
+        for (Date date : AddEventListener.allEvents.keySet()) {
+            if (AddEventListener.allEvents.get(date).size() == 0)
+                AddEventListener.allEvents.remove(date);
+        }
+    }
 }//EditEventButtonListener
