@@ -13,6 +13,7 @@ package com.example.augappprototype;
  * Sets on click listeners for every button on the login screen
  */
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -35,12 +36,14 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import org.w3c.dom.Text;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    TextView mOutputText;
     private Button signOutButton;
     private GoogleApiClient googleApiClient;
     private ImageView profilePicture;
@@ -49,7 +52,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
-    HashMap<String, String> permissions = new HashMap<>();
+    ArrayList<String> whiteList = new ArrayList<String>();
+    GoogleSignInAPI gsi;
+    Context appContext = this;
 
     /*--Methods--*/
 
@@ -73,15 +78,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         email = (TextView) findViewById(R.id.email);
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
 
+       // mOutputText = findViewById(R.id.testTextView);
         signInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
         profileSection.setVisibility(View.GONE);
 
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
-                this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
     }//onCreate
 
     /**
@@ -111,8 +112,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onConnectionFailed(ConnectionResult)
 
     private void signIn() {
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(intent, REQUEST_CODE);
+        gsi = new GoogleSignInAPI();
+        Intent intent = new Intent(this, GoogleSignInAPI.class);
+        startActivity(intent);
     } // signIn()
 
     private void signOut() {
@@ -136,8 +138,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             updateUI(true);
         } else {
             updateUI(false);
-            Toast.makeText(this, "lol" + result.getStatus(),
-                    Toast.LENGTH_LONG).show();
         } // else
     } // handleSignInResult(GoogleSignInResult)
 
@@ -161,21 +161,20 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onActivityResult(int, int, Intent)
 
     public void addName(){
-        permissions.put("psczeng@gmail.com", "faculty");
-        permissions.put("vpreyes@ualberta.ca", "faculty");
-        permissions.put("cwlarocq@ualberta.ca", "faculty");
-        permissions.put("frithsmi@ualberta.ca", "faculty");
-    }//addName
+        whiteList.add("shichun1@ualberta.ca");
+        whiteList.add("vpreyes@ualberta.ca");
+        whiteList.add("cwlarocq@ualberta.ca");
+        whiteList.add("frithsmi@ualberta.ca");
+    } // addName()
 
     public void checkPermissions(String email){
-        if (permissions.containsKey(email)) {
-                Toast.makeText(this, "faculty",
-                        Toast.LENGTH_LONG).show();
-        }
-        else{
+        if (whiteList.contains(email)) {
+            Toast.makeText(this, "faculty",
+                    Toast.LENGTH_LONG).show();
+        } else {
             Toast.makeText(this, "student",
                     Toast.LENGTH_LONG).show();
-        }
+        } // else
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
     } // checkPermissions(String)
