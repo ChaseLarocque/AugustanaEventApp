@@ -1,17 +1,12 @@
 package com.example.augappprototype;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.example.augappprototype.Listeners.AugustanaLibraryListener;
 import com.example.augappprototype.Listeners.AugustanaNewsletterListener;
 import com.example.augappprototype.Listeners.AugustanaWebsiteListener;
 import com.example.augappprototype.Listeners.EventCalendarListener;
-import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
 import com.example.augappprototype.Listeners.SignOutButtonListener;
 
 public class MainMenu extends AppCompatActivity {
