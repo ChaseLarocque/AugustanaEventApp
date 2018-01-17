@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<String> output) {
             mOutputText.setText("Grabbed " + output.size() + " things");
-            Toast.makeText(MainActivity.this, output.size(), Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, String.valueOf(output.size()), Toast.LENGTH_LONG).show();
 
         }
 
