@@ -15,11 +15,16 @@ import android.widget.Toast;
 
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.roomorama.caldroid.CaldroidFragment;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by Pao on 1/7/2018.
@@ -97,7 +102,10 @@ public class AddEventListener implements View.OnClickListener {
       //      Toast.makeText(mainActivity, "This button is not available on guest mode",
       //              Toast.LENGTH_SHORT).show();
       //  else
-            selectDate();//students and faculty will be brought up to the select date popup
+        selectDate();//students and faculty will be brought up to the select date popup
+
+
+
     }//onClick
 
     /**

@@ -35,7 +35,6 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
 
-
     /*--Methods--*/
     /**
      * onCreate(Bundle) --> void
@@ -135,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 Drawable count10 = getResources().getDrawable(R.drawable.count10);
                 caldroidFragment.setBackgroundDrawableForDate(count10, day);
                 break;
-
         }
         caldroidFragment.refreshView();
     }
