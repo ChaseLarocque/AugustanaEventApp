@@ -101,10 +101,5 @@ public class LoginButtonListener implements View.OnClickListener{
      * if the email is student or faculty
      */
     public void userNamePasswordToString(){
-        EditText username = loginScreen.findViewById(R.id.userEmail);
-        EditText password = loginScreen.findViewById(R.id.userPassword);
-        String usernameString = username.getText().toString();
-        String passwordString = password.getText().toString();
-        confirmLogin(usernameString, passwordString);
     }//userNamePasswordToString
 }//LoginButtonListener

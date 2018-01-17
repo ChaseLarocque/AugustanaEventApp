@@ -89,11 +89,8 @@ public class MainActivity extends AppCompatActivity {
         gsia = new GoogleSignInAPI();
         mOutputText = findViewById(R.id.testText);
         new MakeRequestTask(gsia.mCredential).execute();
-        new addAnEvent(gsia.mCredential).execute();
+        new addAnEvent(gsia.mCredential).execute(); //this would go in the onclick listener at some point
 
-        //Toast.makeText(this, gsia.mCredential.getSelectedAccountName() + " yay", Toast.LENGTH_LONG).show();
-        //mOutputText = findViewById(R.id.testText);
-        //mOutputText.setText(loginScreen.mCredential.getSelectedAccountName());
 
 
     }//onCreate
@@ -151,13 +148,10 @@ public class MainActivity extends AppCompatActivity {
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
-
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
 
-
         MakeRequestTask(GoogleAccountCredential credential) {
-
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
@@ -224,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<String> output) {
-            mOutputText.setText(output.get(0));
+            mOutputText.setText("Grabbed " + output.size() + " things");
 
         }
 
@@ -254,9 +248,7 @@ public class MainActivity extends AppCompatActivity {
         private com.google.api.services.calendar.Calendar mService2 = null;
         private Exception mLastError = null;
 
-
         addAnEvent(GoogleAccountCredential credential) {
-
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService2 = new com.google.api.services.calendar.Calendar.Builder(
@@ -296,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 mService2.events().insert(calendarId, event).execute();
             } catch (IOException e) {
+                Toast.makeText(MainActivity.this, "There was an Error pushing the event", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
