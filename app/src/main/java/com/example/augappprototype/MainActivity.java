@@ -15,20 +15,12 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +31,6 @@ import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.example.augappprototype.Listeners.GuestButtonListener;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -48,9 +39,11 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
-import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
 import com.roomorama.caldroid.CaldroidFragment;
 
@@ -63,7 +56,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR };
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
     boolean isGuest = GuestButtonListener.isGuest;
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -75,11 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     /*--Methods--*/
+
     /**
      * onCreate(Bundle) --> void
      * Calls the convertCalendar and registerListenersForButtons methods so that there is a new on
      * click listener for them on creation
      * on creation
+     *
      * @param savedInstanceState
      */
     @Override
@@ -94,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         gsia = new GoogleSignInAPI();
         mOutputText = findViewById(R.id.testText);
         new MakeRequestTask(gsia.mCredential).execute();
+        new addAnEvent(gsia.mCredential).execute();
 
         //Toast.makeText(this, gsia.mCredential.getSelectedAccountName() + " yay", Toast.LENGTH_LONG).show();
         //mOutputText = findViewById(R.id.testText);
@@ -124,13 +120,14 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
 
-    public void goToMainMenu(){
+    public void goToMainMenu() {
         ImageButton back = findViewById(R.id.backbutton);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
                 startActivity(goToMainMenu);
+
             }
         });
     }
@@ -147,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
+
 
     /**
      * An asynchronous task that handles the Google Calendar API call.
@@ -170,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Background task to call Google Calendar API.
+         *
          * @param params no parameters needed for this task.
          */
         @Override
@@ -186,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Fetch a list of the next 10 events from the primary calendar.
+         *
          * @return List of Strings describing returned events.
          * @throws IOException
          */
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("csc320augapp@gmail.com")
                     .setMaxResults(10)
-                    .setTimeMin(now)
+
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
@@ -224,7 +224,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<String> output) {
-            Toast.makeText(MainActivity.this, output.get(0), Toast.LENGTH_LONG).show();
+            for (String s : output)
+                mOutputText.setText(s);
+
         }
 
         @Override
@@ -232,22 +234,78 @@ public class MainActivity extends AppCompatActivity {
 //            mProgress.hide();
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                   // showGooglePlayServicesAvailabilityErrorDialog(
-                            //((GooglePlayServicesAvailabilityIOException) mLastError)
-                                   // .getConnectionStatusCode());
+                    // showGooglePlayServicesAvailabilityErrorDialog(
+                    //((GooglePlayServicesAvailabilityIOException) mLastError)
+                    // .getConnectionStatusCode());
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             MainActivity.REQUEST_AUTHORIZATION);
                 } else {
-                                       Toast.makeText(MainActivity.this, "The following error occurred:\n"
-                                               + mLastError.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "The following error occurred:\n"
+                            + mLastError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
                 //               mOutputText.setText("Request cancelled.");
             }
         }
-    }
+    }//makeRequests
+
+    private class addAnEvent extends AsyncTask {
+        private com.google.api.services.calendar.Calendar mService2 = null;
+        private Exception mLastError = null;
 
 
-}//MainActivity
+        addAnEvent(GoogleAccountCredential credential) {
+
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            mService2 = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, credential)
+                    .setApplicationName("AugAppPrototype2")
+                    .build();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            createEvent();
+            return null;
+        }
+
+        /**
+         *
+         *
+         */
+        public void createEvent() {
+
+            Event event = new Event()
+                    .setSummary("Event- April 2016")
+                    .setLocation("Dhaka")
+                    .setDescription("New Event 1");
+
+            DateTime startDateTime = new DateTime("2016-04-17T18:10:00+06:00");
+            EventDateTime start = new EventDateTime()
+                    .setDateTime(startDateTime)
+                    .setTimeZone("Asia/Dhaka");
+            event.setStart(start);
+
+            DateTime endDateTime = new DateTime("2016-04-17T18:40:00+06:00");
+            EventDateTime end = new EventDateTime()
+                    .setDateTime(endDateTime)
+                    .setTimeZone("Asia/Dhaka");
+            event.setEnd(end);
+
+            String calendarId = "csc320augapp@gmail.com";
+            try {
+                mService2.events().insert(calendarId, event).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void onPreExecute(){
+            Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_LONG).show();
+        }
+    }//MainActivity
+}
