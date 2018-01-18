@@ -44,13 +44,14 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
     private Button signOutButton;
     private GoogleApiClient googleApiClient;
-    private ImageView profilePicture;
+    public ImageView profilePicture;
     private LinearLayout profileSection;
     private SignInButton signInButton;
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
-    ArrayList<String> whiteList = new ArrayList<String>();
+    private ArrayList<String> whiteList = new ArrayList<String>();
+    public GoogleSignInAccount account;
 
     /*--Methods--*/
 
@@ -122,22 +123,26 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
-            GoogleSignInAccount account = result.getSignInAccount();
+            account = result.getSignInAccount();
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
-            if(account.getPhotoUrl() != null) {
-                Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
-            } else {
-                Glide.with(this).load("https://i.stack.imgur.com/34AD2.jpg").into(profilePicture);
-            } // else
+            setProfilePicture(account);
             updateUI(true);
             checkPermissions(userEmail);
         } else {
             updateUI(false);
         } // else
     } // handleSignInResult(GoogleSignInResult)
+
+    public void setProfilePicture(GoogleSignInAccount account) {
+        if(account.getPhotoUrl() != null) {
+            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+        } else {
+            Glide.with(this).load("https://i.stack.imgur.com/34AD2.jpg").into(profilePicture);
+        } // else
+    } // setProfilePicture(GoogleSignInAccount)
 
     private void updateUI(boolean isLogin) {
         if(isLogin) {

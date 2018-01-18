@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -37,6 +39,9 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     boolean isGuest = GuestButtonListener.isGuest;
+    public TextView email;
+    public TextView name;
+    public ImageView profilePicture;
 
 
     /*--Methods--*/
@@ -53,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         convertCalendar();
         registerListenersForCalendarUIButtons();
+
+        name = (TextView) findViewById(R.id.name);
+        email = (TextView) findViewById(R.id.email);
+        profilePicture = (ImageView) findViewById(R.id.profile_image);
     }//onCreate
 
     /**
