@@ -81,15 +81,21 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         profileSection.setVisibility(View.GONE);
 
         GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+                new GoogleSignInOptions
+                        .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
 
 //        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
   //              .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
     //            .requestEmail()
       //          .build();
 
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
-                this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
+        googleApiClient = new GoogleApiClient
+                .Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
+                .build();
     }//onCreate
 
     @Override
@@ -116,7 +122,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // signIn()
 
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+        Auth.GoogleSignInApi
+                .signOut(googleApiClient)
+                .setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 updateUI(false);
@@ -150,7 +158,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         if(account.getPhotoUrl() != null) {
             Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
         } else {
-            Glide.with(this).load("https://i.stack.imgur.com/34AD2.jpg").into(profilePicture);
+            Glide.with(this)
+                    .load("https://i.stack.imgur.com/34AD2.jpg")
+                    .into(profilePicture);
         } // else
     } // setProfilePicture(GoogleSignInAccount)
 
