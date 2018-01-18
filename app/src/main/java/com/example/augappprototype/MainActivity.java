@@ -97,11 +97,15 @@ public class MainActivity extends AppCompatActivity {
         goToMainMenu();
         gsia = new GoogleSignInAPI();
         mOutputText = findViewById(R.id.testText);
-        new MakeRequestTask(gsia.mCredential).execute();
-
+        fetchEvents();
 
 
     }//onCreate
+
+    public void fetchEvents(){
+        new MakeRequestTask(gsia.mCredential).execute();
+
+    }
 
     public void addEventToCalendar(String summary, String location, String description,
                                    String start, String end){
