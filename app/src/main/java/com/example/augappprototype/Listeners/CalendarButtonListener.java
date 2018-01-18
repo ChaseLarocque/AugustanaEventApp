@@ -1,3 +1,4 @@
+
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
@@ -148,7 +149,7 @@ public class CalendarButtonListener extends CaldroidListener {
     }
 
     public void addTextViewForDetails(Dialog eventPopup) {
-        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
+        //MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -158,7 +159,7 @@ public class CalendarButtonListener extends CaldroidListener {
             textView.setText("");
             eventList.addView(textView);
         }
-        eventsInDay.addView(eventList);
+      //  eventsInDay.addView(eventList);
     }
 
 
@@ -201,4 +202,5 @@ public class CalendarButtonListener extends CaldroidListener {
         dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
                 date.getDate() + ", " + (date.getYear() + 1900));
     }
+
 }//CalendarButtonListener

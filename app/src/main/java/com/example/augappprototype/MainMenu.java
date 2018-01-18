@@ -45,9 +45,11 @@ public class MainMenu extends AppCompatActivity {
         registerMenuButtons();
 
         extras = getIntent().getExtras();
-        Toast.makeText(this, extras.getString("com.example.augappprototype.userName") + "Ihopethisworks", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Logged in As: "+extras.getString("com.example.augappprototype.userName"), Toast.LENGTH_LONG).show();
 
     }//onCreate
+
+
 
 
     /**

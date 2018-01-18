@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         credential.setSelectedAccountName(extras.getString("userName"));
         mOutputText = findViewById(R.id.testText);
         new MakeRequestTask(credential).execute();
-       // new addAnEvent(gsia.mCredential).execute(); //this would go in the onclick listener at some point
+        new addAnEvent(credential).execute(); //this would go in the onclick listener at some point
 
 
 
