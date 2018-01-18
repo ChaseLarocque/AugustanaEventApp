@@ -24,13 +24,9 @@ import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 
 import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -102,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        goToMainMenu();
+        //goToMainMenu();
 
         EasyPermissions.requestPermissions(
                 this,
@@ -144,18 +140,6 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
 
-    public void goToMainMenu() {
-        ImageButton back = findViewById(R.id.backbutton);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
-                startActivity(goToMainMenu);
-
-            }
-        });
-    }
-
     /**
      * registerListenersForCalendarUIButtons() --> void
      * Sets on click listeners for the add event button, edit event button and the category button
@@ -185,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     transport, jsonFactory, credential)
                     .setApplicationName("AugAppPrototype2")
                     .build();
+
         }
 
         /**
@@ -246,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<String> output) {
             mOutputText.setText("Grabbed " + output.size() + " things");
-          //  Toast.makeText(MainActivity.this, output.size(), Toast.LENGTH_LONG).show();
 
         }
 
@@ -267,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                             + mLastError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                //               mOutputText.setText("Request cancelled.");
+
             }
         }
     }//makeRequests
@@ -316,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             mService2.events().insert(calendarId, event).execute();
         } catch (IOException e) {
-            //Toast.makeText(MainActivity.this, "There was an Error pushing the event", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -325,9 +308,7 @@ public class MainActivity extends AppCompatActivity {
          *
          */
         @Override
-        protected void onPreExecute(){
-            Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_LONG).show();
-        }
+        protected void onPreExecute(){}
     }
 
     public void setEventCount(Date day){

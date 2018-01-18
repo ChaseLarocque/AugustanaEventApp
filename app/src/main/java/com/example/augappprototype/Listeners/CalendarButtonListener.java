@@ -159,43 +159,8 @@ public class CalendarButtonListener extends CaldroidListener {
             textView.setText("");
             eventList.addView(textView);
         }
-      //  eventsInDay.addView(eventList);
     }
 
-
-/*
-    public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){
-        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
-        eventList = new LinearLayout(mainActivity);
-        eventList.setLayoutParams(new LinearLayout.LayoutParams
-                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        eventList.setOrientation(LinearLayout.VERTICAL);
-            for(int y = 0; y < 4; y++ ) {
-                TextView textView = new TextView(mainActivity);
-                if (y == 0) {
-                    textView.setText("Title: "
-                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-                else if (y == 1){
-                    textView.setText("Time: "
-                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-                else if (y == 2){
-                   textView.setText("Location: "
-                           + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-                else{
-                    textView.setText("Description: "
-                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-            }
-        eventsInDay.addView(eventList);
-    }
-    */
 
     public void dateForBanner(Dialog eventPopup, Date date){
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);

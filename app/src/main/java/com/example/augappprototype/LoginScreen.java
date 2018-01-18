@@ -42,6 +42,8 @@ import java.util.ArrayList;
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    public boolean isAbleToEditCalendar;
+
     private Button signOutButton;
     private GoogleApiClient googleApiClient;
     public ImageView profilePicture;
@@ -64,6 +66,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        isAbleToEditCalendar = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
         Toast.makeText(this, "this has been created", Toast.LENGTH_LONG).show();
@@ -166,6 +169,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onActivityResult(int, int, Intent)
 
     public void addName(){
+        whiteList.add("csc320augapp@gmail.com");
+        whiteList.add("chaselarocque@gmail.com");
         whiteList.add("shichun1@ualberta.ca");
         whiteList.add("vpreyes@ualberta.ca");
         whiteList.add("cwlarocq@ualberta.ca");
@@ -176,6 +181,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         if (whiteList.contains(email)) {
             Toast.makeText(this, "faculty",
                     Toast.LENGTH_LONG).show();
+            isAbleToEditCalendar = true;
         } else {
             Toast.makeText(this, "student",
                     Toast.LENGTH_LONG).show();

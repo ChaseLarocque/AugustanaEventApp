@@ -17,6 +17,7 @@ import com.example.augappprototype.Listeners.AugustanaLibraryListener;
 import com.example.augappprototype.Listeners.AugustanaNewsletterListener;
 import com.example.augappprototype.Listeners.AugustanaWebsiteListener;
 import com.example.augappprototype.Listeners.EventCalendarListener;
+import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
 import com.example.augappprototype.Listeners.SignOutButtonListener;
 
 /**
@@ -48,8 +49,8 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         registerMenuButtons();
-        findViewById(R.id.eventsCalendarImage)
-                .setOnClickListener(new EventCalendarListener(this));
+        //findViewById(R.id.eventsCalendarImage)
+         //       .setOnClickListener(new EventCalendarListener(this));
         findViewById(R.id.newsletterImage)
                 .setOnClickListener(new AugustanaNewsletterListener(this));
         findViewById(R.id.libraryImage)
@@ -80,14 +81,15 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.newsletterImage).setOnClickListener
-                (new OtherMainMenuButtonListeners(this));
-        findViewById(R.id.libraryImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
-        findViewById(R.id.websiteImage).setOnClickListener(new OtherMainMenuButtonListeners(this));
-        findViewById(R.id.signout).setOnClickListener(new SignOutButtonListener(this));
+        findViewById(R.id.newsletterImage)
+                .setOnClickListener(new OtherMainMenuButtonListeners(this));
+        findViewById(R.id.libraryImage)
+                .setOnClickListener(new OtherMainMenuButtonListeners(this));
+        findViewById(R.id.websiteImage)
+                .setOnClickListener(new OtherMainMenuButtonListeners(this));
+        findViewById(R.id.signout)
+                .setOnClickListener(new SignOutButtonListener(this));
     }//registerMenuButtons
-}//MainMenu
-
 
     @Override
     public void onBackPressed() {
