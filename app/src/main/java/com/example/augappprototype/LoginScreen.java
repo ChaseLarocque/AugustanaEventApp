@@ -86,10 +86,11 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
                         .requestEmail()
                         .build();
 
-//        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-  //              .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
-    //            .requestEmail()
-      //          .build();
+//        GoogleSignInOptions signInOptions = new GoogleSignInOptions
+//                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
+//                .requestEmail()
+//                .build();
 
         googleApiClient = new GoogleApiClient
                 .Builder(this)
