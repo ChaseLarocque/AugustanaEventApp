@@ -51,7 +51,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private TextView name;
     private static final int REQUEST_CODE = 9001;
     private ArrayList<String> whiteList = new ArrayList<String>();
-    public GoogleSignInAccount account;
+    public static GoogleSignInAccount account;
 
     /*--Methods--*/
 
@@ -137,6 +137,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // handleSignInResult(GoogleSignInResult)
 
     public void setProfilePicture(GoogleSignInAccount account) {
+        MainActivity mainActivity = new MainActivity();
         if(account.getPhotoUrl() != null) {
             Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
         } else {
