@@ -57,6 +57,7 @@ public class CalendarButtonListener extends CaldroidListener {
     int eventMonth;
     int eventDay;
 
+
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
         this.mainActivity = mainActivity;
@@ -74,31 +75,12 @@ public class CalendarButtonListener extends CaldroidListener {
         final Dialog eventPopupDialog = new Dialog(mainActivity);
         eventPopupDialog.setContentView(R.layout.eventpopup);
         closeWindowListener(eventPopupDialog);
-        Date converted = convertDate(date);
-        if (dayEvents(converted) == true) {
-            dateForBanner(eventPopupDialog, date);
-            addButtonsForEvents(eventPopupDialog, date);
-            eventPopupDialog.show();
-            Toast.makeText(mainActivity, "lol" + AddEventListener.allEvents,
-                    Toast.LENGTH_LONG).show();
-        }//if
-        else
-            Toast.makeText(mainActivity, "No Events On This Day",
-                    Toast.LENGTH_SHORT).show();
-    }//onSelectDate
+        dateForBanner(eventPopupDialog, date);
+        addButtonsForEvents(eventPopupDialog, date);
+        eventPopupDialog.show();
 
-    /**
-     * dayEvents(Date) --> boolean
-     * Checks if there are any events in the hash map
-     * @param date
-     * @return
-     */
-    public boolean dayEvents(Date date){
-        if (AddEventListener.allEvents.containsKey(date))//events in hash map
-            return true;
-        else
-            return false;//no events in hash map
-    }//dayEvents
+
+    }//onSelectDate
 
     /**
      * convertDate(Date) --> Date
@@ -131,84 +113,81 @@ public class CalendarButtonListener extends CaldroidListener {
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        for (Event event : mainActivity.items) {
+        for (final Event event : mainActivity.items) {
+            if (getDateFromDateTime(event).equals(convertDate(date))) {
                 Button eachEvent = new Button(mainActivity);
                 eachEvent.setText(event.getSummary());
                 eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
                 eachEvent.setTextSize(20);
                 eachEvent.setLayoutParams(new LinearLayout
                         .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT));
-            eachEvent.setOnClickListener(new View.OnClickListener() {
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                eachEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         eventPopup.setContentView(R.layout.eventpopup_details);
-                        addTextViewForDetails(eventPopup);
+                        addTextViewForDetails(eventPopup, event);
                     }
                 });
                 eventList.addView(eachEvent);
+            }
         }
         eventsInDay.addView(eventList);
     }
 
-    public void addTextViewForDetails(Dialog eventPopup) {
+    public void addTextViewForDetails(Dialog eventPopup, Event event) {
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        for (Event event : mainActivity.items) {
-            TextView textView = new TextView(mainActivity);
-            convertEventDateTime(event);
-            textView.setText(event.getStart().toString() + eventYear + "-" + eventMonth + "-" + eventDay);
-            eventList.addView(textView);
-
+        for (Event eachEvents : mainActivity.items) {
+            if (eachEvents.equals(event)) {
+                for (int y = 0; y < 4; y++) {
+                    TextView textView = new TextView(mainActivity);
+                    if (y == 0) {
+                        textView.setText("Title: " + event.getSummary());
+                        eventList.addView(textView);
+                    } else if (y == 1) {
+                        textView.setText("Time: " + getStartTimeFromDateTime(event) + " - " +
+                                getEndTimeFromDateTime(event));
+                        eventList.addView(textView);
+                    } else if (y == 2) {
+                        textView.setText("Location: " + event.getLocation());
+                        eventList.addView(textView);
+                    } else {
+                        textView.setText("Description: " + event.getDescription());
+                        eventList.addView(textView);
+                    }
+                }
+            }
         }
         eventsInDay.addView(eventList);
+
     }
 
-    public void convertEventDateTime(Event eachEvent){
+    public Date getDateFromDateTime(Event eachEvent){
         String eventDetails = eachEvent.getStart().toString();
-
         eventYear = Integer.parseInt(eventDetails.substring(13,17));
         eventMonth = Integer.parseInt(eventDetails.substring(18,20));
         eventDay = Integer.parseInt(eventDetails.substring(21,23));
-        Toast.makeText(mainActivity, eventDetails,
-                Toast.LENGTH_LONG).show();
+        return new Date(eventYear - 1900, eventMonth - 1, eventDay);
     }
-/*
-    public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){
-        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
-        eventList = new LinearLayout(mainActivity);
-        eventList.setLayoutParams(new LinearLayout.LayoutParams
-                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        eventList.setOrientation(LinearLayout.VERTICAL);
-            for(int y = 0; y < 4; y++ ) {
-                TextView textView = new TextView(mainActivity);
-                if (y == 0) {
-                    textView.setText("Title: "
-                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-                else if (y == 1){
-                    textView.setText("Time: "
-                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-                else if (y == 2){
-                   textView.setText("Location: "
-                           + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-                else{
-                    textView.setText("Description: "
-                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
-                    eventList.addView(textView);
-                }
-            }
-        eventsInDay.addView(eventList);
+
+    public String getStartTimeFromDateTime(Event eachEvent){
+        String eventDetails = eachEvent.getStart().toString();
+        int startEventHour = Integer.parseInt(eventDetails.substring(24,26));
+        int startEventMinute = Integer.parseInt(eventDetails.substring(27,29));
+        return mainActivity.convertEventTime(startEventHour, startEventMinute);
     }
-    */
+
+    public String getEndTimeFromDateTime(Event eachEvent){
+        String eventDetails = eachEvent.getEnd().toString();
+        int endEventHour = Integer.parseInt(eventDetails.substring(24,26));
+        int endEventMinute = Integer.parseInt(eventDetails.substring(27,29));
+        return mainActivity.convertEventTime(endEventHour, endEventMinute);
+    }
+
 
     public void dateForBanner(Dialog eventPopup, Date date){
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);

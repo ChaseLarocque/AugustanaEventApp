@@ -23,6 +23,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     String eventTitle;
     String eventLocation;
     String eventDescription;
+    String endEvent;
+    String startEvent;
 
     TextView mOutputText;
 
@@ -100,10 +103,13 @@ public class MainActivity extends AppCompatActivity {
 
     }//onCreate
 
-    public void addEventToCalendar(String summary, String location, String description){
+    public void addEventToCalendar(String summary, String location, String description,
+                                   String start, String end){
         eventTitle = summary;
         eventDescription = description;
         eventLocation = location;
+        startEvent = start;
+        endEvent = end;
         new addAnEvent(gsia.mCredential).execute();
     }
 
@@ -125,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         Date jan1 = new Date(1514790000000L);
         Date dec31 = new Date(1546300800000L);
         caldroidFragment.setMinDate(jan1);
+
         caldroidFragment.setMaxDate(dec31);
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
@@ -272,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            createEvent(eventTitle, eventLocation, eventDescription);
+            createEvent(eventTitle, eventLocation, eventDescription, startEvent, endEvent);
             return null;
         }
 
@@ -280,19 +287,20 @@ public class MainActivity extends AppCompatActivity {
          *
          *
          */
-    public void createEvent(String summary, String location, String description) {
+    public void createEvent(String summary, String location,
+                            String description, String eventStart, String eventEnd) {
 
         Event event = new Event()
                 .setSummary(summary)
                 .setLocation(location)
                 .setDescription(description);
 
-        DateTime startDateTime = new DateTime("2017-12-17T18:10:00+06:00");
+        DateTime startDateTime = new DateTime(eventStart);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime);
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime("2017-12-17T18:40:00+06:00");
+        DateTime endDateTime = new DateTime(eventEnd);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime);
         event.setEnd(end);
@@ -367,4 +375,27 @@ public class MainActivity extends AppCompatActivity {
             setEventCount(daysWithEvents);
         }
     }
+
+    /**
+     * saveEventTime(TimePicker) --> void
+     * Stores the time that the user has selected on the select time dialog
+     * @param hour, minute
+     */
+    public String convertEventTime(int hour, int minute){
+        String doubleDigitMinute = String.format("%02d", minute);
+        String amOrPm;
+        int convertedHour = hour;
+        if (hour >= 12) {
+            convertedHour = (hour - 12);
+            amOrPm = "PM";
+        }
+        else if (hour == 0){
+            convertedHour = (hour + 12);
+            amOrPm = "AM";
+        }
+        else{
+            amOrPm = "AM";
+        }
+        return convertedHour + ":" + doubleDigitMinute + " " + amOrPm;
+    }//saveEventTime
 }//MainActivity

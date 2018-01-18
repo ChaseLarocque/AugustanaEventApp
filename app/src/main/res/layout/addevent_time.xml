@@ -28,18 +28,27 @@
         android:layout_width="fill_parent"
         android:layout_height="73dp"
         android:adjustViewBounds="true"
+        android:text=" Start Time:"
+        android:clickable="true"
+        android:textSize="20sp"
+        android:gravity="left|center"
         android:background="@color/caldroid_transparent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventBanner" />
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner" />
 
     <Button
         android:id="@+id/endTimeButton"
         android:layout_width="fill_parent"
-        android:layout_height="69dp"
+        android:layout_height="73dp"
         android:adjustViewBounds="true"
+        android:clickable="true"
+        android:text=" End Time:"
+        android:gravity="left|center"
+        android:textSize="20sp"
         android:background="@color/caldroid_transparent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <Button
@@ -53,6 +62,8 @@
         android:text="Close Window"
         android:textColor="@color/uofaGold"
         android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/endTimeButton" />
@@ -67,41 +78,12 @@
         android:text="Continue"
         android:textColor="@color/uofaGold"
         android:textSize="15sp"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline3"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endTimeButton" />
 
-
-    <TextView
-        android:id="@+id/startTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:textColor="@color/caldroid_black"
-        android:layout_marginTop="8dp"
-        android:text="Start Time:"
-        android:clickable="false"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@id/startTimeButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/startTimeButton" />
-
-    <TextView
-        android:id="@+id/endTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="false"
-        android:text="End Time:"
-        android:textColor="@color/caldroid_black"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/endTimeButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/endTimeButton" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
@@ -110,33 +92,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <TextView
-        android:id="@+id/startTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="false"
-        android:textSize="30sp"
-        android:textColor="@color/caldroid_black"
-        app:layout_constraintBottom_toBottomOf="@+id/startTimeButton"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/startTimeButton" />
 
-    <TextView
-        android:id="@+id/endTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="30sp"
-        android:clickable="false"
-        android:textColor="@color/caldroid_black"
-        app:layout_constraintBottom_toBottomOf="@+id/endTimeButton"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/endTimeButton" />
 
     <ImageView
         android:id="@+id/timeIcon"
@@ -146,7 +102,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="104dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/startTimeButton"
+        app:layout_constraintBottom_toBottomOf="@+id/eventBanner"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/eventBanner"
@@ -157,11 +113,8 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:scaleType="fitXY"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:srcCompat="@drawable/greentaskbar"
-        app:layout_constraintTop_toBottomOf="@id/startTime"
-        app:layout_constraintBottom_toTopOf="@id/endTime"/>
+        android:background="@drawable/greentaskbar"
+        app:layout_constraintTop_toBottomOf="@+id/startTimeButton" />
 
 
 </android.support.constraint.ConstraintLayout>
