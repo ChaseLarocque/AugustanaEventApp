@@ -14,6 +14,7 @@ package com.example.augappprototype;
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -66,6 +68,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_login_screen);
         Toast.makeText(this, "this has been created", Toast.LENGTH_LONG).show();
         addName();
+
         profileSection = (LinearLayout) findViewById(R.id.profile_section);
         signOutButton = (Button) findViewById(R.id.logout_button);
         signInButton = (SignInButton) findViewById(R.id.login_button);
@@ -109,7 +112,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // signIn()
 
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+        Auth.GoogleSignInApi
+                .signOut(googleApiClient)
+                .setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 updateUI(false);

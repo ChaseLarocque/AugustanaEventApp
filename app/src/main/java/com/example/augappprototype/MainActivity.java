@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,8 +28,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
@@ -48,6 +52,8 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
 
 
@@ -64,6 +70,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
+    boolean isGuest = GuestButtonListener.isGuest;
+    public TextView email;
+    public TextView name;
+    public ImageView profilePicture;
+    SharedPreferences sharedPreferences;
 
     private static final String[] SCOPES = {CalendarScopes.CALENDAR};
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -81,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
      * Calls the convertCalendar and registerListenersForButtons methods so that there is a new on
      * click listener for them on creation
      * on creation
-     *
      * @param savedInstanceState
      */
     @Override
@@ -372,4 +382,5 @@ public class MainActivity extends AppCompatActivity {
             setEventCount(daysWithEvents);
         }
     }
+
 }//MainActivity
