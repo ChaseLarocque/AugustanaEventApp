@@ -7,20 +7,6 @@
     android:background="@color/uofaGold"
     tools:context="com.example.augappprototype.LoginScreen">
 
-    <Button
-        android:id="@+id/continueAsGuestButton"
-        android:layout_width="131dp"
-        android:layout_height="58dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/button"
-        android:text="@string/login_as_guest"
-        android:textColor="@color/uofaGold"
-        android:backgroundTint="@color/uofaGreen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
     <TextView
         android:id="@+id/augAppLoginView"
         android:layout_width="128dp"
@@ -123,5 +109,5 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.326"></com.google.android.gms.common.SignInButton>
+        app:layout_constraintVertical_bias="0.532"></com.google.android.gms.common.SignInButton>
 </android.support.constraint.ConstraintLayout>

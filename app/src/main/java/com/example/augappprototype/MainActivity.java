@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        goToMainMenu();
     }//onCreate
 
     /**
@@ -77,17 +76,6 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.setMaxDate(dec31);
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
-
-    public void goToMainMenu(){
-        ImageButton back = findViewById(R.id.backbutton);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
-                startActivity(goToMainMenu);
-            }
-        });
-    }
 
     /**
      * registerListenersForCalendarUIButtons() --> void
