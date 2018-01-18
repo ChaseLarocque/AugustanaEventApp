@@ -16,19 +16,25 @@ package com.example.augappprototype;
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.example.augappprototype.Listeners.GuestButtonListener;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
 
 
@@ -37,6 +43,10 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     boolean isGuest = GuestButtonListener.isGuest;
+    public TextView email;
+    public TextView name;
+    public ImageView profilePicture;
+    SharedPreferences sharedPreferences;
 
 
     /*--Methods--*/
@@ -53,7 +63,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        goToMainMenu();
+        LoginScreen loginScreen = new LoginScreen();
+
+    //    Gson gson = new Gson();
+    //    String json = sharedPreferences.getString("account", "");
+    //    GoogleSignInAccount googleSignInAccount = gson.fromJson(json, GoogleSignInAccount.class);
+
+    //    Glide.with(this).load(googleSignInAccount.getPhotoUrl()).into(profilePicture);
+
     }//onCreate
 
     /**
@@ -78,17 +95,6 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
 
-    public void goToMainMenu(){
-        ImageButton back = findViewById(R.id.backbutton);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
-                startActivity(goToMainMenu);
-            }
-        });
-    }
-
     /**
      * registerListenersForCalendarUIButtons() --> void
      * Sets on click listeners for the add event button, edit event button and the category button
@@ -101,4 +107,5 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
+
 }//MainActivity
