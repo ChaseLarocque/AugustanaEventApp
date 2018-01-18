@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.example.augappprototype.Listeners.LoginButtonListener;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -138,24 +139,20 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
             account = result.getSignInAccount();
 
-            Gson gson = new Gson();
-            String myJson = gson.toJson(account);
-            //in tent.putExtra("myJson", myJson);
-
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
-            setProfilePicture(account);
+            setProfilePicture();
             updateUI(true);
+
             checkPermissions(userEmail);
         } else {
             updateUI(false);
         } // else
     } // handleSignInResult(GoogleSignInResult)
 
-    public void setProfilePicture(GoogleSignInAccount account) {
-        MainActivity mainActivity = new MainActivity();
+    private void setProfilePicture() {
         if(account.getPhotoUrl() != null) {
             Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
         } else {
@@ -199,6 +196,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(this, "student",
                     Toast.LENGTH_LONG).show();
         } // else
+
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
     } // checkPermissions(String)

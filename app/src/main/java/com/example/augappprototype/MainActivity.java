@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -33,6 +34,7 @@ import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.example.augappprototype.Listeners.GuestButtonListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -42,11 +44,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    boolean isGuest = GuestButtonListener.isGuest;
-    public TextView email;
+    GoogleSignInAccount account;
     public TextView name;
     public ImageView profilePicture;
-    SharedPreferences sharedPreferences;
 
 
     /*--Methods--*/
@@ -61,17 +61,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        account = GoogleSignIn.getLastSignedInAccount(this);
+        profilePicture = (ImageView) findViewById(R.id.profile_image);
+
+        if(account != null){
+            setProfilePicture();
+        } else {
+            Toast.makeText(this, "account is null",
+                    Toast.LENGTH_LONG).show();
+        } // else
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        LoginScreen loginScreen = new LoginScreen();
-
-    //    Gson gson = new Gson();
-    //    String json = sharedPreferences.getString("account", "");
-    //    GoogleSignInAccount googleSignInAccount = gson.fromJson(json, GoogleSignInAccount.class);
-
-    //    Glide.with(this).load(googleSignInAccount.getPhotoUrl()).into(profilePicture);
 
     }//onCreate
+
+    private void setProfilePicture() {
+        if(account.getPhotoUrl() != null) {
+            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+        } else {
+            Glide.with(this)
+                    .load("https://i.stack.imgur.com/34AD2.jpg")
+                    .into(profilePicture);
+        } // else
+    }
 
     /**
      * convertCalendar() --> void
