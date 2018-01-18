@@ -68,6 +68,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+
         addName();
 
         profileSection = (LinearLayout) findViewById(R.id.profile_section);
