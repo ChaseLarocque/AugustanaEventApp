@@ -27,6 +27,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 
 import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -48,6 +50,7 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -68,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
     boolean isGuest = GuestButtonListener.isGuest;
     public TextView email;
+    GoogleSignInAccount account;
     public TextView name;
     public ImageView profilePicture;
-    SharedPreferences sharedPreferences;
 
     private static final String[] SCOPES = {CalendarScopes.CALENDAR};
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -96,6 +99,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Bundle extras= getIntent().getExtras();
 
+
+        account = GoogleSignIn.getLastSignedInAccount(this);
+        profilePicture = (ImageView) findViewById(R.id.profile_image);
+
+        if(account != null){
+            setProfilePicture();
+        } else {
+            Toast.makeText(this, "account is null",
+                    Toast.LENGTH_LONG).show();
+        } // else
         convertCalendar();
         registerListenersForCalendarUIButtons();
         //goToMainMenu();
@@ -117,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     }//onCreate
+
+    private void setProfilePicture() {
+        if(account.getPhotoUrl() != null) {
+            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+        } else {
+            Glide.with(this)
+                    .load("https://i.stack.imgur.com/34AD2.jpg")
+                    .into(profilePicture);
+        } // else
+    }
 
     /**
      * convertCalendar() --> void

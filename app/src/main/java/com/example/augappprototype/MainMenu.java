@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 
 import android.widget.Toast;
 
+import android.widget.Toast;
 
 import com.example.augappprototype.Listeners.AugustanaLibraryListener;
 import com.example.augappprototype.Listeners.AugustanaNewsletterListener;
@@ -19,6 +21,8 @@ import com.example.augappprototype.Listeners.AugustanaWebsiteListener;
 import com.example.augappprototype.Listeners.EventCalendarListener;
 import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
 import com.example.augappprototype.Listeners.SignOutButtonListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 /**
  * MainMenu
@@ -44,10 +48,14 @@ public class MainMenu extends AppCompatActivity {
      * main menu
      * @param savedInstanceState
      */
+    GoogleSignInAccount account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        account = GoogleSignIn.getLastSignedInAccount(this);
+
         registerMenuButtons();
         //findViewById(R.id.eventsCalendarImage)
          //       .setOnClickListener(new EventCalendarListener(this));
@@ -90,6 +98,8 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.signout)
                 .setOnClickListener(new SignOutButtonListener(this));
     }//registerMenuButtons
+
+
 
     @Override
     public void onBackPressed() {

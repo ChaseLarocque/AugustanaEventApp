@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -132,20 +133,22 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
-            setProfilePicture(account);
+            setProfilePicture();
             updateUI(true);
+
             checkPermissions(userEmail);//figure out how to call this again
         } else {
             updateUI(false);
         } // else
     } // handleSignInResult(GoogleSignInResult)
 
-    public void setProfilePicture(GoogleSignInAccount account) {
-        MainActivity mainActivity = new MainActivity();
+    private void setProfilePicture() {
         if(account.getPhotoUrl() != null) {
             Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
         } else {
-            Glide.with(this).load("https://i.stack.imgur.com/34AD2.jpg").into(profilePicture);
+            Glide.with(this)
+                    .load("https://i.stack.imgur.com/34AD2.jpg")
+                    .into(profilePicture);
         } // else
     } // setProfilePicture(GoogleSignInAccount)
 
@@ -186,6 +189,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(this, "student",
                     Toast.LENGTH_LONG).show();
         } // else
+
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
         goToMenu.putExtra("com.example.augappprototype.userName", account.getEmail());
