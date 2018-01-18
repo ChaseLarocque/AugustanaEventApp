@@ -110,6 +110,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onConnectionFailed(ConnectionResult)
 
     private void signIn() {
+        signOut();
         Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(intent, REQUEST_CODE);
     } // signIn()
