@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import com.example.augappprototype.GoogleSignInAPI;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 import com.roomorama.caldroid.CaldroidFragment;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,8 +66,11 @@ public class AddEventListener implements View.OnClickListener {
     private int day;
     private int month;
     private int year;
-    private int minute;
-    private int hour;
+    boolean isStartTime;
+    private int startMinute;
+    private int startHour;
+    private int endMinute;
+    private int endHour;
     private String step;
     private final MainActivity mainActivity;
     private String amOrPm;
@@ -160,10 +166,8 @@ public class AddEventListener implements View.OnClickListener {
                     step = "time";
                 }//if
                 else if (step == "time"){
-                    saveEventTime(eventTime);
                     addEvents.dismiss();
-                    Toast.makeText(mainActivity, "lol" + minute,
-                            Toast.LENGTH_SHORT).show();
+
                     openEventDetails();
                     step = "details";
                 }//else
@@ -187,25 +191,22 @@ public class AddEventListener implements View.OnClickListener {
     /**
      * saveEventTime(TimePicker) --> void
      * Stores the time that the user has selected on the select time dialog
-     * @param timePicker
+     * @param hour, minute
      */
-    public void saveEventTime(TimePicker timePicker){
-        minute = timePicker.getCurrentMinute();
+    public String convertEventTime(int hour, int minute){
         String doubleDigitMinute = String.format("%02d", minute);
-        hour = timePicker.getCurrentHour();
         if (hour > 12) {
-            hour = (timePicker.getCurrentHour() - 12);
+            hour = (hour - 12);
             amOrPm = "PM";
         }
         else if (hour == 0){
-            hour = (timePicker.getCurrentHour() + 12);
+            hour = (hour + 12);
             amOrPm = "AM";
         }
         else{
-            hour = timePicker.getCurrentHour();
             amOrPm = "AM";
         }
-        eventTime = hour + ":" + doubleDigitMinute + " " + amOrPm;
+        return hour + ":" + doubleDigitMinute + " " + amOrPm;
     }//saveEventTime
 
     /**
@@ -227,13 +228,66 @@ public class AddEventListener implements View.OnClickListener {
      * minute
      */
     public void openEventTime(){
-        final Dialog addEventDialog = new Dialog(mainActivity);
-        addEventDialog.setContentView(R.layout.addeventtime);
-        addEventDialog.show();
-        continueButtonListener(addEventDialog);
-        closeWindowListener(addEventDialog);
+        final Dialog addEventTimeDialog = new Dialog(mainActivity);
+        addEventTimeDialog.setContentView(R.layout.addevent_time);
+        addEventTimeDialog.show();
+        final Button setStart = addEventTimeDialog.findViewById(R.id.startTimeButton);
+
+        setStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isStartTime = true;
+                openEventTimePicker(isStartTime, addEventTimeDialog);
+            }
+        });
+        final Button setEnd = addEventTimeDialog.findViewById(R.id.endTimeButton);
+        setEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isStartTime = false;
+                openEventTimePicker(isStartTime, addEventTimeDialog);
+            }
+        });
+        continueButtonListener(addEventTimeDialog);
+        closeWindowListener(addEventTimeDialog);
     }//openEventTime
 
+
+    public void openEventTimePicker(final Boolean isStartTime, final Dialog eventTimes){
+        final Dialog timePickerDialog = new Dialog(mainActivity);
+        timePickerDialog.setContentView(R.layout.addevent_timepicker);
+        timePickerDialog.show();
+        Button submitTime = timePickerDialog.findViewById(R.id.submitButton);
+        final TimePicker timePicker = timePickerDialog.findViewById(R.id.timePicker);
+        final TextView timeLabel = timePickerDialog.findViewById(R.id.timeLabel);
+        final TextView startTime = eventTimes.findViewById(R.id.startTime);
+        final TextView endTime = eventTimes.findViewById(R.id.endTime);
+        if (isStartTime){
+            timeLabel.setText(" Set Start Time");
+        }
+        else{
+            timeLabel.setText(" Set End Time");
+        }
+        submitTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (isStartTime){
+                    startHour = timePicker.getCurrentHour();
+                    startMinute = timePicker.getCurrentMinute();
+                    startTime.setText(convertEventTime(startHour, startMinute));
+
+                }
+                else{
+                    endHour = timePicker.getCurrentHour();
+                    endMinute = timePicker.getCurrentMinute();
+                    endTime.setText(convertEventTime(endHour, endMinute));
+
+                }
+                timePickerDialog.dismiss();
+            }
+        });
+    }
     /**
      * openEventDetails() --> void
      * When called, will open the event details dialog where the user enters the event title,

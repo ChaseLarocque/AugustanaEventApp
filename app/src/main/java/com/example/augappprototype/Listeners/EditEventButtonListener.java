@@ -200,7 +200,7 @@ public class EditEventButtonListener implements View.OnClickListener {
 
     private void editEventTime(final Dialog editEventDetails, final Date date, final int eventID) {
         final Dialog editTimeDialog = new Dialog(mainActivity);
-        editTimeDialog.setContentView(R.layout.addeventtime);
+        editTimeDialog.setContentView(R.layout.addevent_timepicker);
         editTimeDialog.show();
         final TimePicker eventTime = editTimeDialog.findViewById(R.id.timePicker);
         Button continueButton = editTimeDialog.findViewById(R.id.continueButton);
