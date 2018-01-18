@@ -323,7 +323,6 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         protected void onPreExecute(){
-            Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_LONG).show();
         }
     }
 

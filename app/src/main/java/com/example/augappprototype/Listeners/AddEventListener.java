@@ -325,7 +325,6 @@ public class AddEventListener implements View.OnClickListener {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
         }
-        mainActivity.setEventCount(eventDate);
     }
 
 
