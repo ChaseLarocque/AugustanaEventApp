@@ -116,9 +116,3 @@ public class EditEventButtonListener implements View.OnClickListener {
 }//EditEventButtonListener
 
 
-/*
-    public void getLocation(){
-        TextView location = mainActivity.findViewById(R.id.getLocation);
-        // location.setText(AddEventListener.eventDetails.get(0));
-    }
-    */

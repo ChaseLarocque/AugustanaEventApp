@@ -1,30 +1,18 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.roomorama.caldroid.CaldroidFragment;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by Pao on 1/7/2018.
@@ -55,7 +43,10 @@ import java.util.Iterator;
  * openEventDetails()
  *      Opens the popup for the event details
  * addEventButtonListener(final Dialog addEvents)
- *      Stores the details the user has entered
+ *      Stores the details the user has entered if they enter in all credentials
+ * saveEvent(Date eventDate)
+ *      Saves the event details and categories into an array list and sets the event count for each
+ *      day
  * checkAmorPm(int hourOfDay)
  *      Checks if the time the user entered is AM or PM
  * selectCategoryListener(Dialog eventDetails)
@@ -82,6 +73,7 @@ public class AddEventListener implements View.OnClickListener {
     String eventLocation;
     ArrayList<String> categorySelected = new ArrayList<>();
     String checked;
+    boolean noCategory = true;
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -98,14 +90,7 @@ public class AddEventListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-      //  if(GuestButtonListener.isGuest)//guests cannot add events
-      //      Toast.makeText(mainActivity, "This button is not available on guest mode",
-      //              Toast.LENGTH_SHORT).show();
-      //  else
         selectDate();//students and faculty will be brought up to the select date popup
-
-
-
     }//onClick
 
     /**
@@ -115,14 +100,6 @@ public class AddEventListener implements View.OnClickListener {
      * back to the calendar or continue to the next dialog popup
      */
     public void selectDate(){
-        /**
-        eventDetails.add(0, "Augustana");
-        eventDetails.add(1, "Basketball Game");
-        eventDetails.add(2, "The Augustana Vikings will take on the GPRC Wolves");
-        events.put(new Date(118, 0, 1), eventDetails);
-        Toast.makeText(mainActivity, "Event Added",
-                Toast.LENGTH_SHORT).show();
-         */
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventpopup);
         addEventDialog.show();
@@ -140,13 +117,12 @@ public class AddEventListener implements View.OnClickListener {
     public void closeWindowListener(final Dialog addEvents){
         Button closeWindow = addEvents.findViewById(R.id.closeWindow);
         closeWindow.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 addEvents.dismiss();
                 Toast.makeText(mainActivity, " " + categorySelected,
                         Toast.LENGTH_SHORT).show();
-            }
+            }//onClick
         });
     }//closeWindowListener
 
@@ -249,7 +225,8 @@ public class AddEventListener implements View.OnClickListener {
     /**
      * addEventButtonListener(Dialog) --> void
      * Saves the events title, location, and description and adds them to an array list and then
-     * puts the array list into a hash map that puts the event the date the user selected.
+     * puts the array list into a hash map that puts the event the date the user selected only if
+     * the user has filled out every credential
      * @param addEvents
      */
     public void addEventButtonListener(final Dialog addEvents){
@@ -258,14 +235,38 @@ public class AddEventListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
-                saveEvent(new Date(year, month, day));
-                Toast.makeText(mainActivity, "Event Added!",
-                        Toast.LENGTH_LONG).show();
-                addEvents.dismiss();
-            }
+                if (noCategory == true) {
+                    Toast.makeText(mainActivity, "Please Select A Category",
+                            Toast.LENGTH_SHORT).show();
+                }//if
+                else if (eventTitle.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Title",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else if (eventLocation.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Location",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else if (eventDescription.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Description",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else {
+                    saveEvent(new Date(year, month, day));
+                    Toast.makeText(mainActivity, "Event Added!",
+                            Toast.LENGTH_LONG).show();
+                    addEvents.dismiss();
+                }//else
+            }//onClick
         });
     }//addEventButtonListener
 
+    /**
+     * saveEvent(Date) --> void
+     * stores the event details in an array list that is stored in a hashmap and sets the count for
+     * the events on each day
+     * @param eventDate
+     */
     public void saveEvent(Date eventDate) {
         ArrayList<String> eventDetails = new ArrayList();
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
@@ -280,13 +281,13 @@ public class AddEventListener implements View.OnClickListener {
         eventDetails.add(8, categorySelected.get(4));
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
-        }
+        }//if
         else {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
-        }
+        }//else
         mainActivity.setEventCount(eventDate, allEvents.get(eventDate).size());
-    }
+    }//saveEvent
 
     /**
      * checkAmOrPm(int) --> String
@@ -315,9 +316,10 @@ public class AddEventListener implements View.OnClickListener {
                 final Dialog categoryDialog = new Dialog(mainActivity);
                 categoryDialog.setContentView(R.layout.addeventcategory);
                 categorySelected = new ArrayList<>();
+
                 confirmCategoryListener(categoryDialog);
                 categoryDialog.show();
-            }
+            }//onClick
         });
     }//selectCategoryListener
 
@@ -328,7 +330,8 @@ public class AddEventListener implements View.OnClickListener {
      * @param eventDetailsDialog
      */
     public void checkedCategoryAthletics(Dialog eventDetailsDialog) {
-        final CheckBox athletics = (CheckBox) eventDetailsDialog.findViewById(R.id.athleticsCategory);
+        final CheckBox athletics = (CheckBox) eventDetailsDialog.findViewById
+                (R.id.athleticsCategory);
         if (athletics.isChecked() == true) {
             checked = "yes";
         }//if
@@ -345,7 +348,8 @@ public class AddEventListener implements View.OnClickListener {
      * @param eventDetailsDialog
      */
     public void checkedCategoryPerformance(Dialog eventDetailsDialog) {
-        final CheckBox performance = (CheckBox) eventDetailsDialog.findViewById(R.id.performanceCategory);
+        final CheckBox performance = (CheckBox) eventDetailsDialog.findViewById
+                (R.id.performanceCategory);
         if (performance.isChecked() == true) {
             checked = "yes";
         } //if
@@ -397,7 +401,6 @@ public class AddEventListener implements View.OnClickListener {
      */
     public void checkedCategoryAsa(Dialog eventDetailsDialog) {
         final CheckBox asa = (CheckBox) eventDetailsDialog.findViewById(R.id.asaCategory);
-
         if (asa.isChecked() == true) {
             checked = "yes";
         }//if
@@ -422,6 +425,13 @@ public class AddEventListener implements View.OnClickListener {
                 checkedCategoryClub(categoryDialog);
                 checkedCategoryResearch(categoryDialog);
                 checkedCategoryAsa(categoryDialog);
+                if (categorySelected.get(0) == "no" && categorySelected.get(1) == "no"
+                        && categorySelected.get(2) == "no"
+                        && categorySelected.get(3) == "no" && categorySelected.get(4) == "no") {
+                    noCategory = true;
+                }//if
+                else
+                    noCategory = false;
                 categoryDialog.dismiss();
             }//onClick
         });

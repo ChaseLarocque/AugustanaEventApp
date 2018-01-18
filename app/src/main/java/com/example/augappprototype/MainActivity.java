@@ -15,7 +15,6 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
-
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -87,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.backbutton).setOnClickListener((new BackButtonListener(this)));
     }//registerListenersForButtons
 
+    /**
+     * setEventCount(Date, int) --> void
+     * uses a switch table to add a drawable icon with a number to display how many events are on
+     * a certain day
+     * @param day
+     * @param filter
+     */
     public void setEventCount(Date day, int filter){
         switch (filter){
             case(0):
@@ -134,13 +140,13 @@ public class MainActivity extends AppCompatActivity {
                 Drawable count10 = getResources().getDrawable(R.drawable.count10);
                 caldroidFragment.setBackgroundDrawableForDate(count10, day);
                 break;
-        }
+        }//switch
         caldroidFragment.refreshView();
-    }
+    }//setEventCount
 
     public void updateCalendar(){
         for (Date daysWithEvents : AddEventListener.allEvents.keySet()){
             setEventCount(daysWithEvents, 0);
-        }
-    }
+        }//for
+    }//updateCalendar
 }//MainActivity

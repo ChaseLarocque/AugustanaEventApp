@@ -21,7 +21,7 @@ import com.example.augappprototype.R;
  *      Logs in user as a guest and brings them to the main menu
  */
 
-public class GuestButtonListener extends MainActivity implements View.OnClickListener{
+public class GuestButtonListener implements View.OnClickListener{
     /*--Data--*/
     public static boolean isGuest;
     private LoginScreen loginScreen;

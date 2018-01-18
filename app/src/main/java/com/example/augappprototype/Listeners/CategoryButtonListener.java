@@ -27,7 +27,8 @@ import java.util.Map;
  *      Shows a popup consisting of different categories that can be checked or unchecked
  * closeButtonListener(final Dialog categoryDialog)
  *      Sets an on click listener for the close button that closes the dialog when clicked
- *
+ * saveCheckBox(final Dialog categoryDialog)
+ *      saves the state of the checkbox's in the category popup using shared preferences
  */
 
 public class CategoryButtonListener implements View.OnClickListener {
@@ -40,11 +41,9 @@ public class CategoryButtonListener implements View.OnClickListener {
     private final String researchKey = "researchKey";
     private final String asaKey = "asaKey";
 
-
     /*--Constructor--*/
     public CategoryButtonListener(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-
     }//CategoryButtonListener
 
     /*--Methods--*/

@@ -39,13 +39,6 @@ import java.util.List;
  *      Returns the year, month, and day
  * closeWindowListener(final Dialog eventPopup)
  *      on click will dismiss the event popup and go back to the calendar screen
- * filterEvent(final Dialog dialog)
- *      hides the basketball game event when the user unchecks the athletics category
- * showEditedEvent(final Dialog dialog)
- *      shows the Choir Performance event is showEdited event is true
- * studentMode(final Dialog dialog)
- *      shows the restrictions of student mode. Choir event is not visible to students unless
- *      showEditedEvent is set to true
  */
 public class CalendarButtonListener extends CaldroidListener {
 
@@ -127,6 +120,12 @@ public class CalendarButtonListener extends CaldroidListener {
         });
     }//closeWindowListener
 
+    /**
+     * addButtonsForEvents(Dialog, Date) --> void
+     * Adds a button to the event popup for each event and the buttons text is the event title
+     * @param eventPopup
+     * @param date
+     */
     public void addButtonsForEvents(final Dialog eventPopup, final Date date) {
         numEvents = AddEventListener.allEvents.get(date).size();
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.allEvents);
@@ -152,16 +151,20 @@ public class CalendarButtonListener extends CaldroidListener {
                         addTextViewForDetails(eventPopup, date, finalCounter);
                     }
                 });
-
                 eventList.addView(eachEvent);
                 filterCategory(eachEvent);
-        }
-
+        }//for
         eventsInDay.addView(eventList);
         mainActivity.setEventCount(date, numEvents);
-    }
+    }//addButtonsForEvents
 
-
+    /**
+     * addTextViewForDetails(Dialog, Date, int) --> void
+     * Creates a text view that will display the event title, location and description
+     * @param eventPopup
+     * @param date
+     * @param eventID
+     */
     public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){
         MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
         eventList = new LinearLayout(mainActivity);
@@ -174,28 +177,34 @@ public class CalendarButtonListener extends CaldroidListener {
                     textView.setText("Event Title: "
                             + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
-                }
+                }//if
                 else if (y == 1){
                     textView.setText("Event Location: "
                             + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
-                }
-                else{
+                }//else if
+                else {
                    textView.setText("Event Description: "
                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
-                }
-            }
+                }//else
+            }//for
         eventsInDay.addView(eventList);
-    }
+    }//addTextViewForDetails
 
+    /**
+     * dateForBanner(Dialog, Date) --> void
+     * Displays the current date on the event popup dialog
+     * @param eventPopup
+     * @param date
+     */
     public void dateForBanner(Dialog eventPopup, Date date){
         List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
                 "June", "July", "August", "September", "October", "November", "December");
         TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);
         dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
                 date.getDate() + ", " + (date.getYear() + 1900));
-    }
+    }//dateForBanner
 
     /**
      * checkCategoryPicked(Date, int) --> void
@@ -245,13 +254,17 @@ public class CalendarButtonListener extends CaldroidListener {
      */
     public void filterCategory(Button eachEvent) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
-        if (athleticsCategory == true && sharedPreferences.getBoolean("athleticsKey", true))
+        if (athleticsCategory == true && sharedPreferences.getBoolean
+                ("athleticsKey", true))
             eachEvent.setVisibility(View.VISIBLE);
-        else if (performanceCategory == true && sharedPreferences.getBoolean("performanceKey", true))
+        else if (performanceCategory == true && sharedPreferences.getBoolean
+                ("performanceKey", true))
             eachEvent.setVisibility(View.VISIBLE);
-        else if (clubCategory == true && sharedPreferences.getBoolean("clubKey", true))
+        else if (clubCategory == true && sharedPreferences.getBoolean
+                ("clubKey", true))
             eachEvent.setVisibility(View.VISIBLE);
-        else if (researchCategory == true && sharedPreferences.getBoolean("researchKey", true))
+        else if (researchCategory == true && sharedPreferences.getBoolean
+                ("researchKey", true))
             eachEvent.setVisibility(View.VISIBLE);
         else if (asaCategory == true && sharedPreferences.getBoolean("asaKey", true))
             eachEvent.setVisibility(View.VISIBLE);
