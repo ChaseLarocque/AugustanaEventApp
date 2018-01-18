@@ -27,4 +27,9 @@ public class MainMenu extends AppCompatActivity {
                 .setOnClickListener(new SignOutButtonListener(this));
     } // onCreate(Bundle)
 
+
+    @Override
+    public void onBackPressed() {
+    }
+
 } // MainMenu

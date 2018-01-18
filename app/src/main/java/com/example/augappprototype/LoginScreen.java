@@ -14,6 +14,7 @@ package com.example.augappprototype;
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -123,7 +125,13 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
+            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
             account = result.getSignInAccount();
+
+            Gson gson = new Gson();
+            String myJson = gson.toJson(account);
+            //in tent.putExtra("myJson", myJson);
+
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
             name.setText(userName);
