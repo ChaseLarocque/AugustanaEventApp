@@ -39,6 +39,10 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.3.0'
     compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.bskim:maxheightscrollview:1.0.0@aar'
+
+    compile 'org.parceler:parceler-api:1.1.6'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
+
     compile('com.google.api-client:google-api-client-android:1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }

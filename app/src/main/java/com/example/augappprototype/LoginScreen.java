@@ -13,6 +13,8 @@ package com.example.augappprototype;
  * Sets on click listeners for every button on the login screen
  */
 
+
+
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -29,22 +31,33 @@ import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
+
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    GoogleSignInAccount account;
+
     TextView mOutputText;
     private Button signOutButton;
+    GoogleSignInOptions gso;
     private GoogleApiClient googleApiClient;
     private ImageView profilePicture;
     private LinearLayout profileSection;
@@ -53,7 +66,12 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     private TextView name;
     private static final int REQUEST_CODE = 9001;
     ArrayList<String> whiteList = new ArrayList<String>();
+
     GoogleSignInAPI gsi;
+
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+
+
     Context appContext = this;
 
     /*--Methods--*/
@@ -69,19 +87,19 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
         addName();
-        registerListenersForLoginScreenButtons();
 
-        profileSection = (LinearLayout) findViewById(R.id.profile_section);
-        signOutButton = (Button) findViewById(R.id.logout_button);
         signInButton = (SignInButton) findViewById(R.id.login_button);
-        name = (TextView) findViewById(R.id.name);
-        email = (TextView) findViewById(R.id.email);
-        profilePicture = (ImageView) findViewById(R.id.profile_picture);
-
-       // mOutputText = findViewById(R.id.testTextView);
+        signOutButton = findViewById(R.id.test);
         signInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
-        profileSection.setVisibility(View.GONE);
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope("https://www.googleapis.com/auth/calendar"))
+                .build();
+        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        googleApiClient.connect();
+
 
     }//onCreate
 
@@ -89,10 +107,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
      * registerListenersForLoginScreenButtons() --> void
      * Sets on click listeners for the Login button and the Guest Login Button on the Login screen
      */
-    public void registerListenersForLoginScreenButtons() {
-        findViewById(R.id.continueAsGuestButton).setOnClickListener
-                (new GuestButtonListener(this));
-    }//registerListenersForLoginScreenButtons
+
+
 
     @Override
     public void onClick(View v) {
@@ -100,7 +116,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             case R.id.login_button:
                 signIn();
                 break;
-            case R.id.logout_button:
+            case R.id.test:
                 signOut();
                 break;
         } // switch(View)
@@ -112,30 +128,45 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onConnectionFailed(ConnectionResult)
 
     private void signIn() {
-        gsi = new GoogleSignInAPI();
-        Intent intent = new Intent(this, GoogleSignInAPI.class);
-        startActivity(intent);
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope("https://www.googleapis.com/auth/calendar"))
+                .build();
+        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        googleApiClient.connect();
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(intent, 9001);
+
     } // signIn()
 
-    private void signOut() {
+    public void signOut() {
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                updateUI(false);
+              //  googleApiClient.disconnect();
             }
         });
     } // signOut()
 
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
-            GoogleSignInAccount account = result.getSignInAccount();
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    android.Manifest.permission.GET_ACCOUNTS);
+
+            account = result.getSignInAccount();
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
-            name.setText(userName);
-            email.setText(userEmail);
+            //name.setText(userName);
+            //email.setText(userEmail);
             checkPermissions(userEmail);
-            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
-            updateUI(true);
+            //Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+            //updateUI(true);
+            Toast.makeText(this, account.getEmail(),Toast.LENGTH_LONG).show();
         } else {
             updateUI(false);
         } // else
@@ -176,6 +207,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
                     Toast.LENGTH_LONG).show();
         } // else
         Intent goToMenu = new Intent(this, MainMenu.class);
-        this.startActivity(goToMenu);
-    } // checkPermissions(String)
+
+        goToMenu.putExtra("com.example.augappprototype.userName", account.getEmail());
+        startActivity(goToMenu);
+    }
+
 }//LoginScreen

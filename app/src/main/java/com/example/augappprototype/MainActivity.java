@@ -15,6 +15,7 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
+import android.*;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -54,14 +55,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
 
     private static final String[] SCOPES = {CalendarScopes.CALENDAR};
-    boolean isGuest = GuestButtonListener.isGuest;
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -70,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
     public static List<Event> items;
 
     TextView mOutputText;
-
-
     /*--Methods--*/
 
     /**
@@ -86,15 +88,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bundle extras= getIntent().getExtras();
+
         convertCalendar();
         registerListenersForCalendarUIButtons();
         goToMainMenu();
-        registerListenersForCalendarUIButtons();
-        goToMainMenu();
-        gsia = new GoogleSignInAPI();
+
+        EasyPermissions.requestPermissions(
+                this,
+                "This app needs to access your Google account (via Contacts).",
+                REQUEST_PERMISSION_GET_ACCOUNTS,
+                android.Manifest.permission.GET_ACCOUNTS);
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(),
+                Collections.singleton("https://www.googleapis.com/auth/calendar"));
+        credential.setSelectedAccountName(extras.getString("userName"));
         mOutputText = findViewById(R.id.testText);
-        new MakeRequestTask(gsia.mCredential).execute();
-        new addAnEvent(gsia.mCredential).execute(); //this would go in the onclick listener at some point
+        new MakeRequestTask(credential).execute();
+       // new addAnEvent(gsia.mCredential).execute(); //this would go in the onclick listener at some point
+
 
 
 

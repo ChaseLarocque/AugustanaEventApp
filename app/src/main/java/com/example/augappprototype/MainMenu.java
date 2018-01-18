@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import android.widget.Toast;
+
+
 import com.example.augappprototype.Listeners.EventCalendarListener;
 import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
 import com.example.augappprototype.Listeners.SignOutButtonListener;
@@ -24,6 +27,10 @@ import com.example.augappprototype.Listeners.SignOutButtonListener;
  *      sets on click listeners for all buttons on the main menu
  */
 public class MainMenu extends AppCompatActivity {
+
+    MainMenu mainMenu;
+    Bundle extras;
+
     /*--Methods--*/
     /**
      * onCreate(Bundle) --> void
@@ -36,15 +43,28 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         registerMenuButtons();
+
+        extras = getIntent().getExtras();
+        Toast.makeText(this, extras.getString("com.example.augappprototype.userName") + "Ihopethisworks", Toast.LENGTH_LONG).show();
+
     }//onCreate
+
 
     /**
      * registerMenuButtons() --> void
      * Sets on click listeners for all the buttons that are in the main menu
      */
     public void registerMenuButtons() {
-        findViewById(R.id.eventsCalendarImage).setOnClickListener
-                (new EventCalendarListener(this));
+        findViewById(R.id.eventsCalendarImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainMenu = new MainMenu();
+                Intent goToCalendar = new Intent(MainMenu.this, MainActivity.class);
+                goToCalendar.putExtra("userName", extras.getString("com.example.augappprototype.userName"));
+                startActivity(goToCalendar);
+            }
+        });
+
         findViewById(R.id.newsletterImage).setOnClickListener
                 (new OtherMainMenuButtonListeners(this));
         findViewById(R.id.libraryImage).setOnClickListener(new OtherMainMenuButtonListeners(this));

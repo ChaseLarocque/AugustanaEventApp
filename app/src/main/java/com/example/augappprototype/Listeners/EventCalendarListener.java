@@ -35,7 +35,6 @@ public class EventCalendarListener implements View.OnClickListener{
      */
     @Override
     public void onClick(View v) {
-        Intent goToCalendar = new Intent(mainMenu, MainActivity.class);
-        mainMenu.startActivity(goToCalendar);
+
     }//onClick
 }//EventCalendarListener
