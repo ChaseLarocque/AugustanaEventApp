@@ -160,7 +160,7 @@ public class CalendarButtonListener extends CaldroidListener {
         for (Event event : mainActivity.items) {
             TextView textView = new TextView(mainActivity);
             convertEventDateTime(event);
-            textView.setText(monthNames.get(eventMonth) + " "+ eventDay + ", " + eventYear);
+            textView.setText(event.getStart().toString() + eventYear + "-" + eventMonth + "-" + eventDay);
             eventList.addView(textView);
 
         }
@@ -168,10 +168,13 @@ public class CalendarButtonListener extends CaldroidListener {
     }
 
     public void convertEventDateTime(Event eachEvent){
-        String eventDetails = eachEvent.getStart().getDateTime().toString();
-        eventYear = Integer.parseInt(eventDetails.substring(0,4));
-        eventMonth = Integer.parseInt(eventDetails.substring(5,6));
-        eventDay = Integer.parseInt(eventDetails.substring(8,9));
+        String eventDetails = eachEvent.getStart().toString();
+
+        eventYear = Integer.parseInt(eventDetails.substring(13,17));
+        eventMonth = Integer.parseInt(eventDetails.substring(18,20));
+        eventDay = Integer.parseInt(eventDetails.substring(21,23));
+        Toast.makeText(mainActivity, eventDetails,
+                Toast.LENGTH_LONG).show();
     }
 /*
     public void addTextViewForDetails(Dialog eventPopup, Date date, int eventID){

@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     GoogleSignInAPI gsia;
     public static List<Event> items;
+    String eventTitle;
+    String eventLocation;
+    String eventDescription;
 
     TextView mOutputText;
 
@@ -89,16 +92,20 @@ public class MainActivity extends AppCompatActivity {
         convertCalendar();
         registerListenersForCalendarUIButtons();
         goToMainMenu();
-        registerListenersForCalendarUIButtons();
-        goToMainMenu();
         gsia = new GoogleSignInAPI();
         mOutputText = findViewById(R.id.testText);
         new MakeRequestTask(gsia.mCredential).execute();
-        new addAnEvent(gsia.mCredential).execute(); //this would go in the onclick listener at some point
 
 
 
     }//onCreate
+
+    public void addEventToCalendar(String summary, String location, String description){
+        eventTitle = summary;
+        eventDescription = description;
+        eventLocation = location;
+        new addAnEvent(gsia.mCredential).execute();
+    }
 
     /**
      * convertCalendar() --> void
@@ -250,11 +257,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }//makeRequests
 
-    private class addAnEvent extends AsyncTask {
+    public class addAnEvent extends AsyncTask {
         private com.google.api.services.calendar.Calendar mService2 = null;
         private Exception mLastError = null;
 
-        addAnEvent(GoogleAccountCredential credential) {
+        public addAnEvent(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService2 = new com.google.api.services.calendar.Calendar.Builder(
@@ -265,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            createEvent();
+            createEvent(eventTitle, eventLocation, eventDescription);
             return null;
         }
 
@@ -273,19 +280,19 @@ public class MainActivity extends AppCompatActivity {
          *
          *
          */
-    public void createEvent() {
+    public void createEvent(String summary, String location, String description) {
 
         Event event = new Event()
-                .setSummary("popcorn")
-                .setLocation("alligator")
-                .setDescription("New Event 1");
+                .setSummary(summary)
+                .setLocation(location)
+                .setDescription(description);
 
-        DateTime startDateTime = new DateTime("2017-04-17T18:10:00+06:00");
+        DateTime startDateTime = new DateTime("2017-12-17T18:10:00+06:00");
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime);
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime("2017-04-17T18:40:00+06:00");
+        DateTime endDateTime = new DateTime("2017-12-17T18:40:00+06:00");
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime);
         event.setEnd(end);

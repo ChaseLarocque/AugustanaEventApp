@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.augappprototype.GoogleSignInAPI;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -74,6 +75,8 @@ public class AddEventListener implements View.OnClickListener {
     String eventDescription;
     String eventLocation;
     String eventTime;
+
+
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -276,6 +279,7 @@ public class AddEventListener implements View.OnClickListener {
         eventDetails.add(1, eventTime);
         eventDetails.add(2, eventLocation);
         eventDetails.add(3, eventDescription);
+        mainActivity.addEventToCalendar(eventTitle, eventLocation, eventDescription);
 
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
