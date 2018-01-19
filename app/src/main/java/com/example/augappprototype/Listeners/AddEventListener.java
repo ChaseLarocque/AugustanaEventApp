@@ -1,6 +1,7 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +15,13 @@ import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
 import com.roomorama.caldroid.CaldroidFragment;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Pao on 1/7/2018.
@@ -50,15 +55,13 @@ import java.util.HashMap;
  *      Stores the details the user has entered
  * checkAmorPm(int hourOfDay)
  *      Checks if the time the user entered is AM or PM
- * selectCategoryListener(Dialog eventDetails)
- *      Opens the select category popup
+ *
  */
 
 public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
     public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
-
     private int day;
     private int month;
     private int year;
@@ -70,14 +73,10 @@ public class AddEventListener implements View.OnClickListener {
     EditText titleBox;
     EditText locationBox;
     EditText descriptionBox;
-    String eventTitle;
-    String eventDescription;
-    String eventLocation;
-    ArrayList<String> categorySelected = new ArrayList<>();
-    String checked;
-    boolean noCategory = true;
-    String eventTime;
-
+    public static String eventTitle;
+    public static String eventDescription;
+    public static String eventLocation;
+    public static String eventTime;
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -108,14 +107,6 @@ public class AddEventListener implements View.OnClickListener {
      * back to the calendar or continue to the next dialog popup
      */
     public void selectDate(){
-        /**
-        eventDetails.add(0, "Augustana");
-        eventDetails.add(1, "Basketball Game");
-        eventDetails.add(2, "The Augustana Vikings will take on the GPRC Wolves");
-        events.put(new Date(118, 0, 1), eventDetails);
-        Toast.makeText(mainActivity, "Event Added",
-                Toast.LENGTH_SHORT).show();
-         */
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventpopup);
         addEventDialog.show();
@@ -133,12 +124,10 @@ public class AddEventListener implements View.OnClickListener {
     public void closeWindowListener(final Dialog addEvents){
         Button closeWindow = addEvents.findViewById(R.id.closeWindow);
         closeWindow.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 addEvents.dismiss();
-                Toast.makeText(mainActivity, " " + categorySelected,
-                        Toast.LENGTH_SHORT).show();
+
             }//onClick
         });
     }//closeWindowListener
@@ -246,7 +235,6 @@ public class AddEventListener implements View.OnClickListener {
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventdetails);
         addEventDialog.show();
-        selectCategoryListener(addEventDialog);
         addEventButtonListener(addEventDialog);
         closeWindowListener(addEventDialog);
         locationBox = addEventDialog.findViewById(R.id.eventLocation);
@@ -267,11 +255,7 @@ public class AddEventListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
-                if (noCategory == true) {
-                    Toast.makeText(mainActivity, "Please Select A Category",
-                            Toast.LENGTH_SHORT).show();
-                }//if
-                else if (eventTitle.equals("")) {
+                if (eventTitle.equals("")) {
                     Toast.makeText(mainActivity, "Please Enter An Event Title",
                             Toast.LENGTH_SHORT).show();
                 }//else if
@@ -302,17 +286,10 @@ public class AddEventListener implements View.OnClickListener {
     public void saveEvent(Date eventDate) {
         ArrayList<String> eventDetails = new ArrayList();
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
-
         eventDetails.add(0, eventTitle);
         eventDetails.add(1, eventTime);
         eventDetails.add(2, eventLocation);
         eventDetails.add(3, eventDescription);
-        eventDetails.add(4, categorySelected.get(0));
-        eventDetails.add(5, categorySelected.get(1));
-        eventDetails.add(6, categorySelected.get(2));
-        eventDetails.add(7, categorySelected.get(3));
-        eventDetails.add(8, categorySelected.get(4));
-
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
         }
@@ -320,9 +297,8 @@ public class AddEventListener implements View.OnClickListener {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
         }
-        mainActivity.setEventCount(eventDate);
+        mainActivity.setEventCount(eventDate, 0);
     }
-
 
     /**
      * checkAmOrPm(int) --> String
@@ -336,139 +312,4 @@ public class AddEventListener implements View.OnClickListener {
         else
             return "PM";
     }//checkAmOrPm
-
-    /**
-     * selectCategoryDetails(Dialog) --> void
-     * On click will bring up a popup of all the categories where the user will select what category
-     * their event fits under
-     * @param eventDetails
-     */
-    public void selectCategoryListener(Dialog eventDetails){
-        Button category = eventDetails.findViewById(R.id.categoryButton);
-        category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog categoryDialog = new Dialog(mainActivity);
-                categoryDialog.setContentView(R.layout.addeventcategory);
-                categorySelected = new ArrayList<>();
-
-                confirmCategoryListener(categoryDialog);
-                categoryDialog.show();
-            }//onClick
-        });
-    }//selectCategoryListener
-
-    /**
-     * checkedCategoryAthletics(Dialog) --> void
-     * Checks if the athletics category was checked by the user and then stores a string yes or no
-     * into an array list
-     * @param eventDetailsDialog
-     */
-    public void checkedCategoryAthletics(Dialog eventDetailsDialog) {
-        final CheckBox athletics = (CheckBox) eventDetailsDialog.findViewById
-                (R.id.athleticsCategory);
-        if (athletics.isChecked() == true) {
-            checked = "yes";
-        }//if
-        else {
-            checked = "no";
-        }//else
-        categorySelected.add(0, checked);
-    }//checkedCategoryAthletics
-
-    /**
-     * checkedCategoryPerformance(Dialog) --> void
-     * Checks if the performance category was checked by the user and then stores a string yes or no
-     * in an array list
-     * @param eventDetailsDialog
-     */
-    public void checkedCategoryPerformance(Dialog eventDetailsDialog) {
-        final CheckBox performance = (CheckBox) eventDetailsDialog.findViewById
-                (R.id.performanceCategory);
-        if (performance.isChecked() == true) {
-            checked = "yes";
-        } //if
-        else {
-            checked = "no";
-        }//else
-        categorySelected.add(1, checked);
-    }//checkedCategoryPerformance
-
-    /**
-     * checkedCategoryClub(Dialog) --> void
-     * Checks if the club category was checked by the user and then stores a string yes or no
-     * in an array list
-     * @param eventDetailsDialog
-     */
-    public void checkedCategoryClub(Dialog eventDetailsDialog) {
-        final CheckBox club = (CheckBox) eventDetailsDialog.findViewById(R.id.clubCategory);
-        if (club.isChecked() == true) {
-            checked = "yes";
-        } //if
-        else {
-            checked = "no";
-        }//else
-        categorySelected.add(2, checked);
-    }//checkedCategoryClub
-
-    /**
-     * checkedCategoryResearch(Dialog) --> void
-     * Checks if the research category was checked by the user and then stores a string yes or no
-     * in an array list
-     * @param eventDetailsDialog
-     */
-    public void checkedCategoryResearch(Dialog eventDetailsDialog) {
-        final CheckBox research = (CheckBox) eventDetailsDialog.findViewById(R.id.researchCategory);
-        if (research.isChecked() == true) {
-            checked = "yes";
-        }//if
-        else {
-            checked = "no";
-        }//else
-        categorySelected.add(3, checked);
-    }//checkedCategoryResearch
-
-    /**
-     * checkedCategoryAsa(Dialog) --> void
-     * Checks if the asa category was checked by the user and then stores a string yes or no
-     * in an array list
-     * @param eventDetailsDialog
-     */
-    public void checkedCategoryAsa(Dialog eventDetailsDialog) {
-        final CheckBox asa = (CheckBox) eventDetailsDialog.findViewById(R.id.asaCategory);
-        if (asa.isChecked() == true) {
-            checked = "yes";
-        }//if
-        else {
-            checked = "no";
-        }//else
-        categorySelected.add(4, checked);
-    }//checkedCategoryAsa
-
-    /**
-     * confirmCategoryListener(Dialog) --> void
-     * Stores the category or categories the user has selected when they click confirm category
-     * @param categoryDialog
-     */
-    public void confirmCategoryListener(final Dialog categoryDialog) {
-        Button confirmCategory = (Button)categoryDialog.findViewById(R.id.closeWindow);
-        confirmCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkedCategoryAthletics(categoryDialog);
-                checkedCategoryPerformance(categoryDialog);
-                checkedCategoryClub(categoryDialog);
-                checkedCategoryResearch(categoryDialog);
-                checkedCategoryAsa(categoryDialog);
-                if (categorySelected.get(0) == "no" && categorySelected.get(1) == "no"
-                        && categorySelected.get(2) == "no"
-                        && categorySelected.get(3) == "no" && categorySelected.get(4) == "no") {
-                    noCategory = true;
-                }//if
-                else
-                    noCategory = false;
-                categoryDialog.dismiss();
-            }//onClick
-        });
-    }//confirmCategoryListener
 }//AddEventListener

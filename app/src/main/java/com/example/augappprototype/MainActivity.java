@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.BackButtonListener;
@@ -28,10 +29,17 @@ import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.roomorama.caldroid.CaldroidFragment;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    /*--Data--*/
     CaldroidFragment caldroidFragment = new CaldroidFragment();
 
     /*--Methods--*/
@@ -149,4 +157,8 @@ public class MainActivity extends AppCompatActivity {
             setEventCount(daysWithEvents, 0);
         }//for
     }//updateCalendar
+
+
+
+
 }//MainActivity
