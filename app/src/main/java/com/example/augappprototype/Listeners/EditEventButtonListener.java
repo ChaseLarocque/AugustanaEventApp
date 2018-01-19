@@ -88,10 +88,6 @@ public class EditEventButtonListener implements View.OnClickListener {
         eventsInDay.addView(eventList);
     }//nextEventListener
 
-    /**
-     * datesIntoButtons() --> void
-     * Makes a button for every date that has an event or events
-     */
     private void datesIntoButtons(){
         for (final Date key : AddEventListener.allEvents.keySet()) {
             Button eachEvent = new Button(mainActivity);
@@ -109,8 +105,8 @@ public class EditEventButtonListener implements View.OnClickListener {
                 }
             });
             eventList.addView(eachEvent);
-        }//for
-    }//datesIntoButtons
+        }
+    }
 
     /**
      * openEditEventDetails() --> void
@@ -133,11 +129,6 @@ public class EditEventButtonListener implements View.OnClickListener {
         eventsInDay.addView(eventList);
     }//openEditEventDetails
 
-    /**
-     * eventsIntoButtons(Date) --> void
-     * Goes through every event and makes it a button
-     * @param date
-     */
     private void eventsIntoButtons(final Date date){
         for (final int key : AddEventListener.allEvents.get(date).keySet()) {
             Button eachEvent = new Button(mainActivity);
@@ -151,15 +142,16 @@ public class EditEventButtonListener implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     openEditEventDetails(date, key);
-                }//onClick
+
+                }
             });
             eventList.addView(eachEvent);
-        }//for
-    }//eventsIntoButtons
+        }
+    }
 
     /**
-     * openEditEventDetails(Dialog) --> void
-     *
+     * submitEditEventDetails(Dialog) --> void
+     * Closes the popup for event details which submits the edit
      */
     private void openEditEventDetails(Date date, int eventID) {
         eventDate = date;
@@ -169,16 +161,8 @@ public class EditEventButtonListener implements View.OnClickListener {
         submitEditEventDetails(editEventDetails, date, eventID);
         openEditEventTimeDialog(editEventDetails, date, eventID);
         openEditEventDateDialog(editEventDetails, date, eventID);
-    }//openEditEventDetails
+    }//submitEditEventDetails
 
-    /**
-     * submitEditEventDetails(Dialog, Date, int) --> void
-     * Stores the new details that the user has entered and changes the event id if the date was
-     * changed and updates the calendar showing the change
-     * @param eventDetails
-     * @param date
-     * @param eventID
-     */
     private void submitEditEventDetails(final Dialog eventDetails, final Date date, final int eventID){
         Button submitNewDetails = eventDetails.findViewById(R.id.submitEvent);
         final EditText title = eventDetails.findViewById(R.id.eventTitle);
@@ -202,15 +186,7 @@ public class EditEventButtonListener implements View.OnClickListener {
                 eventDetails.dismiss();
             }
         });
-    }//submitEditEventDetails
-
-    /**
-     * openEditEventTimeDialog(Dialog, Date, int) --> void
-     * Opens the dialog that allows the user to edit the time of an event
-     * @param eventDetails
-     * @param date
-     * @param eventID
-     */
+    }
     private void openEditEventTimeDialog(final Dialog eventDetails, final Date date, final int eventID){
         final Button editTimeButton = eventDetails.findViewById(R.id.timechange);
         editTimeButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
@@ -220,18 +196,11 @@ public class EditEventButtonListener implements View.OnClickListener {
                 editEventTime(eventDetails, date, eventID);
             }
         });
-    }//openEditEventTimeDialog
+    }
 
-    /**
-     * editEventTime(Dialog, Date, int) --> void
-     * User if able to change the time and it is then converted into a string
-     * @param editEventDetails
-     * @param date
-     * @param eventID
-     */
     private void editEventTime(final Dialog editEventDetails, final Date date, final int eventID) {
         final Dialog editTimeDialog = new Dialog(mainActivity);
-        editTimeDialog.setContentView(R.layout.addeventtime);
+        editTimeDialog.setContentView(R.layout.addevent_timepicker);
         editTimeDialog.show();
         final TimePicker eventTime = editTimeDialog.findViewById(R.id.timePicker);
         Button continueButton = editTimeDialog.findViewById(R.id.continueButton);
@@ -244,14 +213,8 @@ public class EditEventButtonListener implements View.OnClickListener {
                 timeChange.setText(convertTimeToString(eventTime));
             }
         });
-    }//editEventTime
+    }
 
-    /**
-     * convertTimeToString(TimePicker) --> String
-     * Takes the time from the time picker and converts it into a string
-     * @param timePicker
-     * @return String
-     */
     private String convertTimeToString(TimePicker timePicker){
         String doubleDigitMinute = String.format("%02d", timePicker.getCurrentMinute());
         if (timePicker.getCurrentHour() > 12)
@@ -262,15 +225,8 @@ public class EditEventButtonListener implements View.OnClickListener {
             return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "pm");
         else
             return (timePicker.getCurrentHour() + ":" + doubleDigitMinute + "am");
-    }//convertTimeToString
+    }
 
-    /**
-     * openEditEventDateDialog(Dialog, Date, int) --> void
-     * Opens the dialog that will allow the user to change the date
-     * @param eventDetails
-     * @param date
-     * @param currentEventID
-     */
     private void openEditEventDateDialog(final Dialog eventDetails, final Date date, final int currentEventID){
         final Button editDateButton = eventDetails.findViewById(R.id.dateOfTheEvent);
         editDateButton.setText((eventDate.getMonth() + 1) + "/" +  eventDate.getDate()
@@ -281,21 +237,14 @@ public class EditEventButtonListener implements View.OnClickListener {
                 editEventDate(eventDetails, date, currentEventID);
             }
         });
-    }//openEditEventDateDialog
+    }
 
-    /**
-     * editEventDate(Dialog, Date, int) --> void
-     * Displays the date picker where the user can select a new date for an event they want to edit
-     * and stores that date
-     * @param editEventDetails
-     * @param date
-     * @param currentEventID
-     */
     private void editEventDate(final Dialog editEventDetails, final Date date, final int currentEventID) {
         final Dialog editDateDialog = new Dialog(mainActivity);
         editDateDialog.setContentView(R.layout.addeventpopup);
         editDateDialog.show();
         final DatePicker eventDatePicker = editDateDialog.findViewById(R.id.datePicker);
+
         Toast.makeText(mainActivity, "" + date.getYear() + date.getMonth() + date.getDate(),
                 Toast.LENGTH_LONG).show();
         eventDatePicker.updateDate(date.getYear() + 1900, date.getMonth(), date.getDate());
@@ -305,6 +254,7 @@ public class EditEventButtonListener implements View.OnClickListener {
             public void onClick(View v) {
                 eventDate = new Date((eventDatePicker.getYear() - 1900),
                         eventDatePicker.getMonth(), eventDatePicker.getDayOfMonth());
+
                 if (eventDate.equals(date))
                     dateWasChanged = false;
                 else
@@ -318,16 +268,8 @@ public class EditEventButtonListener implements View.OnClickListener {
                 editDateDialog.dismiss();
             }
         });
-    }//editEventDate
+    }
 
-    /**
-     * makeNewKey(Date, int, Date) --> void
-     * If the user edited the date of an event then a new key is made so that it has a different
-     * event id
-     * @param oldEventDate
-     * @param oldEventID
-     * @param newEventDate
-     */
     private void makeNewKey(Date oldEventDate, int oldEventID, Date newEventDate){
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
         if (AddEventListener.allEvents.containsKey(newEventDate)) {
@@ -336,43 +278,28 @@ public class EditEventButtonListener implements View.OnClickListener {
                 newEventID++;
             AddEventListener.allEvents.get(newEventDate).put(newEventID,
                     AddEventListener.allEvents.get(oldEventDate).remove(oldEventID));
-        }//if
-        else {
+        }
+        else{
             AddEventListener.allEvents.put(newEventDate, events);
             AddEventListener.allEvents.get(newEventDate)
                     .put(0, AddEventListener.allEvents.get(oldEventDate).get(oldEventID));
             AddEventListener.allEvents.get(oldEventDate).remove(oldEventID);
-        }//else
-    }//makeNewKey
+        }
+    }
 
-    /**
-     * initializeNewDate(Date, boolean) --> void
-     *
-     * @param date
-     * @param editedDate
-     */
     private void initializeNewDate(Date date, boolean editedDate){
         eventDate = date;
         dateWasChanged = editedDate;
-    }//initializeNewDate
+    }
 
-    /**
-     * initializeNewTime(String) --> void
-     *
-     * @param time
-     */
     private void initializeNewTime(String time){
         newEventTime = time;
-    }//initializeNewTime
+    }
 
-    /**
-     * deleteDatesWithNoEvents() --> void
-     *
-     */
     private void deleteDatesWithNoEvents(){
         for (Date date : AddEventListener.allEvents.keySet()) {
             if (AddEventListener.allEvents.get(date).size() == 0)
                 AddEventListener.allEvents.remove(date);
-        }//if
-    }//deleteDatesWithNoEvents
+        }
+    }
 }//EditEventButtonListener

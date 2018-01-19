@@ -13,7 +13,6 @@ package com.example.augappprototype;
  * Sets on click listeners for every button on the login screen
  */
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -27,8 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.augappprototype.Listeners.GuestButtonListener;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -37,21 +36,26 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class LoginScreen extends AppCompatActivity implements View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener {
 
+    public boolean isAbleToEditCalendar;
+
     private Button signOutButton;
     private GoogleApiClient googleApiClient;
-    private ImageView profilePicture;
+    public ImageView profilePicture;
     private LinearLayout profileSection;
     private SignInButton signInButton;
     private TextView email;
     private TextView name;
     private static final int REQUEST_CODE = 9001;
-    HashMap<String, String> permissions = new HashMap<>();
+    private ArrayList<String> whiteList = new ArrayList<String>();
+    public GoogleSignInAccount account;
+    GoogleSignInOptions signInOptions;
 
     /*--Methods--*/
 
@@ -63,37 +67,30 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        isAbleToEditCalendar = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+        Toast.makeText(this, "this has been created", Toast.LENGTH_LONG).show();
         addName();
-        registerListenersForLoginScreenButtons();
 
         profileSection = (LinearLayout) findViewById(R.id.profile_section);
         signOutButton = (Button) findViewById(R.id.logout_button);
         signInButton = (SignInButton) findViewById(R.id.login_button);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
-        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        profilePicture = (ImageView) findViewById(R.id.profile_image);
 
         signInButton.setOnClickListener(this);
         signOutButton.setOnClickListener(this);
         profileSection.setVisibility(View.GONE);
 
-        GoogleSignInOptions signInOptions =
+        signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,
                 this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
-    }//onCreate
 
-    /**
-     * registerListenersForLoginScreenButtons() --> void
-     * Sets on click listeners for the Login button and the Guest Login Button on the Login screen
-     */
-    public void registerListenersForLoginScreenButtons() {
-        findViewById(R.id.continueAsGuestButton).setOnClickListener
-                (new GuestButtonListener(this));
-    }//registerListenersForLoginScreenButtons
+    }//onCreate
 
     @Override
     public void onClick(View v) {
@@ -113,12 +110,15 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onConnectionFailed(ConnectionResult)
 
     private void signIn() {
+        signOut();
         Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(intent, REQUEST_CODE);
     } // signIn()
 
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+        Auth.GoogleSignInApi
+                .signOut(googleApiClient)
+                .setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 updateUI(false);
@@ -128,21 +128,29 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
-            GoogleSignInAccount account = result.getSignInAccount();
+            account = result.getSignInAccount();
             String userName = account.getDisplayName();
             String userEmail = account.getEmail();
             name.setText(userName);
             email.setText(userEmail);
-            checkPermissions(userEmail);
-            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+            setProfilePicture();
             updateUI(true);
 
+            checkPermissions(userEmail);//figure out how to call this again
         } else {
             updateUI(false);
-            Toast.makeText(this, "lol" + result.getStatus(),
-                    Toast.LENGTH_LONG).show();
         } // else
     } // handleSignInResult(GoogleSignInResult)
+
+    private void setProfilePicture() {
+        if(account.getPhotoUrl() != null) {
+            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+        } else {
+            Glide.with(this)
+                    .load("https://i.stack.imgur.com/34AD2.jpg")
+                    .into(profilePicture);
+        } // else
+    } // setProfilePicture(GoogleSignInAccount)
 
     private void updateUI(boolean isLogin) {
         if(isLogin) {
@@ -164,26 +172,28 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
     } // onActivityResult(int, int, Intent)
 
     public void addName(){
-        permissions.put("shichun1@ualberta.ca", "faculty");
-        permissions.put("vpreyes@ualberta.ca", "faculty");
-        permissions.put("cwlarocq@ualberta.ca", "faculty");
-        permissions.put("frithsmi@ualberta.ca", "faculty");
-    }//addName
+        whiteList.add("csc320augapp@gmail.com");
+        whiteList.add("chaselarocque@gmail.com");
+        whiteList.add("shichun1@ualberta.ca");
+        whiteList.add("vpreyes@ualberta.ca");
+        whiteList.add("cwlarocq@ualberta.ca");
+        whiteList.add("frithsmi@ualberta.ca");
+    } // addName()
 
     public void checkPermissions(String email){
-        if (permissions.containsKey(email)) {
-                Toast.makeText(this, "faculty",
-                        Toast.LENGTH_LONG).show();
-        }
-        else{
+        if (whiteList.contains(email)) {
+            Toast.makeText(this, "faculty",
+                    Toast.LENGTH_LONG).show();
+            isAbleToEditCalendar = true;
+        } else {
             Toast.makeText(this, "student",
                     Toast.LENGTH_LONG).show();
-        }
+        } // else
+
         Intent goToMenu = new Intent(this, MainMenu.class);
         this.startActivity(goToMenu);
-        SharedPreferences sharedPreferences = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("activity_executed", true);
-        editor.commit();
-    } // checkPermissions(String)
+        goToMenu.putExtra("com.example.augappprototype.userName", account.getEmail());
+        startActivity(goToMenu);
+    }
+
 }//LoginScreen
