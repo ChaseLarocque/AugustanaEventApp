@@ -295,9 +295,9 @@ public class AddEventListener implements View.OnClickListener {
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
                 saveEvent(new Date(year, month, day));
+                mainActivity.fetchEvents();
                 Toast.makeText(mainActivity, "Event Added!",
                         Toast.LENGTH_LONG).show();
-                mainActivity.fetchEvents();
                 addEvents.dismiss();
             }
         });

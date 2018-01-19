@@ -70,12 +70,9 @@ import java.util.List;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
-    boolean isGuest = GuestButtonListener.isGuest;
-    public TextView email;
     GoogleSignInAccount account;
     public TextView name;
     public ImageView profilePicture;
@@ -123,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         } // else
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        registerListenersForCalendarUIButtons();
 
         EasyPermissions.requestPermissions(
                 this,
@@ -134,25 +130,36 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(),
                 Collections.singleton("https://www.googleapis.com/auth/calendar"));
         credential.setSelectedAccountName(extras.getString("userName"));
-        gsia = new GoogleSignInAPI();
         mOutputText = findViewById(R.id.testText);
         fetchEvents();
 
 
     }//onCreate
     public void fetchEvents(){
-        new MakeRequestTask(gsia.mCredential).execute();
+        Bundle extras= getIntent().getExtras();
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(),
+                Collections.singleton("https://www.googleapis.com/auth/calendar"));
+        credential.setSelectedAccountName(extras.getString("userName"));
+        new MakeRequestTask(credential).execute();
 
     }
 
+
+
     public void addEventToCalendar(String summary, String location, String description,
                                    String start, String end){
+        Bundle extras= getIntent().getExtras();
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(),
+                Collections.singleton("https://www.googleapis.com/auth/calendar"));
+        credential.setSelectedAccountName(extras.getString("userName"));
         eventTitle = summary;
         eventDescription = description;
         eventLocation = location;
         startEvent = start;
         endEvent = end;
-        new addAnEvent(gsia.mCredential).execute();
+        new addAnEvent(credential).execute();
     }
 
     private void setProfilePicture() {
@@ -245,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("csc320augapp@gmail.com")
-                    .setMaxResults(10)
                     .setOrderBy("startTime")
                     .setTimeMin(new DateTime("2016-04-17T17:10:00+06:00"))
                     .setSingleEvents(true)

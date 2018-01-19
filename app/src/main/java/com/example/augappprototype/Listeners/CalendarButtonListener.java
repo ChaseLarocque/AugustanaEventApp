@@ -136,7 +136,7 @@ public class CalendarButtonListener extends CaldroidListener {
     }
 
     public void addTextViewForDetails(Dialog eventPopup, Event event) {
-        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
+        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.parentLayout);
         eventList = new LinearLayout(mainActivity);
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
