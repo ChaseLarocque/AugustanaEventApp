@@ -179,4 +179,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
+    <ImageView
+        android:id="@+id/buttonBlocker"
+        android:layout_width="604dp"
+        android:layout_height="100dp"
+        android:background="@color/uofaGreen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caldroidCalendar" />
+
 </android.support.constraint.ConstraintLayout>

@@ -74,15 +74,14 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
     GoogleSignInAccount account;
+    Bundle extras;
     public TextView name;
     public ImageView profilePicture;
     private static final String[] SCOPES = {CalendarScopes.CALENDAR};
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    GoogleSignInAPI gsia;
-    public static List<Event> items;
+    public List<Event> items;
+    ImageView  buttonBlocker;
     String eventTitle;
     String eventLocation;
     String eventDescription;
@@ -106,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Bundle extras= getIntent().getExtras();
+        extras= getIntent().getExtras();
+        buttonBlocker = findViewById(R.id.buttonBlocker);
+        buttonBlocker.setVisibility(View.GONE);
 
 
         account = GoogleSignIn.getLastSignedInAccount(this);
@@ -202,6 +203,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.addEventButton).setOnClickListener(new AddEventListener(this));
         findViewById(R.id.editEventButton).setOnClickListener
                 (new EditEventButtonListener(this));
+        if(!extras.getBoolean("editCalendar")){
+            buttonBlocker.setVisibility(View.VISIBLE);
+            findViewById(R.id.addEventButton).setVisibility(View.GONE);
+            findViewById(R.id.editEventButton).setVisibility(View.GONE);
+        }
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
@@ -220,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("AugAppPrototype2")
+                    .setApplicationName("uAlberta Augustana")
                     .build();
         }
 
@@ -248,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("csc320augapp@gmail.com")
@@ -281,8 +286,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<String> output) {
-            mOutputText.setText("Grabbed " + output.size() + " things");
-
         }
 
         @Override
@@ -290,9 +293,6 @@ public class MainActivity extends AppCompatActivity {
 //            mProgress.hide();
             if (mLastError != null) {
                 if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    // showGooglePlayServicesAvailabilityErrorDialog(
-                    //((GooglePlayServicesAvailabilityIOException) mLastError)
-                    // .getConnectionStatusCode());
                 } else if (mLastError instanceof UserRecoverableAuthIOException) {
                     startActivityForResult(
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService2 = new com.google.api.services.calendar.Calendar.Builder(
                     transport, jsonFactory, credential)
-                    .setApplicationName("AugAppPrototype2")
+                    .setApplicationName("uAlberta Augustana")
                     .build();
         }
 

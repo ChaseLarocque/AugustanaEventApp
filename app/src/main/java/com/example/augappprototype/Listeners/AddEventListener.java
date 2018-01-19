@@ -117,7 +117,7 @@ public class AddEventListener implements View.OnClickListener {
         /**
         eventDetails.add(0, "Augustana");
         eventDetails.add(1, "Basketball Game");
-        eventDetails.add(2, "The Augustana Vikings will take on the GPRC Wolves");
+        eventDetails.add(2, "The Augustana vikings will take on the GPRC Wolves");
         events.put(new Date(118, 0, 1), eventDetails);
         Toast.makeText(mainActivity, "Event Added",
                 Toast.LENGTH_SHORT).show();
