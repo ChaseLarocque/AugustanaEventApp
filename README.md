@@ -2,13 +2,13 @@
 
 Project made by:  
 
-  -**Paolo Reyes**  
+  **Paolo Reyes**  
     -Developer, Tester  
-  -**Zach Frith-Smith**  
+  **Zach Frith-Smith**  
     -Developer, Tester  
-  -**Chase Larocque**  
+  **Chase Larocque**  
     -Developer, Tester  
-  -**Peter Zeng**  
+  **Peter Zeng**  
     -Developer, Tester  
   
 This is a Android application that focuses on retrieving and displaying events that take place on the Augustana campus. Users are able to log in via Google Sign-in and are distinguishable to grant special permissions. It has many features that are intended to future proof the app. Before reaching the event calendar, a main menu consists of external Augustana links that redirect users to different activities.This main menu can later be altered to include other features.
