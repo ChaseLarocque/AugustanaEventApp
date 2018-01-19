@@ -15,20 +15,24 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
+import android.*;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
@@ -48,6 +52,9 @@ import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
 
 
@@ -55,14 +62,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
+
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class MainActivity extends AppCompatActivity {
     CaldroidFragment caldroidFragment = new CaldroidFragment();
-
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
     boolean isGuest = GuestButtonListener.isGuest;
+    public TextView email;
+    GoogleSignInAccount account;
+    public TextView name;
+    public ImageView profilePicture;
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -92,16 +109,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bundle extras= getIntent().getExtras();
+
+
+        account = GoogleSignIn.getLastSignedInAccount(this);
+        profilePicture = (ImageView) findViewById(R.id.profile_image);
+
+        if(account != null){
+            setProfilePicture();
+        } else {
+            Toast.makeText(this, "account is null",
+                    Toast.LENGTH_LONG).show();
+        } // else
         convertCalendar();
         registerListenersForCalendarUIButtons();
-        goToMainMenu();
+        registerListenersForCalendarUIButtons();
+
+        EasyPermissions.requestPermissions(
+                this,
+                "This app needs to access your Google account (via Contacts).",
+                REQUEST_PERMISSION_GET_ACCOUNTS,
+                android.Manifest.permission.GET_ACCOUNTS);
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(),
+                Collections.singleton("https://www.googleapis.com/auth/calendar"));
+        credential.setSelectedAccountName(extras.getString("userName"));
         gsia = new GoogleSignInAPI();
         mOutputText = findViewById(R.id.testText);
         fetchEvents();
 
 
     }//onCreate
-
     public void fetchEvents(){
         new MakeRequestTask(gsia.mCredential).execute();
 
@@ -117,6 +155,15 @@ public class MainActivity extends AppCompatActivity {
         new addAnEvent(gsia.mCredential).execute();
     }
 
+    private void setProfilePicture() {
+        if(account.getPhotoUrl() != null) {
+            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
+        } else {
+            Glide.with(this)
+                    .load("https://i.stack.imgur.com/34AD2.jpg")
+                    .into(profilePicture);
+        } // else
+    }
     /**
      * convertCalendar() --> void
      * Makes android's calendar view the caldroid calendar
@@ -135,22 +182,9 @@ public class MainActivity extends AppCompatActivity {
         Date jan1 = new Date(1514790000000L);
         Date dec31 = new Date(1546300800000L);
         caldroidFragment.setMinDate(jan1);
-
         caldroidFragment.setMaxDate(dec31);
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
     }//convertCalendar
-
-    public void goToMainMenu() {
-        ImageButton back = findViewById(R.id.backbutton);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToMainMenu = new Intent(MainActivity.this, MainMenu.class);
-                startActivity(goToMainMenu);
-
-            }
-        });
-    }
 
     /**
      * registerListenersForCalendarUIButtons() --> void
@@ -242,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<String> output) {
             mOutputText.setText("Grabbed " + output.size() + " things");
-          //  Toast.makeText(MainActivity.this, output.size(), Toast.LENGTH_LONG).show();
 
         }
 
@@ -263,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                             + mLastError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             } else {
-                //               mOutputText.setText("Request cancelled.");
+
             }
         }
     }//makeRequests
@@ -313,7 +346,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             mService2.events().insert(calendarId, event).execute();
         } catch (IOException e) {
-            //Toast.makeText(MainActivity.this, "There was an Error pushing the event", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -322,8 +354,7 @@ public class MainActivity extends AppCompatActivity {
          *
          */
         @Override
-        protected void onPreExecute(){
-        }
+        protected void onPreExecute(){}
     }
 
     public void setEventCount(Date day){
