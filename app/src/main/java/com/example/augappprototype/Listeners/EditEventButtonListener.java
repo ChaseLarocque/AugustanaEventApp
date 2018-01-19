@@ -41,15 +41,10 @@ public class EditEventButtonListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        if (GuestButtonListener.isGuest)
-            Toast.makeText(mainActivity, "This button is not available on guest mode",
-                    Toast.LENGTH_SHORT).show();
-        else {
-            final Dialog editEventDialog = new Dialog(mainActivity);
-            editEventDialog.setContentView(R.layout.edit_event);
-            editEventDialog.show();
-            nextEventListener(editEventDialog);
-        }//else
+        final Dialog editEventDialog = new Dialog(mainActivity);
+        editEventDialog.setContentView(R.layout.edit_event);
+        editEventDialog.show();
+        nextEventListener(editEventDialog);
     }//onClick
 
     public void nextEventListener(final Dialog editEvents) {

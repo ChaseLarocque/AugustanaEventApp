@@ -33,10 +33,9 @@ import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
-import com.example.augappprototype.Listeners.GuestButtonListener;
+import com.example.augappprototype.Listeners.SignOutMainActivityListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
 
 
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "account is null",
                     Toast.LENGTH_LONG).show();
         } // else
+
         convertCalendar();
         registerListenersForCalendarUIButtons();
 
@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 (new EditEventButtonListener(this));
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
+        findViewById(R.id.signOutButton).setOnClickListener
+                (new SignOutMainActivityListener(this));
     }//registerListenersForButtons
 
 }//MainActivity

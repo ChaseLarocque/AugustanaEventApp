@@ -78,7 +78,6 @@ public class LoginButtonListener implements View.OnClickListener{
         if (password.equals(passwords.get(username))){
             Intent k = new Intent(loginScreen, MainMenu.class);
             loginScreen.startActivity(k);
-            GuestButtonListener.isGuest = false;
             if (permissions.get(username).equals("faculty"))
                 Toast.makeText(loginScreen, "Logged in as a faculty member",
                         Toast.LENGTH_LONG).show();

@@ -54,14 +54,8 @@ public class AddEventListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        if(GuestButtonListener.isGuest)
-            Toast.makeText(mainActivity, "This button is not available on guest mode",
-                    Toast.LENGTH_SHORT).show();
-        else
-            selectDate();
-
-
-    }
+        selectDate();
+    } // onClick(View)
 
     /**
      * selectDate() --> void
