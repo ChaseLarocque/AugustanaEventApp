@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -427,13 +428,16 @@ public class MainActivity extends AppCompatActivity {
         String doubleDigitMinute = String.format("%02d", minute);
         String amOrPm;
         int convertedHour = hour;
-        if (hour >= 12) {
+        if (hour > 12) {
             convertedHour = (hour - 12);
             amOrPm = "PM";
         }
         else if (hour == 0){
             convertedHour = (hour + 12);
             amOrPm = "AM";
+        }
+        else if (hour == 12){
+            amOrPm = "PM";
         }
         else{
             amOrPm = "AM";
