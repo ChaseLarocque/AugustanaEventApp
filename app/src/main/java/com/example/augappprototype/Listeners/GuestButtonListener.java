@@ -30,7 +30,6 @@ public class GuestButtonListener extends MainActivity implements View.OnClickLis
         this.loginScreen = loginScreen;
     }//GuestLoginButtonListener
 
-
     /*--Methods--*/
     /**
      * Logs the user in as a guest meaning they can view the calendar, and add events to their local
@@ -44,9 +43,5 @@ public class GuestButtonListener extends MainActivity implements View.OnClickLis
                 Toast.LENGTH_LONG).show();
         Intent goToMainMenu = new Intent(loginScreen, MainMenu.class);
         loginScreen.startActivity(goToMainMenu);
-    }
-
-
-
-
-}
+    }//onClick
+}//GuestButtonListener

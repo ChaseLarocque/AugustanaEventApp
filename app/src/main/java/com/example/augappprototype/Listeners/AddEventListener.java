@@ -1,44 +1,85 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.augappprototype.GoogleSignInAPI;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.google.api.client.util.DateTime;
+import com.roomorama.caldroid.CaldroidFragment;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by Pao on 1/7/2018.
+ * AddEventListener
+ * implements View.OnClickListener
+ * Responsible for all the popups that are displayed when the user is adding an event such as the
+ * select date popup, the select time popup and then the enter event details popup.
+ *
+ * Methods:
+ * onClick(View v)
+ *      On click will either say not available to guests if in guest mode or bring up the select
+ *      date popup if in student or faculty mode.
+ * selectDate()
+ *      Displays a popup that allows the user to select a date with a scroll bar
+ * closeWindowListener(final Dialog addEvents)
+ *      Dismisses the popup dialog that is on the screen when clicked
+ * continueButtonListener(final Dialog addEvents)
+ *      When clicked, will either go to the select time popup, enter event details popup, or
+ *      dismiss the popup, adding the event
+ * saveEventDate(DatePicker datePicker)
+ *      Stores the date that the user entered
+ * saveEventTime(TimePicker timePicker)
+ *      Stores the time the user selected
+ * saveEventDetails(EditText title, EditText location, EditText description)
+ *      Converts the event details the user entered to a string
+ * openEventTime()
+ *      Displays the popup for the user to select a time
+ * openEventDetails()
+ *      Opens the popup for the event details
+ * addEventButtonListener(final Dialog addEvents)
+ *      Stores the details the user has entered
+ * checkAmorPm(int hourOfDay)
+ *      Checks if the time the user entered is AM or PM
+ *
  */
 
 public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
-    public static HashMap<Date, ArrayList<String>> events = new HashMap<>();
-    public static ArrayList<String> eventDetails = new ArrayList();
+    public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
     private int day;
     private int month;
     private int year;
-    private int minute;
-    private int hour;
+    boolean isStartTime;
+    private int startMinute;
+    private int startHour;
+    private int endMinute;
+    private int endHour;
     private String step;
     private final MainActivity mainActivity;
-    private String amOrPm;
     EditText titleBox;
     EditText locationBox;
     EditText descriptionBox;
     String eventTitle;
     String eventDescription;
     String eventLocation;
+    String eventTime;
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -49,19 +90,14 @@ public class AddEventListener implements View.OnClickListener {
     /**
      * onClick(View) --> void
      * Calls the selectDate method when clicked which will bring up a scroll bar where the user
-     * can select a day, month, and year.
+     * can select a day, month, and year. If in guest mode it will not be clickable and will
+     * display a message saying Button is not available in guest mode
      * @param v
      */
     @Override
     public void onClick(View v) {
-        if(GuestButtonListener.isGuest)
-            Toast.makeText(mainActivity, "This button is not available on guest mode",
-                    Toast.LENGTH_SHORT).show();
-        else
-            selectDate();
-
-
-    }
+        selectDate();//students and faculty will be brought up to the select date popup
+    }//onClick
 
     /**
      * selectDate() --> void
@@ -70,22 +106,12 @@ public class AddEventListener implements View.OnClickListener {
      * back to the calendar or continue to the next dialog popup
      */
     public void selectDate(){
-        /**
-        eventDetails.add(0, "Augustana");
-        eventDetails.add(1, "Basketball Game");
-        eventDetails.add(2, "Dennis Didusenko gonna dunk on mfers");
-        events.put(new Date(118, 0, 1), eventDetails);
-        Toast.makeText(mainActivity, "Event Added",
-                Toast.LENGTH_SHORT).show();
-         */
-
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventpopup);
         addEventDialog.show();
         step = "date";
         closeWindowListener(addEventDialog);
         continueButtonListener(addEventDialog);
-
     }//selectDate
 
     /**
@@ -103,10 +129,16 @@ public class AddEventListener implements View.OnClickListener {
                 addEvents.dismiss();
             }
         });
-    }
+    }//closeWindowListener
 
+    /**
+     * continueButtonListener(Dialog) --> void
+     * Clicking the continue button throughout the event details will take the user to the select
+     * time popup, the enter event details popup or close the dialog
+     * @param addEvents
+     */
     public void continueButtonListener(final Dialog addEvents){
-        Button continueButton = addEvents.findViewById(R.id.continueAdd);
+        Button continueButton = addEvents.findViewById(R.id.continueButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
         DatePicker eventDate = addEvents.findViewById(R.id.datePicker);
         TimePicker eventTime = addEvents.findViewById(R.id.timePicker);
@@ -119,14 +151,12 @@ public class AddEventListener implements View.OnClickListener {
                     step = "time";
                 }//if
                 else if (step == "time"){
-                    saveEventTime(eventTime);
                     addEvents.dismiss();
                     openEventDetails();
                     step = "details";
                 }//else
                 else
                     addEvents.dismiss();
-
             }//onClick
         });
     }//continueButtonListener
@@ -143,20 +173,8 @@ public class AddEventListener implements View.OnClickListener {
     }//saveEventDate
 
     /**
-     * saveEventTime(TimePicker) --> void
-     * Stores the time that the user has selected on the select time dialog
-     * @param timePicker
-     */
-    public void saveEventTime(TimePicker timePicker){
-        minute = timePicker.getCurrentMinute();
-        hour = timePicker.getCurrentHour();
-        amOrPm = checkAmOrPm(hour);
-    }//saveEventTime
-
-    /**
      * saveEventDetails(EditText, EditText, EditText) --> void
-     * Stores the event title, location, and description that the user enters on the event details
-     * screen
+     * Converts event details to a string
      * @param title
      * @param location
      * @param description
@@ -173,13 +191,63 @@ public class AddEventListener implements View.OnClickListener {
      * minute
      */
     public void openEventTime(){
-        final Dialog addEventDialog = new Dialog(mainActivity);
-        addEventDialog.setContentView(R.layout.addeventtime);
-        addEventDialog.show();
-        continueButtonListener(addEventDialog);
-        closeWindowListener(addEventDialog);
+        final Dialog addEventTimeDialog = new Dialog(mainActivity);
+        addEventTimeDialog.setContentView(R.layout.addevent_time);
+        addEventTimeDialog.show();
+        final Button setStart = addEventTimeDialog.findViewById(R.id.startTimeButton);
+        setStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isStartTime = true;
+                openEventTimePicker(isStartTime, addEventTimeDialog);
+            }
+        });
+        final Button setEnd = addEventTimeDialog.findViewById(R.id.endTimeButton);
+        setEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isStartTime = false;
+                openEventTimePicker(isStartTime, addEventTimeDialog);
+            }
+        });
+        continueButtonListener(addEventTimeDialog);
+        closeWindowListener(addEventTimeDialog);
     }//openEventTime
 
+    /**
+     * openEventTimePicker(Boolean, Dialog) --> void
+     * Opens the time picker scroller for the start and end time so the user can select a start
+     * and end time
+     * @param isStartTime
+     * @param eventTimes
+     */
+    public void openEventTimePicker(final Boolean isStartTime, final Dialog eventTimes){
+        final Dialog timePickerDialog = new Dialog(mainActivity);
+        timePickerDialog.setContentView(R.layout.addevent_timepicker);
+        timePickerDialog.show();
+        Button submitTime = timePickerDialog.findViewById(R.id.submitButton);
+        final Button setStart = eventTimes.findViewById(R.id.startTimeButton);
+        final Button setEnd = eventTimes.findViewById(R.id.endTimeButton);
+        final TimePicker timePicker = timePickerDialog.findViewById(R.id.timePicker);
+        submitTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isStartTime){
+                    startHour = timePicker.getCurrentHour();
+                    startMinute = timePicker.getCurrentMinute();
+                    setStart.setText(" Start Time: " + mainActivity.
+                            convertEventTime(startHour, startMinute));
+                }//if
+                else{
+                    endHour = timePicker.getCurrentHour();
+                    endMinute = timePicker.getCurrentMinute();
+                    setEnd.setText(" End Time: " + mainActivity.
+                            convertEventTime(endHour, endMinute));
+                }//else
+                timePickerDialog.dismiss();
+            }
+        });
+    }//openEventTimePicker
     /**
      * openEventDetails() --> void
      * When called, will open the event details dialog where the user enters the event title,
@@ -189,7 +257,6 @@ public class AddEventListener implements View.OnClickListener {
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventdetails);
         addEventDialog.show();
-        selectCategoryListener(addEventDialog);
         addEventButtonListener(addEventDialog);
         closeWindowListener(addEventDialog);
         locationBox = addEventDialog.findViewById(R.id.eventLocation);
@@ -209,40 +276,56 @@ public class AddEventListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
-                eventDetails.add(0, eventLocation);
-                eventDetails.add(1, eventTitle);
-                eventDetails.add(2, eventDescription);
-                events.put(new Date(year, month, day), eventDetails);
-                Toast.makeText(mainActivity, "Event Added!",
-                        Toast.LENGTH_SHORT).show();
-                addEvents.dismiss();
+                if (eventTitle.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Title",
+                            Toast.LENGTH_SHORT).show();
+                }//if
+                else if (eventLocation.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Location",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else if (eventDescription.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Description",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else {
+                    saveEvent(new Date(year, month, day));
+                    Toast.makeText(mainActivity, "Event Added!",
+                            Toast.LENGTH_LONG).show();
+                    mainActivity.fetchEvents();
+                    addEvents.dismiss();
+                }//else
             }
         });
     }//addEventButtonListener
 
     /**
-     * checkAmOrPm(int) --> String
-     * Checks if the time the user selected is in the AM or the PM
-     * @param hourOfDay
+     * saveEvent() --> void
+     * Saves the date, start and end time, the event title, the event location, and the event
+     * description
+     */
+    public void saveEvent(Date eventDate) {
+        mainActivity.addEventToCalendar(eventTitle, eventLocation, eventDescription,
+                convertToDateTime(startMinute, startHour, month, day),
+                convertToDateTime(endMinute, endHour, month, day));
+    }//saveEvent
+
+    /**
+     * convertToDateTime(int, int, int, int) --> String
+     * Converts to a date that includes the time
+     * @param minute
+     * @param hour
+     * @param month
+     * @param day
      * @return String
      */
-    private String checkAmOrPm(int hourOfDay){
-        if (hourOfDay < 12)
-            return "AM";
-        else
-            return "PM";
-    }//checkAmOrPm
-
-    public void selectCategoryListener(Dialog eventDetails){
-        Button category = eventDetails.findViewById(R.id.categoryButton);
-        category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog categoryDialog = new Dialog(mainActivity);
-                categoryDialog.setContentView(R.layout.addeventcategory);
-                closeWindowListener(categoryDialog);
-                categoryDialog.show();
-            }
-        });
-    }
+    public String convertToDateTime(int minute, int hour, int month, int day){
+        String doubleDigitMonth = String.format("%02d", month + 1);
+        String doubleDigitMinute = String.format("%02d", minute);
+        String doubleDigitDay = String.format("%02d", day);
+        String doubleDigitHour = String.format("%02d", hour);
+        String eventDateTime = (year + 1900) + "-" + doubleDigitMonth + "-" + doubleDigitDay + "T"
+                + doubleDigitHour + ":" + doubleDigitMinute + ":" +"00" + "-07:00";
+        return eventDateTime;
+    }//convertToDateTime
 }//AddEventListener

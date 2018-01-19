@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/eventBanner"
+        android:layout_width="fill_parent"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/greentaskbar"
+        android:gravity="left|center"
+        android:scaleType="centerCrop"
+        android:text=" Set Event Times"
+        android:textColor="@color/uofaGold"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/startTimeButton"
+        android:layout_width="fill_parent"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:text=" Start Time:"
+        android:clickable="true"
+        android:textSize="20sp"
+        android:gravity="left|center"
+        android:background="@color/caldroid_transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner" />
+
+    <Button
+        android:id="@+id/endTimeButton"
+        android:layout_width="fill_parent"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:text=" End Time:"
+        android:gravity="left|center"
+        android:textSize="20sp"
+        android:background="@color/caldroid_transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <Button
+        android:id="@+id/closeWindow"
+        android:layout_width="0dp"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/greentaskbar"
+        android:onClick="closeWindowListener"
+        android:scaleType="centerCrop"
+        android:text="Close Window"
+        android:textColor="@color/uofaGold"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/endTimeButton" />
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="0dp"
+        android:layout_height="73dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/greentaskbar"
+        android:scaleType="centerCrop"
+        android:text="Continue"
+        android:textColor="@color/uofaGold"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline3"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endTimeButton" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/eventBanner"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/eventBanner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/timegold" />
+
+    <ImageView
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/greentaskbar"
+        app:layout_constraintTop_toBottomOf="@+id/startTimeButton" />
+
+
+</android.support.constraint.ConstraintLayout>

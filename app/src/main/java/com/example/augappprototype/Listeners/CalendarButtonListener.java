@@ -1,19 +1,26 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.roomorama.caldroid.CaldroidListener;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Pao on 1/7/2018.
@@ -23,15 +30,34 @@ import java.util.HashMap;
  *
  * Methods:
  * onSelectDate(Date date, View view)
- * dayEvents(Date date)
+ *      popup of the events for that day displays on screen
  * convertDate(Date date)
  *      Returns the year, month, and day
+ * closeWindowListener(final Dialog eventPopup)
+ *      on click will dismiss the event popup and go back to the calendar screen
+ * addButtonsForEvents(final Dialog eventPopup, final Date date)
+ *      Makes buttons for every event on the event popup when a date it selected
+ * addTextViewForDetails(Dialog eventPopup, Event event)
+ *      Adds a text view to display the event details
+ * getDateFromDateTime(Event eachEvent)
+ *      Returns the date from a date time format
+ * getStartTimeFromDateTime(Event eachEvent)
+ *      Returns the start time from a date time format
+ * getEndTimeFromDateTime(Event eachEvent)
+ *      Returns the end time from a date time format
+ * dateForBanner(Dialog eventPopup, Date date)
+ *      Displays the current day on the event popup banner
  */
-
 public class CalendarButtonListener extends CaldroidListener {
 
     /*--Data--*/
     private final MainActivity mainActivity;
+    LinearLayout eventList;
+    List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
+            "June", "July", "August", "September", "October", "November", "December");
+    int eventYear;
+    int eventMonth;
+    int eventDay;
 
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
@@ -41,7 +67,7 @@ public class CalendarButtonListener extends CaldroidListener {
     /*--Methods--*/
     /**
      * onSelectDate(Date, View) --> void
-     *
+     * When a date is selected a popup will be displayed that shows the events for that day
      * @param date
      * @param view
      */
@@ -49,37 +75,11 @@ public class CalendarButtonListener extends CaldroidListener {
     public void onSelectDate(Date date, View view) {
         final Dialog eventPopupDialog = new Dialog(mainActivity);
         eventPopupDialog.setContentView(R.layout.eventpopup);
-        filterEvent(eventPopupDialog);
-        showEditedEvent(eventPopupDialog);
-        studentMode(eventPopupDialog);
         closeWindowListener(eventPopupDialog);
+        dateForBanner(eventPopupDialog, date);
+        addButtonsForEvents(eventPopupDialog, date);
         eventPopupDialog.show();
-
-        Date converted = convertDate(date);
-        if (dayEvents(converted) == true) {
-            String eventDisplay = AddEventListener.events.get(date).get(0);
-            String eventDisplay1 = AddEventListener.events.get(date).get(1);
-            String eventDisplay2 = AddEventListener.events.get(date).get(2);
-            //Toast.makeText(mainActivity, "Location: " + eventDisplay + " " + "Event: " +
-                       //     eventDisplay1 + " " + "Description: " + eventDisplay2,
-                //    Toast.LENGTH_SHORT).show();
-        }
-        else
-            ;
-    }
-
-    /**
-     * dayEvents(Date) --> boolean
-     * Checks if there are any events in the hash map
-     * @param date
-     * @return
-     */
-    public boolean dayEvents(Date date){
-        if (AddEventListener.events.containsKey(date))//events in hash map
-            return true;
-        else
-            return false;//no events in hash map
-    }//dayEvents
+    }//onSelectDate
 
     /**
      * convertDate(Date) --> Date
@@ -89,8 +89,13 @@ public class CalendarButtonListener extends CaldroidListener {
      */
     public Date convertDate(Date date){
         return new Date(date.getYear(), date.getMonth(), date.getDate());
-    }
+    }//convertDate
 
+    /**
+     * closeWindowListener(Dialog) --> void
+     * Closes the dialog when the close window button is clicked
+     * @param eventPopup
+     */
     public void closeWindowListener(final Dialog eventPopup){
         Button closeWindow = eventPopup.findViewById(R.id.closeButton);
         closeWindow.setOnClickListener(new View.OnClickListener() {
@@ -99,26 +104,138 @@ public class CalendarButtonListener extends CaldroidListener {
                 eventPopup.dismiss();
             }
         });
+    }//closeWindowListener
 
-    }
+    /**
+     * addButtonsForEvents(Dialog, Date) --> void
+     * Adds a button that displays the event title on the event popup dialog for all events on
+     * that day and when clicked will show the event details of that event
+     * @param eventPopup
+     * @param date
+     */
+    public void addButtonsForEvents(final Dialog eventPopup, final Date date) {
+        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.allEvents);
+        eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        for (final Event event : mainActivity.items) {
+            if (getDateFromDateTime(event).equals(convertDate(date))) {
+                Button eachEvent = new Button(mainActivity);
+                eachEvent.setText(event.getSummary());
+                eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
+                eachEvent.setTextSize(20);
+                eachEvent.setLayoutParams(new LinearLayout
+                        .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                eachEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        eventPopup.setContentView(R.layout.eventpopup_details);
+                        addTextViewForDetails(eventPopup, event);
+                    }
+                });
+                eventList.addView(eachEvent);
+            }//if
+        }//for
+        eventsInDay.addView(eventList);
+    }//addButtonsForEvents
 
-    public void filterEvent(final Dialog dialog){
-        TextView event1 = dialog.findViewById(R.id.imageButton);
-        if (CategoryButtonListener.filterAthletics == true && LoginButtonListener.facultyOrStudent == "faculty")
-            event1.setVisibility(View.GONE);
-    }
+    /**
+     * addTextViewForDetails(Dialog, Event) --> void
+     * Adds a text view for displaying the event title, time, location, and description
+     * @param eventPopup
+     * @param event
+     */
+    public void addTextViewForDetails(Dialog eventPopup, Event event) {
+        MaxHeightScrollView eventsInDay = eventPopup.findViewById(R.id.eventDetails);
+        eventList = new LinearLayout(mainActivity);
+        eventList.setLayoutParams(new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        eventList.setOrientation(LinearLayout.VERTICAL);
+        for (Event eachEvents : mainActivity.items) {
+            if (eachEvents.equals(event)) {
+                for (int y = 0; y < 4; y++) {
+                    TextView textView = new TextView(mainActivity);
+                    if (y == 0) {
+                        textView.setText(event.getSummary());
+                        textView.setTextColor(mainActivity.getResources()
+                                .getColor(R.color.uofaGreen));
+                        textView.setTextSize(30);
+                        eventList.addView(textView);
+                    }//if
+                    else if (y == 1) {
+                        textView.setText("Time: " + getStartTimeFromDateTime(event) + " - " +
+                                getEndTimeFromDateTime(event));
+                        textView.setTextColor(Color.BLACK);
+                        eventList.addView(textView);
+                    }//else if
+                    else if (y == 2) {
+                        textView.setText("Location: " + event.getLocation());
+                        textView.setTextColor(Color.BLACK);
+                        eventList.addView(textView);
+                    }//else if
+                    else {
+                        textView.setText("Description: " + event.getDescription());
+                        textView.setTextColor(Color.BLACK);
+                        eventList.addView(textView);
+                    }//else
+                }//for
+            }//if
+        }//for
+        eventsInDay.addView(eventList);
+        closeWindowListener(eventPopup);
+    }//addTextViewForDetails
 
-    public void showEditedEvent(final Dialog dialog){
-        TextView event2 = dialog.findViewById(R.id.imageButton2);
-        if (EditEventButtonListener.showEditedEvent == true)
-            event2.setBackgroundResource(R.drawable.prototypeevent3);
-    }
+    /**
+     * getDateFromDateTime(Event) --> Date
+     * Gets the date from a date that also includes the time
+     * @param eachEvent
+     * @return Date
+     */
+    public Date getDateFromDateTime(Event eachEvent){
+        String eventDetails = eachEvent.getStart().toString();
+        eventYear = Integer.parseInt(eventDetails.substring(13,17));
+        eventMonth = Integer.parseInt(eventDetails.substring(18,20));
+        eventDay = Integer.parseInt(eventDetails.substring(21,23));
+        return new Date(eventYear - 1900, eventMonth - 1, eventDay);
+    }//getDateFromDateTime
 
-    public void studentMode(final Dialog dialog){
-        TextView event2 = dialog.findViewById(R.id.imageButton2);
-        if (LoginButtonListener.facultyOrStudent == "faculty" || EditEventButtonListener.showEditedEvent == true)
-            event2.setVisibility(View.VISIBLE);
-        else
-            event2.setVisibility(View.GONE);
-    }//convertDate
+    /**
+     * getStartTimeFromDateTime(Event) --> String
+     * Gets the start time from a date time format
+     * @param eachEvent
+     * @return
+     */
+    public String getStartTimeFromDateTime(Event eachEvent){
+        String eventDetails = eachEvent.getStart().toString();
+        int startEventHour = Integer.parseInt(eventDetails.substring(24,26));
+        int startEventMinute = Integer.parseInt(eventDetails.substring(27,29));
+        return mainActivity.convertEventTime(startEventHour, startEventMinute);
+    }//getStartTimeFromDateTime
+
+    /**
+     * getEndTimeFromDateTime(Event) --> String
+     * Gets the end time from a date time format
+     * @param eachEvent
+     * @return
+     */
+    public String getEndTimeFromDateTime(Event eachEvent){
+        String eventDetails = eachEvent.getEnd().toString();
+        int endEventHour = Integer.parseInt(eventDetails.substring(24,26));
+        int endEventMinute = Integer.parseInt(eventDetails.substring(27,29));
+        return mainActivity.convertEventTime(endEventHour, endEventMinute);
+    }//getEndTimeFromDateTime
+
+    /**
+     * dateForBanner(Dialog, Date) --> void
+     * Gets the current date and displays it on the event popup banner
+     * @param eventPopup
+     * @param date
+     */
+    public void dateForBanner(Dialog eventPopup, Date date){
+        TextView dateBanner = eventPopup.findViewById(R.id.eventBanner);
+        dateBanner.setText(" " + monthNames.get(date.getMonth()) + " " +
+                date.getDate() + ", " + (date.getYear() + 1900));
+    }//dateForBanner
 }//CalendarButtonListener
