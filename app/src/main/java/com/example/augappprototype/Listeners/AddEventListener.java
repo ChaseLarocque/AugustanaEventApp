@@ -292,6 +292,7 @@ public class AddEventListener implements View.OnClickListener {
                     saveEvent(new Date(year, month, day));
                     Toast.makeText(mainActivity, "Event Added!",
                             Toast.LENGTH_LONG).show();
+                    mainActivity.fetchEvents();
                     addEvents.dismiss();
                 }//else
             }
@@ -304,21 +305,6 @@ public class AddEventListener implements View.OnClickListener {
      * description
      */
     public void saveEvent(Date eventDate) {
-        ArrayList<String> eventDetails = new ArrayList();
-        HashMap<Integer, ArrayList<String>> events = new HashMap<>();
-
-        eventDetails.add(0, eventTitle);
-        eventDetails.add(1, eventTime);
-        eventDetails.add(2, eventLocation);
-        eventDetails.add(3, eventDescription);
-
-        if (allEvents.containsKey(eventDate)) {//events in hash map
-            allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
-        }
-        else {
-            events.put(events.size(), eventDetails);
-            allEvents.put(eventDate, events);
-        }
         mainActivity.addEventToCalendar(eventTitle, eventLocation, eventDescription,
                 convertToDateTime(startMinute, startHour, month, day),
                 convertToDateTime(endMinute, endHour, month, day));

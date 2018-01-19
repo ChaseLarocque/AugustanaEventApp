@@ -1,6 +1,7 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.view.Gravity;
 import android.view.View;
@@ -157,20 +158,26 @@ public class CalendarButtonListener extends CaldroidListener {
                 for (int y = 0; y < 4; y++) {
                     TextView textView = new TextView(mainActivity);
                     if (y == 0) {
-                        textView.setText("Title: " + event.getSummary());
+                        textView.setText(event.getSummary());
+                        textView.setTextColor(mainActivity.getResources()
+                                .getColor(R.color.uofaGreen));
+                        textView.setTextSize(30);
                         eventList.addView(textView);
                     }//if
                     else if (y == 1) {
                         textView.setText("Time: " + getStartTimeFromDateTime(event) + " - " +
                                 getEndTimeFromDateTime(event));
+                        textView.setTextColor(Color.BLACK);
                         eventList.addView(textView);
                     }//else if
                     else if (y == 2) {
                         textView.setText("Location: " + event.getLocation());
+                        textView.setTextColor(Color.BLACK);
                         eventList.addView(textView);
                     }//else if
                     else {
                         textView.setText("Description: " + event.getDescription());
+                        textView.setTextColor(Color.BLACK);
                         eventList.addView(textView);
                     }//else
                 }//for

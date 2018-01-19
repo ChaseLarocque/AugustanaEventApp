@@ -46,7 +46,7 @@ public class CategoryButtonListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        Toast.makeText(mainActivity, "Google API does not support categories",
+        Toast.makeText(mainActivity, "Feature Coming Soon!",
                 Toast.LENGTH_LONG).show();
     }//onClick
 
