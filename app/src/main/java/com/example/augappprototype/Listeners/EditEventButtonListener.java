@@ -181,7 +181,6 @@ public class EditEventButtonListener implements View.OnClickListener {
                 AddEventListener.allEvents.get(eventDate).get(newEventID).set(2, location.getText().toString());
                 AddEventListener.allEvents.get(eventDate).get(newEventID).set(3, description.getText().toString());
                 deleteDatesWithNoEvents();
-                mainActivity.updateCalendar();
                 Toast.makeText(mainActivity, "Event Edited!", Toast.LENGTH_LONG).show();
                 eventDetails.dismiss();
             }
