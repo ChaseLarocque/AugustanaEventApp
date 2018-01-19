@@ -15,29 +15,22 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
-import android.*;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
-import com.example.augappprototype.Listeners.GuestButtonListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -48,22 +41,13 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,12 +61,8 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInAccount account;
     public TextView name;
     public ImageView profilePicture;
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    GoogleSignInAPI gsia;
     public static List<Event> items;
     String eventTitle;
     String eventLocation;
@@ -91,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     String startEvent;
     HashMap<Date, Integer> counts;
     TextView mOutputText;
-
 
     /*--Methods--*/
 
@@ -209,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
     }//registerListenersForButtons
-    
+
     /**
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
@@ -282,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<String> output) {
             mOutputText.setText("Grabbed " + output.size() + " things");
-            updateCalendar(convertCalendar());
+            showEventCount(convertCalendar());
         }
 
         @Override
@@ -416,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.refreshView();
     }
 
-    public void updateCalendar(CaldroidFragment caldroidFragment) {
+    public void showEventCount(CaldroidFragment caldroidFragment) {
         CalendarButtonListener calendarButtonListener = new CalendarButtonListener(this);
         counts = new HashMap<>();
         for (Event event : items) {
