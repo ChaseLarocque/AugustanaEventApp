@@ -135,18 +135,19 @@
         android:id="@+id/button"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="9dp"
         android:background="@drawable/timegold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/timechange" />
 
-    <TextView
+    <Button
         android:id="@+id/timechange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
-        android:text="6:00pm"
+        android:background="@color/caldroid_transparent"
         android:textColor="#000000"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/button"
@@ -157,30 +158,30 @@
         android:id="@+id/calendaricon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-
-        android:layout_marginLeft="2dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/dateOfTheEvent"
         app:layout_constraintStart_toEndOf="@+id/timechange"
-        app:layout_constraintTop_toTopOf="@+id/dateOfTheEvent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/eventDescription"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/calendaricongold" />
 
-    <TextView
+    <Button
         android:id="@+id/dateOfTheEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1/12/2018"
+        android:layout_marginStart="8dp"
+        android:background="@color/caldroid_transparent"
         android:textColor="#000000"
         android:textSize="20dp"
         app:layout_constraintStart_toEndOf="@+id/calendaricon"
-        app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/eventDescription" />
 
     <CheckBox
         android:id="@+id/pushToAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:buttonTint="@color/uofaGold"
         android:text="Push to all devices?"
         android:textColor="@color/caldroid_black"
@@ -188,7 +189,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateOfTheEvent" />
+        app:layout_constraintTop_toBottomOf="@+id/timechange" />
 
     <Button
         android:id="@+id/button2"

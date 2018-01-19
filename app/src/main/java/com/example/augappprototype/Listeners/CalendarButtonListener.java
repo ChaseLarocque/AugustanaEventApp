@@ -39,6 +39,13 @@ import java.util.List;
  *      Returns the year, month, and day
  * closeWindowListener(final Dialog eventPopup)
  *      on click will dismiss the event popup and go back to the calendar screen
+ * filterEvent(final Dialog dialog)
+ *      hides the basketball game event when the user unchecks the athletics category
+ * showEditedEvent(final Dialog dialog)
+ *      shows the Choir Performance event is showEdited event is true
+ * studentMode(final Dialog dialog)
+ *      shows the restrictions of student mode. Choir event is not visible to students unless
+ *      showEditedEvent is set to true
  */
 public class CalendarButtonListener extends CaldroidListener {
 
@@ -51,7 +58,8 @@ public class CalendarButtonListener extends CaldroidListener {
     boolean researchCategory = false;
     boolean asaCategory = false;
     int numEvents;
-
+    List<String> monthNames = Arrays.asList("January", "February", "March", "April", "May",
+            "June", "July", "August", "September", "October", "November", "December");
     /*--Constructor--*/
     public CalendarButtonListener(MainActivity mainActivity){
         this.mainActivity = mainActivity;
@@ -171,23 +179,28 @@ public class CalendarButtonListener extends CaldroidListener {
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-            for(int y = 0; y < 3; y++ ) {
+            for(int y = 0; y < 4; y++ ) {
                 TextView textView = new TextView(mainActivity);
                 if (y == 0) {
-                    textView.setText("Event Title: "
+                    textView.setText("Title: "
                             + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
                 }//if
                 else if (y == 1){
-                    textView.setText("Event Location: "
+                    textView.setText("Time: "
                             + AddEventListener.allEvents.get(date).get(eventID).get(y));
+                    eventList.addView(textView);
+                }
+                else if (y == 2){
+                   textView.setText("Location: "
+                           + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
                 }//else if
                 else {
-                   textView.setText("Event Description: "
-                           + AddEventListener.allEvents.get(date).get(eventID).get(y));
+                    textView.setText("Description: "
+                            + AddEventListener.allEvents.get(date).get(eventID).get(y));
                     eventList.addView(textView);
-                }//else
+                }
             }//for
         eventsInDay.addView(eventList);
     }//addTextViewForDetails

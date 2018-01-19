@@ -41,7 +41,7 @@
         app:layout_constraintRight_toRightOf="@+id/guideline" />
 
     <Button
-        android:id="@+id/continueAdd"
+        android:id="@+id/continueButton"
         android:layout_width="0dp"
         android:layout_height="73dp"
         android:adjustViewBounds="true"

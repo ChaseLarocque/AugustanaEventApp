@@ -1,6 +1,7 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -8,8 +9,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.roomorama.caldroid.CaldroidFragment;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,10 +47,7 @@ import java.util.HashMap;
  * openEventDetails()
  *      Opens the popup for the event details
  * addEventButtonListener(final Dialog addEvents)
- *      Stores the details the user has entered if they enter in all credentials
- * saveEvent(Date eventDate)
- *      Saves the event details and categories into an array list and sets the event count for each
- *      day
+ *      Stores the details the user has entered
  * checkAmorPm(int hourOfDay)
  *      Checks if the time the user entered is AM or PM
  * selectCategoryListener(Dialog eventDetails)
@@ -57,6 +58,7 @@ public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
     public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
+
     private int day;
     private int month;
     private int year;
@@ -74,6 +76,8 @@ public class AddEventListener implements View.OnClickListener {
     ArrayList<String> categorySelected = new ArrayList<>();
     String checked;
     boolean noCategory = true;
+    String eventTime;
+
 
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
@@ -90,7 +94,11 @@ public class AddEventListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        selectDate();//students and faculty will be brought up to the select date popup
+      //  if(GuestButtonListener.isGuest)//guests cannot add events
+      //      Toast.makeText(mainActivity, "This button is not available on guest mode",
+      //              Toast.LENGTH_SHORT).show();
+      //  else
+            selectDate();//students and faculty will be brought up to the select date popup
     }//onClick
 
     /**
@@ -100,6 +108,14 @@ public class AddEventListener implements View.OnClickListener {
      * back to the calendar or continue to the next dialog popup
      */
     public void selectDate(){
+        /**
+        eventDetails.add(0, "Augustana");
+        eventDetails.add(1, "Basketball Game");
+        eventDetails.add(2, "The Augustana Vikings will take on the GPRC Wolves");
+        events.put(new Date(118, 0, 1), eventDetails);
+        Toast.makeText(mainActivity, "Event Added",
+                Toast.LENGTH_SHORT).show();
+         */
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventpopup);
         addEventDialog.show();
@@ -117,6 +133,7 @@ public class AddEventListener implements View.OnClickListener {
     public void closeWindowListener(final Dialog addEvents){
         Button closeWindow = addEvents.findViewById(R.id.closeWindow);
         closeWindow.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 addEvents.dismiss();
@@ -133,7 +150,7 @@ public class AddEventListener implements View.OnClickListener {
      * @param addEvents
      */
     public void continueButtonListener(final Dialog addEvents){
-        Button continueButton = addEvents.findViewById(R.id.continueAdd);
+        Button continueButton = addEvents.findViewById(R.id.continueButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
         DatePicker eventDate = addEvents.findViewById(R.id.datePicker);
         TimePicker eventTime = addEvents.findViewById(R.id.timePicker);
@@ -148,6 +165,8 @@ public class AddEventListener implements View.OnClickListener {
                 else if (step == "time"){
                     saveEventTime(eventTime);
                     addEvents.dismiss();
+                    Toast.makeText(mainActivity, "lol" + minute,
+                            Toast.LENGTH_SHORT).show();
                     openEventDetails();
                     step = "details";
                 }//else
@@ -175,8 +194,21 @@ public class AddEventListener implements View.OnClickListener {
      */
     public void saveEventTime(TimePicker timePicker){
         minute = timePicker.getCurrentMinute();
+        String doubleDigitMinute = String.format("%02d", minute);
         hour = timePicker.getCurrentHour();
-        amOrPm = checkAmOrPm(hour);
+        if (hour > 12) {
+            hour = (timePicker.getCurrentHour() - 12);
+            amOrPm = "PM";
+        }
+        else if (hour == 0){
+            hour = (timePicker.getCurrentHour() + 12);
+            amOrPm = "AM";
+        }
+        else{
+            hour = timePicker.getCurrentHour();
+            amOrPm = "AM";
+        }
+        eventTime = hour + ":" + doubleDigitMinute + " " + amOrPm;
     }//saveEventTime
 
     /**
@@ -270,24 +302,27 @@ public class AddEventListener implements View.OnClickListener {
     public void saveEvent(Date eventDate) {
         ArrayList<String> eventDetails = new ArrayList();
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
+
         eventDetails.add(0, eventTitle);
-        eventDetails.add(1, eventLocation);
-        eventDetails.add(2, eventDescription);
-        eventDetails.add(3, "Time");
+        eventDetails.add(1, eventTime);
+        eventDetails.add(2, eventLocation);
+        eventDetails.add(3, eventDescription);
         eventDetails.add(4, categorySelected.get(0));
         eventDetails.add(5, categorySelected.get(1));
         eventDetails.add(6, categorySelected.get(2));
         eventDetails.add(7, categorySelected.get(3));
         eventDetails.add(8, categorySelected.get(4));
+
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
-        }//if
+        }
         else {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
-        }//else
-        mainActivity.setEventCount(eventDate, allEvents.get(eventDate).size());
-    }//saveEvent
+        }
+        mainActivity.setEventCount(eventDate);
+    }
+
 
     /**
      * checkAmOrPm(int) --> String

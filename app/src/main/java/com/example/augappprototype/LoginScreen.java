@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.GuestButtonListener;
-import com.example.augappprototype.Listeners.LoginButtonListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -92,7 +91,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
      * Sets on click listeners for the Login button and the Guest Login Button on the Login screen
      */
     public void registerListenersForLoginScreenButtons() {
-        findViewById(R.id.loginButton).setOnClickListener(new LoginButtonListener(this));
         findViewById(R.id.continueAsGuestButton).setOnClickListener
                 (new GuestButtonListener(this));
     }//registerListenersForLoginScreenButtons
@@ -141,6 +139,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
         } else {
             updateUI(false);
+            Toast.makeText(this, "lol" + result.getStatus(),
+                    Toast.LENGTH_LONG).show();
         } // else
     } // handleSignInResult(GoogleSignInResult)
 
