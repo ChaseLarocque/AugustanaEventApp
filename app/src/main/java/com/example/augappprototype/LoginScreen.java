@@ -46,11 +46,7 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
 
     private Button signOutButton;
     private GoogleApiClient googleApiClient;
-    public ImageView profilePicture;
-    private LinearLayout profileSection;
     private SignInButton signInButton;
-    private TextView email;
-    private TextView name;
     private static final int REQUEST_CODE = 9001;
     private ArrayList<String> whiteList = new ArrayList<String>();
     public static GoogleSignInAccount account;
@@ -69,17 +65,9 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_login_screen);
 
         addName();
-
-        profileSection = (LinearLayout) findViewById(R.id.profile_section);
-        signOutButton = (Button) findViewById(R.id.logout_button);
         signInButton = (SignInButton) findViewById(R.id.login_button);
-        name = (TextView) findViewById(R.id.name);
-        email = (TextView) findViewById(R.id.email);
-        profilePicture = (ImageView) findViewById(R.id.profile_image);
 
         signInButton.setOnClickListener(this);
-        signOutButton.setOnClickListener(this);
-        profileSection.setVisibility(View.GONE);
 
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions
@@ -106,9 +94,6 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
             case R.id.login_button:
                 signIn();
                 break;
-            case R.id.logout_button:
-                signOut();
-                break;
         } // switch(View)
     } // onClick(View)
 
@@ -129,48 +114,17 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
                 .setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                updateUI(false);
             }
         });
     } // signOut()
 
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
-            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
             account = result.getSignInAccount();
-
-            String userName = account.getDisplayName();
             String userEmail = account.getEmail();
-            name.setText(userName);
-            email.setText(userEmail);
-            setProfilePicture();
-            updateUI(true);
-
             checkPermissions(userEmail);
-        } else {
-            updateUI(false);
-        } // else
+        }
     } // handleSignInResult(GoogleSignInResult)
-
-    private void setProfilePicture() {
-        if(account.getPhotoUrl() != null) {
-            Glide.with(this).load(account.getPhotoUrl()).into(profilePicture);
-        } else {
-            Glide.with(this)
-                    .load("https://i.stack.imgur.com/34AD2.jpg")
-                    .into(profilePicture);
-        } // else
-    } // setProfilePicture(GoogleSignInAccount)
-
-    private void updateUI(boolean isLogin) {
-        if(isLogin) {
-            profileSection.setVisibility(View.VISIBLE);
-            signInButton.setVisibility(View.GONE);
-        } else {
-            profileSection.setVisibility(View.GONE);
-            signInButton.setVisibility(View.VISIBLE);
-        } // else
-    } // updateUI
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
