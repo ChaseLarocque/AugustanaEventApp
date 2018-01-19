@@ -4,36 +4,32 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.example.augappprototype.LoginScreen;
+import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.MainMenu;
 import com.example.augappprototype.R;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
- * Created by Pao on 1/12/2018.
- * SignOutButtonListener
- * implements View.OnClickListener
- * Responsible for the events that occur when the sign out button is clicked
- *
- * Methods:
- * onClick(View v)
- *      on click will take the user back to the login screen
+ * Created by Peter on 1/18/2018.
  */
 
-public class SignOutButtonListener implements View.OnClickListener {
-    /*--Data--*/
-    private MainMenu mainMenu;
+public class SignOutMainActivityListener implements View.OnClickListener {
+    private MainActivity mainActivity;
+    private GoogleApiClient googleApiClient;
 
-    /*--Constructor--*/
-    public SignOutButtonListener(MainMenu mainMenu){
-        this.mainMenu = mainMenu;
-    }
+    public SignOutMainActivityListener(MainActivity mainActivity){
+        this.mainActivity = mainActivity;
+    } // SignOUtButtonListener(MainActivity)
 
-    /*--Methods--*/
+
     @Override
     public void onClick(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mainMenu);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
         builder.setCancelable(true);
         builder.setTitle("Signing out");
         builder.setMessage("Are you sure you want to sign out?");
@@ -41,8 +37,8 @@ public class SignOutButtonListener implements View.OnClickListener {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent goToLogin = new Intent(mainMenu, LoginScreen.class);
-                        mainMenu.startActivity(goToLogin);
+                        Intent goToLogin = new Intent(mainActivity, LoginScreen.class);
+                        mainActivity.startActivity(goToLogin);
                     }
                 });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -53,5 +49,6 @@ public class SignOutButtonListener implements View.OnClickListener {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-    }//onClick
-}//SignOutButtonListener
+    } // onClick(View)
+
+} // SignOutMainActivityListener

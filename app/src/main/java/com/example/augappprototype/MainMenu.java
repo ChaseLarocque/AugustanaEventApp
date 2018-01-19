@@ -70,7 +70,7 @@ public class MainMenu extends AppCompatActivity {
 
 
         extras = getIntent().getExtras();
-        Toast.makeText(this, "Logged in As: "+extras.getString("com.example.augappprototype.userName"), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Logged in As:  "+extras.getString("com.example.augappprototype.userName"), Toast.LENGTH_LONG).show();
 
     }//onCreate
 
@@ -85,6 +85,7 @@ public class MainMenu extends AppCompatActivity {
                 mainMenu = new MainMenu();
                 Intent goToCalendar = new Intent(MainMenu.this, MainActivity.class);
                 goToCalendar.putExtra("userName", extras.getString("com.example.augappprototype.userName"));
+                goToCalendar.putExtra("editCalendar", extras.getBoolean("canEditCalendar"));
                 startActivity(goToCalendar);
             }
         });
