@@ -37,7 +37,7 @@ import com.example.augappprototype.Listeners.AddEventListener;
 import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
-import com.example.augappprototype.Listeners.GuestButtonListener;
+import com.example.augappprototype.Listeners.SignOutMainActivityListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -210,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
         }
         findViewById(R.id.categoryButton).setOnClickListener
                 (new CategoryButtonListener(this));
+        findViewById(R.id.signOutButton).setOnClickListener
+                (new SignOutMainActivityListener(this));
     }//registerListenersForButtons
 
 
