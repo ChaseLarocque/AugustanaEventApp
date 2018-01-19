@@ -16,7 +16,7 @@
         android:background="@drawable/greentaskbar"
         android:gravity="left|center"
         android:scaleType="centerCrop"
-        android:text="  Days With Events"
+        android:text="  All Events"
         android:textColor="@color/uofaGold"
         android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"

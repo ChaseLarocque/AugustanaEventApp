@@ -15,22 +15,14 @@ package com.example.augappprototype;
  *      Sets on click listeners for all buttons on the calendar screen
  */
 
-import android.*;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 
 import com.bumptech.glide.Glide;
 import com.example.augappprototype.Listeners.AddEventListener;
@@ -38,6 +30,8 @@ import com.example.augappprototype.Listeners.CalendarButtonListener;
 import com.example.augappprototype.Listeners.CategoryButtonListener;
 import com.example.augappprototype.Listeners.EditEventButtonListener;
 import com.example.augappprototype.Listeners.SignOutMainActivityListener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -48,23 +42,16 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.EventReminder;
 import com.google.api.services.calendar.model.Events;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.gson.Gson;
 import com.roomorama.caldroid.CaldroidFragment;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -72,7 +59,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 
 public class MainActivity extends AppCompatActivity {
-    CaldroidFragment caldroidFragment = new CaldroidFragment();
     GoogleSignInAccount account;
     Bundle extras;
     public TextView name;
@@ -82,14 +68,14 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     public List<Event> items;
     ImageView  buttonBlocker;
+
     String eventTitle;
     String eventLocation;
     String eventDescription;
     String endEvent;
     String startEvent;
-
+    HashMap<Date, Integer> counts;
     TextView mOutputText;
-
 
     /*--Methods--*/
 
@@ -119,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "account is null",
                     Toast.LENGTH_LONG).show();
         } // else
-        convertCalendar();
+
         registerListenersForCalendarUIButtons();
 
         EasyPermissions.requestPermissions(
@@ -133,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         credential.setSelectedAccountName(extras.getString("userName"));
         mOutputText = findViewById(R.id.testText);
         fetchEvents();
+        convertCalendar();
+
 
 
     }//onCreate
@@ -177,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
      * Makes android's calendar view the caldroid calendar
      * Sets the minimum date to January 1st 2018 and the maximum date to December 31st 2018
      */
-    private void convertCalendar() {
+    private CaldroidFragment convertCalendar() {
         CaldroidFragment caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
         Calendar cal = Calendar.getInstance();
@@ -192,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         caldroidFragment.setMinDate(jan1);
         caldroidFragment.setMaxDate(dec31);
         caldroidFragment.setCaldroidListener(new CalendarButtonListener(this));
+        return caldroidFragment;
     }//convertCalendar
 
     /**
@@ -213,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.signOutButton).setOnClickListener
                 (new SignOutMainActivityListener(this));
     }//registerListenersForButtons
-
 
     /**
      * An asynchronous task that handles the Google Calendar API call.
@@ -248,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         /**
          * Fetch a list of the next 10 events from the primary calendar.
          *
@@ -264,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                     .setSingleEvents(true)
                     .execute();
             items = events.getItems();
-
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
@@ -283,11 +269,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
+            showEventCount(convertCalendar());
         }
 
         @Override
@@ -309,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }//makeRequests
 
-    public class addAnEvent extends AsyncTask {
+        public class addAnEvent extends AsyncTask {
         private com.google.api.services.calendar.Calendar mService2 = null;
         private Exception mLastError = null;
 
@@ -365,8 +351,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute(){}
     }
 
-    public void setEventCount(Date day){
-        switch (AddEventListener.allEvents.get(day).size()){
+    public void setEventCount(Date day, CaldroidFragment caldroidFragment){
+        Drawable count10 = getResources().getDrawable(R.drawable.countplus);
+        switch (counts.get(day)){
             case(1):
                 Drawable count1 = getResources().getDrawable(R.drawable.count1);
                 caldroidFragment.setBackgroundDrawableForDate(count1, day);
@@ -404,18 +391,31 @@ public class MainActivity extends AppCompatActivity {
                 caldroidFragment.setBackgroundDrawableForDate(count9, day);
                 break;
             case(10):
-                Drawable count10 = getResources().getDrawable(R.drawable.count10);
                 caldroidFragment.setBackgroundDrawableForDate(count10, day);
                 break;
-
+            default:
+                if(counts.get(day) > 10) {
+                    caldroidFragment.setBackgroundDrawableForDate(count10, day);
+                    break;
+                }
+                else
+                    break;
         }
         caldroidFragment.refreshView();
     }
 
-    public void updateCalendar(){
-        for (Date daysWithEvents : AddEventListener.allEvents.keySet()){
-            setEventCount(daysWithEvents);
+    public void showEventCount(CaldroidFragment caldroidFragment) {
+        CalendarButtonListener calendarButtonListener = new CalendarButtonListener(this);
+        counts = new HashMap<>();
+        for (Event event : items) {
+            if (!counts.containsKey(calendarButtonListener.getDateFromDateTime(event)))
+                counts.put(calendarButtonListener.getDateFromDateTime(event), 1);
+            else
+                counts.put(calendarButtonListener.getDateFromDateTime(event),
+                        counts.get(calendarButtonListener.getDateFromDateTime(event)) + 1);
         }
+        for(Date date : counts.keySet())
+            setEventCount(date, caldroidFragment);
     }
 
     /**
