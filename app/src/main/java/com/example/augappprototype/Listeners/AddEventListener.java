@@ -56,15 +56,13 @@ import java.util.HashMap;
  *      Stores the details the user has entered
  * checkAmorPm(int hourOfDay)
  *      Checks if the time the user entered is AM or PM
- * selectCategoryListener(Dialog eventDetails)
- *      Opens the select category popup
+ *
  */
 
 public class AddEventListener implements View.OnClickListener {
 
     /*--Data--*/
     public static HashMap<Date, HashMap<Integer, ArrayList<String>>> allEvents = new HashMap<>();
-
     private int day;
     private int month;
     private int year;
@@ -83,8 +81,6 @@ public class AddEventListener implements View.OnClickListener {
     String eventLocation;
     String eventTime;
 
-
-
     /*--Constructor--*/
     public AddEventListener(MainActivity mainActivity){
         this.mainActivity = mainActivity;
@@ -100,11 +96,7 @@ public class AddEventListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-      //  if(GuestButtonListener.isGuest)//guests cannot add events
-      //      Toast.makeText(mainActivity, "This button is not available on guest mode",
-      //              Toast.LENGTH_SHORT).show();
-      //  else
-            selectDate();//students and faculty will be brought up to the select date popup
+        selectDate();//students and faculty will be brought up to the select date popup
     }//onClick
 
     /**
@@ -114,14 +106,6 @@ public class AddEventListener implements View.OnClickListener {
      * back to the calendar or continue to the next dialog popup
      */
     public void selectDate(){
-        /**
-        eventDetails.add(0, "Augustana");
-        eventDetails.add(1, "Basketball Game");
-        eventDetails.add(2, "The Augustana Vikings will take on the GPRC Wolves");
-        events.put(new Date(118, 0, 1), eventDetails);
-        Toast.makeText(mainActivity, "Event Added",
-                Toast.LENGTH_SHORT).show();
-         */
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventpopup);
         addEventDialog.show();
@@ -188,8 +172,6 @@ public class AddEventListener implements View.OnClickListener {
         day = datePicker.getDayOfMonth();
     }//saveEventDate
 
-
-
     /**
      * saveEventDetails(EditText, EditText, EditText) --> void
      * Converts event details to a string
@@ -213,7 +195,6 @@ public class AddEventListener implements View.OnClickListener {
         addEventTimeDialog.setContentView(R.layout.addevent_time);
         addEventTimeDialog.show();
         final Button setStart = addEventTimeDialog.findViewById(R.id.startTimeButton);
-
         setStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,7 +214,13 @@ public class AddEventListener implements View.OnClickListener {
         closeWindowListener(addEventTimeDialog);
     }//openEventTime
 
-
+    /**
+     * openEventTimePicker(Boolean, Dialog) --> void
+     * Opens the time picker scroller for the start and end time so the user can select a start
+     * and end time
+     * @param isStartTime
+     * @param eventTimes
+     */
     public void openEventTimePicker(final Boolean isStartTime, final Dialog eventTimes){
         final Dialog timePickerDialog = new Dialog(mainActivity);
         timePickerDialog.setContentView(R.layout.addevent_timepicker);
@@ -241,30 +228,26 @@ public class AddEventListener implements View.OnClickListener {
         Button submitTime = timePickerDialog.findViewById(R.id.submitButton);
         final Button setStart = eventTimes.findViewById(R.id.startTimeButton);
         final Button setEnd = eventTimes.findViewById(R.id.endTimeButton);
-
         final TimePicker timePicker = timePickerDialog.findViewById(R.id.timePicker);
         submitTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (isStartTime){
                     startHour = timePicker.getCurrentHour();
                     startMinute = timePicker.getCurrentMinute();
                     setStart.setText(" Start Time: " + mainActivity.
                             convertEventTime(startHour, startMinute));
-
-                }
+                }//if
                 else{
                     endHour = timePicker.getCurrentHour();
                     endMinute = timePicker.getCurrentMinute();
                     setEnd.setText(" End Time: " + mainActivity.
                             convertEventTime(endHour, endMinute));
-
-                }
+                }//else
                 timePickerDialog.dismiss();
             }
         });
-    }
+    }//openEventTimePicker
     /**
      * openEventDetails() --> void
      * When called, will open the event details dialog where the user enters the event title,
@@ -274,7 +257,6 @@ public class AddEventListener implements View.OnClickListener {
         final Dialog addEventDialog = new Dialog(mainActivity);
         addEventDialog.setContentView(R.layout.addeventdetails);
         addEventDialog.show();
-        selectCategoryListener(addEventDialog);
         addEventButtonListener(addEventDialog);
         closeWindowListener(addEventDialog);
         locationBox = addEventDialog.findViewById(R.id.eventLocation);
@@ -294,17 +276,33 @@ public class AddEventListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 saveEventDetails(titleBox, locationBox, descriptionBox);
-                saveEvent(new Date(year, month, day));
-                mainActivity.fetchEvents();
-                Toast.makeText(mainActivity, "Event Added!",
-                        Toast.LENGTH_LONG).show();
-                addEvents.dismiss();
+                if (eventTitle.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Title",
+                            Toast.LENGTH_SHORT).show();
+                }//if
+                else if (eventLocation.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Location",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else if (eventDescription.equals("")) {
+                    Toast.makeText(mainActivity, "Please Enter An Event Description",
+                            Toast.LENGTH_SHORT).show();
+                }//else if
+                else {
+                    saveEvent(new Date(year, month, day));
+                    Toast.makeText(mainActivity, "Event Added!",
+                            Toast.LENGTH_LONG).show();
+                    addEvents.dismiss();
+                }//else
             }
         });
     }//addEventButtonListener
 
-
-
+    /**
+     * saveEvent() --> void
+     * Saves the date, start and end time, the event title, the event location, and the event
+     * description
+     */
     public void saveEvent(Date eventDate) {
         ArrayList<String> eventDetails = new ArrayList();
         HashMap<Integer, ArrayList<String>> events = new HashMap<>();
@@ -313,11 +311,7 @@ public class AddEventListener implements View.OnClickListener {
         eventDetails.add(1, eventTime);
         eventDetails.add(2, eventLocation);
         eventDetails.add(3, eventDescription);
-        mainActivity.addEventToCalendar(eventTitle, eventLocation, eventDescription,
-                convertToDateTime(startMinute, startHour, month, day),
-                convertToDateTime(endMinute, endHour, month, day));
-        Toast.makeText(mainActivity, convertToDateTime(startMinute, startHour, month, day),
-                Toast.LENGTH_LONG).show();
+
         if (allEvents.containsKey(eventDate)) {//events in hash map
             allEvents.get(eventDate).put(allEvents.get(eventDate).size(), eventDetails);
         }
@@ -325,29 +319,20 @@ public class AddEventListener implements View.OnClickListener {
             events.put(events.size(), eventDetails);
             allEvents.put(eventDate, events);
         }
-    }
-
-
+        mainActivity.addEventToCalendar(eventTitle, eventLocation, eventDescription,
+                convertToDateTime(startMinute, startHour, month, day),
+                convertToDateTime(endMinute, endHour, month, day));
+    }//saveEvent
 
     /**
-     * selectCategoryDetails(Dialog) --> void
-     * On click will bring up a popup of all the categories where the user will select what category
-     * their event fits under
-     * @param eventDetails
+     * convertToDateTime(int, int, int, int) --> String
+     * Converts to a date that includes the time
+     * @param minute
+     * @param hour
+     * @param month
+     * @param day
+     * @return String
      */
-    public void selectCategoryListener(Dialog eventDetails){
-        Button category = eventDetails.findViewById(R.id.categoryButton);
-        category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog categoryDialog = new Dialog(mainActivity);
-                categoryDialog.setContentView(R.layout.addeventcategory);
-                closeWindowListener(categoryDialog);
-                categoryDialog.show();
-            }
-        });
-    }//selectCategoryListener
-
     public String convertToDateTime(int minute, int hour, int month, int day){
         String doubleDigitMonth = String.format("%02d", month + 1);
         String doubleDigitMinute = String.format("%02d", minute);
@@ -356,5 +341,5 @@ public class AddEventListener implements View.OnClickListener {
         String eventDateTime = (year + 1900) + "-" + doubleDigitMonth + "-" + doubleDigitDay + "T"
                 + doubleDigitHour + ":" + doubleDigitMinute + ":" +"00" + "-07:00";
         return eventDateTime;
-    }
+    }//convertToDateTime
 }//AddEventListener

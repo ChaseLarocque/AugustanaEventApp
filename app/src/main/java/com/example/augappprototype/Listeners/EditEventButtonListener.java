@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bskim.maxheightscrollview.widgets.MaxHeightScrollView;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
+import com.google.api.services.calendar.model.Event;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,8 @@ import java.util.List;
 public class EditEventButtonListener implements View.OnClickListener {
     /*--Data--*/
     private final MainActivity mainActivity;
+    HashMap<Date, ArrayList> allEvents = new HashMap<>();
+    ArrayList<Event> events;
     private LinearLayout eventList;
     private List<String> monthNames = Arrays.asList("January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December");
@@ -70,7 +73,19 @@ public class EditEventButtonListener implements View.OnClickListener {
             editEventDialog.setContentView(R.layout.edit_event);
             editEventDialog.show();
             nextEventListener(editEventDialog);
+            closeButtonListener(editEventDialog);
     }//onClick
+
+    public void closeButtonListener(final Dialog editEvents){
+        Button closeWindow = editEvents.findViewById(R.id.closeButton);
+        closeWindow.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                editEvents.dismiss();
+            }
+        });
+    }//closeWindowListener
 
     /**
      * nextEventListener(Dialog) --> void
@@ -84,82 +99,73 @@ public class EditEventButtonListener implements View.OnClickListener {
         eventList.setLayoutParams(new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         eventList.setOrientation(LinearLayout.VERTICAL);
-        datesIntoButtons();
+        datesIntoButtons(editEvents);
         eventsInDay.addView(eventList);
     }//nextEventListener
 
-    private void datesIntoButtons(){
-        for (final Date key : AddEventListener.allEvents.keySet()) {
+    private void datesIntoButtons(final Dialog eventDialog){
+        CalendarButtonListener calendarButtonListener = new CalendarButtonListener(mainActivity);
+        for (final Event key : mainActivity.items) {
+            events = new ArrayList<>();
+            if (!allEvents.containsKey(calendarButtonListener.getDateFromDateTime(key))) {
+                events.add(key);
+                allEvents.put(calendarButtonListener.getDateFromDateTime(key), events);
+            } else {
+                allEvents.get(calendarButtonListener.getDateFromDateTime(key));
+                allEvents.put(calendarButtonListener.getDateFromDateTime(key), allEvents.get(key));
+            }
             Button eachEvent = new Button(mainActivity);
-            eachEvent.setText(monthNames.get(key.getMonth()) + " " +
-                    key.getDate() + ", " + (key.getYear() + 1900));
+            eachEvent.setText(key.getSummary());
             eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
             eachEvent.setTextSize(20);
             eachEvent.setLayoutParams(new LinearLayout
                     .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
+            eventList.addView(eachEvent);
             eachEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openEditEventDetails(key);
+                    openEditEventDetails(key, eventDialog);
                 }
             });
-            eventList.addView(eachEvent);
+
+            }
         }
-    }
 
     /**
      * openEditEventDetails() --> void
      * Displays a popup of the event details and allows the user to edit the details that have
      * changed
      */
-    private void openEditEventDetails(Date date) {
+    private void openEditEventDetails(Event event, Dialog eventDialog) {
         final Dialog editDetailEventDialog = new Dialog(mainActivity);
-        editDetailEventDialog.setContentView(R.layout.eventpopup);
-        MaxHeightScrollView eventsInDay = editDetailEventDialog.findViewById(R.id.allEvents);
+        editDetailEventDialog.setContentView(R.layout.edit_event_options);
         editDetailEventDialog.show();
-        eventList = new LinearLayout(mainActivity);
-        eventList.setLayoutParams(new LinearLayout.LayoutParams
-                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        eventList.setOrientation(LinearLayout.VERTICAL);
+        EditText eventTitle = editDetailEventDialog.findViewById(R.id.eventTitle);
+        eventTitle.setText(event.getSummary());
+        EditText eventLocation = editDetailEventDialog.findViewById(R.id.eventLocation);
+        eventLocation.setText(event.getLocation());
+        EditText eventDescription = editDetailEventDialog.findViewById(R.id.eventDescription);
+        eventDescription.setText(event.getDescription());
         TextView eventBanner = editDetailEventDialog.findViewById(R.id.eventBanner);
-        eventBanner.setText(monthNames.get(date.getMonth()) + " " +
-                date.getDate() + ", " + (date.getYear() + 1900));
-        eventsIntoButtons(date);
-        eventsInDay.addView(eventList);
+        eventBanner.setText("Event");
+        closeButtonListener(editDetailEventDialog);
+        openEditEventTimeDialog(editDetailEventDialog);
+        eventDialog.dismiss();
     }//openEditEventDetails
 
-    private void eventsIntoButtons(final Date date){
-        for (final int key : AddEventListener.allEvents.get(date).keySet()) {
-            Button eachEvent = new Button(mainActivity);
-            eachEvent.setText(AddEventListener.allEvents.get(date).get(key).get(0));
-            eachEvent.setBackgroundResource(R.drawable.eventbuttonarrow);
-            eachEvent.setTextSize(20);
-            eachEvent.setLayoutParams(new LinearLayout
-                    .LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            eachEvent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openEditEventDetails(date, key);
 
-                }
-            });
-            eventList.addView(eachEvent);
-        }
-    }
 
     /**
      * submitEditEventDetails(Dialog) --> void
      * Closes the popup for event details which submits the edit
      */
-    private void openEditEventDetails(Date date, int eventID) {
+    private void editEventDetails(Date date, int eventID) {
         eventDate = date;
         Dialog editEventDetails = new Dialog(mainActivity);
         editEventDetails.setContentView(R.layout.edit_event_options);
         editEventDetails.show();
         submitEditEventDetails(editEventDetails, date, eventID);
-        openEditEventTimeDialog(editEventDetails, date, eventID);
         openEditEventDateDialog(editEventDetails, date, eventID);
     }//submitEditEventDetails
 
@@ -181,29 +187,29 @@ public class EditEventButtonListener implements View.OnClickListener {
                 AddEventListener.allEvents.get(eventDate).get(newEventID).set(2, location.getText().toString());
                 AddEventListener.allEvents.get(eventDate).get(newEventID).set(3, description.getText().toString());
                 deleteDatesWithNoEvents();
-                mainActivity.updateCalendar();
+
                 Toast.makeText(mainActivity, "Event Edited!", Toast.LENGTH_LONG).show();
                 eventDetails.dismiss();
             }
         });
     }
-    private void openEditEventTimeDialog(final Dialog eventDetails, final Date date, final int eventID){
+    private void openEditEventTimeDialog(final Dialog eventDetails){
         final Button editTimeButton = eventDetails.findViewById(R.id.timechange);
-        editTimeButton.setText(AddEventListener.allEvents.get(date).get(eventID).get(1));
+
         editTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editEventTime(eventDetails, date, eventID);
+                editEventTime(eventDetails);
             }
         });
     }
 
-    private void editEventTime(final Dialog editEventDetails, final Date date, final int eventID) {
+    private void editEventTime(final Dialog editEventDetails) {
         final Dialog editTimeDialog = new Dialog(mainActivity);
         editTimeDialog.setContentView(R.layout.addevent_timepicker);
         editTimeDialog.show();
         final TimePicker eventTime = editTimeDialog.findViewById(R.id.timePicker);
-        Button continueButton = editTimeDialog.findViewById(R.id.continueButton);
+        Button continueButton = editTimeDialog.findViewById(R.id.submitButton);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

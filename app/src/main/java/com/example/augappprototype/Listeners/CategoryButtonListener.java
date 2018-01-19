@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 
 import com.example.augappprototype.MainActivity;
@@ -24,22 +25,13 @@ import java.util.Map;
  *
  * Methods:
  * onClick(View v)
- *      Shows a popup consisting of different categories that can be checked or unchecked
- * closeButtonListener(final Dialog categoryDialog)
- *      Sets an on click listener for the close button that closes the dialog when clicked
- *
+ *      Displays a message to the user
  */
 
 public class CategoryButtonListener implements View.OnClickListener {
 
     /*--Data--*/
     private final MainActivity mainActivity;
-    private final String athleticsKey = "athleticsKey";
-    private final String performanceKey = "performanceKey";
-    private final String clubKey = "clubKey";
-    private final String researchKey = "researchKey";
-    private final String asaKey = "asaKey";
-
 
     /*--Constructor--*/
     public CategoryButtonListener(MainActivity mainActivity) {
@@ -49,65 +41,15 @@ public class CategoryButtonListener implements View.OnClickListener {
     /*--Methods--*/
     /**
      * onClick(View) --> void
-     * When the category button is clicked it will open a popup that has categories with check
-     * boxes that are automatically checked to start. Calls the closeButtonListener that will
-     * dismiss the dialog when it is clicked
+     * Displays a message saying Google API does not support categories
      * @param v
      */
     @Override
     public void onClick(View v) {
-        final Dialog categoryDialog = new Dialog(mainActivity);
-        categoryDialog.setContentView(R.layout.categorypopup);
-        categoryDialog.show();
-        closeButtonListener(categoryDialog);
-        saveCheckBox(categoryDialog);
+        Toast.makeText(mainActivity, "Google API does not support categories",
+                Toast.LENGTH_LONG).show();
     }//onClick
 
-    /**
-     * closeButtonListener(Dialog) --> void
-     * Closes the category popup when clicked
-     * @param categoryDialog
-     */
-    public void closeButtonListener(final Dialog categoryDialog) {
-        Button closeButton = (Button) categoryDialog.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoryDialog.dismiss();
-            }//onClick
-        });
-    }//closeButtonListener
 
-
-    public void saveCheckBox(final Dialog categoryDialog) {
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
-        final CheckBox athletics = (CheckBox)categoryDialog.findViewById(R.id.athleticsCategory);
-        final CheckBox performance = (CheckBox)categoryDialog.findViewById(R.id.performanceCategory);
-        final CheckBox club = (CheckBox)categoryDialog.findViewById(R.id.clubCategory);
-        final CheckBox research = (CheckBox)categoryDialog.findViewById(R.id.researchCategory);
-        final CheckBox asa = (CheckBox)categoryDialog.findViewById(R.id.asaCategory);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mainActivity);
-        Map<String, CheckBox> checkBoxMap = new HashMap();
-        checkBoxMap.put(athleticsKey, athletics);
-        checkBoxMap.put(performanceKey, performance);
-        checkBoxMap.put(clubKey, club);
-        checkBoxMap.put(researchKey, research);
-        checkBoxMap.put(asaKey, asa);
-        for (Map.Entry<String, CheckBox> checkboxEntry: checkBoxMap.entrySet()) {
-            Boolean checked = sharedPreferences.getBoolean(checkboxEntry.getKey(), true);
-            checkboxEntry.getValue().setChecked(checked);
-        }//for
-        for (final Map.Entry<String, CheckBox> checkboxEntry: checkBoxMap.entrySet()) {
-            checkboxEntry.getValue().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    final SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(checkboxEntry.getKey(), isChecked);
-                    editor.apply();
-                }//onCheckedChange
-            });
-        }//for
-
-    }//saveCheckBox
 }//CategoryButtonListener
 
