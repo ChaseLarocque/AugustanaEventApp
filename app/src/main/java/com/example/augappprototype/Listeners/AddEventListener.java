@@ -1,25 +1,16 @@
 package com.example.augappprototype.Listeners;
 
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.augappprototype.GoogleSignInAPI;
 import com.example.augappprototype.MainActivity;
 import com.example.augappprototype.R;
-import com.google.api.client.util.DateTime;
-import com.roomorama.caldroid.CaldroidFragment;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

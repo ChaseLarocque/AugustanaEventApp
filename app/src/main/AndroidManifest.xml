@@ -26,8 +26,6 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".MainMenu"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".GoogleSignInAPI"
-            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

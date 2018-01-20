@@ -1,0 +1,539 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,0,255); }
+.s4 { color: rgb(128,128,128); font-weight: bold; font-style: italic; }
+.s5 { color: rgb(0,128,0); font-weight: bold; }
+.s6 { color: rgb(128,128,128); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+MainActivity.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">com.example.augappprototype; 
+ 
+</span><span class="s2">/** 
+ * MainActivity.java 
+ * extends AppCompatActivity 
+ * Resposinble for displaying the caldroid calendar instead of android's calendar view and 
+ * also responsible for registering all the buttons on the calendar screen. 
+ * Handles all the events  
+ * 
+ * Methods: 
+ * onCreate(Bundle savedInstanceState) 
+ * convertCalendar() 
+ *      Display's caldroid's calendar on the calendar screen and sets an on click listener 
+ *      for the calendar buttons 
+ * registerListenersForCalendarButtons() 
+ *      Sets on click listeners for all buttons on the calendar screen 
+ */</span><span class="s1"> 
+ 
+</span><span class="s0">import </span><span class="s1">android.graphics.drawable.Drawable; 
+</span><span class="s0">import </span><span class="s1">android.os.AsyncTask; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.support.v4.app.FragmentTransaction; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.widget.ImageView; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextView; 
+</span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+ 
+</span><span class="s0">import </span><span class="s1">com.bumptech.glide.Glide; 
+</span><span class="s0">import </span><span class="s1">com.example.augappprototype.Listeners.AddEventListener; 
+</span><span class="s0">import </span><span class="s1">com.example.augappprototype.Listeners.CalendarButtonListener; 
+</span><span class="s0">import </span><span class="s1">com.example.augappprototype.Listeners.CategoryButtonListener; 
+</span><span class="s0">import </span><span class="s1">com.example.augappprototype.Listeners.EditEventButtonListener; 
+</span><span class="s0">import </span><span class="s1">com.example.augappprototype.Listeners.SignOutMainActivityListener; 
+</span><span class="s0">import </span><span class="s1">com.google.android.gms.auth.api.signin.GoogleSignIn; 
+</span><span class="s0">import </span><span class="s1">com.google.android.gms.auth.api.signin.GoogleSignInAccount; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.extensions.android.http.AndroidHttp; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.http.HttpTransport; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.json.JsonFactory; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.json.jackson2.JacksonFactory; 
+</span><span class="s0">import </span><span class="s1">com.google.api.client.util.DateTime; 
+</span><span class="s0">import </span><span class="s1">com.google.api.services.calendar.model.Event; 
+</span><span class="s0">import </span><span class="s1">com.google.api.services.calendar.model.EventDateTime; 
+</span><span class="s0">import </span><span class="s1">com.google.api.services.calendar.model.Events; 
+</span><span class="s0">import </span><span class="s1">com.roomorama.caldroid.CaldroidFragment; 
+ 
+</span><span class="s0">import </span><span class="s1">java.io.IOException; 
+</span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+</span><span class="s0">import </span><span class="s1">java.util.Calendar; 
+</span><span class="s0">import </span><span class="s1">java.util.Collections; 
+</span><span class="s0">import </span><span class="s1">java.util.Date; 
+</span><span class="s0">import </span><span class="s1">java.util.HashMap; 
+</span><span class="s0">import </span><span class="s1">java.util.List; 
+ 
+</span><span class="s0">import </span><span class="s1">pub.devrel.easypermissions.EasyPermissions; 
+ 
+ 
+</span><span class="s2">/** 
+ *  
+ */</span><span class="s1"> 
+</span><span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity { 
+    GoogleSignInAccount account; 
+    Bundle extras; 
+    </span><span class="s0">public </span><span class="s1">TextView name; 
+    </span><span class="s0">public </span><span class="s1">ImageView profilePicture; 
+    </span><span class="s0">static final int </span><span class="s1">REQUEST_AUTHORIZATION = </span><span class="s3">1001</span><span class="s1">; 
+    </span><span class="s0">static final int </span><span class="s1">REQUEST_PERMISSION_GET_ACCOUNTS = </span><span class="s3">1003</span><span class="s1">; 
+    </span><span class="s0">public </span><span class="s1">List&lt;Event&gt; items; 
+    ImageView  buttonBlocker; 
+ 
+    String eventTitle; 
+    String eventLocation; 
+    String eventDescription; 
+    String endEvent; 
+    String startEvent; 
+    HashMap&lt;Date, Integer&gt; counts; 
+ 
+ 
+ 
+    </span><span class="s2">/** 
+     * onCreate(Bundle) --&gt; void 
+     * Handles the methods and data creation that needs to be done when the  
+     * calendar opens. Method grabs the account that was logged in, grabs the  
+     * profile picture of the user, registers the buttons on the calendar and the  
+     * assures the user has given the app the permissions, creates the  
+     * GoogleAccountCredential, grabs the events from the calendar and draws the  
+     * CalDroid calendar. 
+     * 
+     * </span><span class="s4">@param </span><span class="s2">savedInstanceState 
+     */</span><span class="s1"> 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_main); 
+        extras= getIntent().getExtras(); 
+        buttonBlocker = findViewById(R.id.buttonBlocker); 
+        buttonBlocker.setVisibility(View.GONE); 
+        account = GoogleSignIn.getLastSignedInAccount(</span><span class="s0">this</span><span class="s1">); 
+         
+        profilePicture = (ImageView) findViewById(R.id.profile_image); 
+        </span><span class="s0">if</span><span class="s1">(account != </span><span class="s0">null</span><span class="s1">){ 
+            setProfilePicture(); 
+        } </span><span class="s0">else </span><span class="s1">{ 
+            Toast.makeText(</span><span class="s0">this</span><span class="s1">, </span><span class="s5">&quot;account is null&quot;</span><span class="s1">, 
+                    Toast.LENGTH_LONG).show(); 
+        } </span><span class="s2">// else</span><span class="s1"> 
+ 
+        registerListenersForCalendarUIButtons(); 
+         
+        </span><span class="s2">//requests permissions from user for contacts so app can grab the credential</span><span class="s1"> 
+        EasyPermissions.requestPermissions( 
+                </span><span class="s0">this</span><span class="s1">, 
+                </span><span class="s5">&quot;This app needs to access your Google account (via Contacts).&quot;</span><span class="s1">, 
+                REQUEST_PERMISSION_GET_ACCOUNTS, 
+                android.Manifest.permission.GET_ACCOUNTS); 
+         
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2( 
+                getApplicationContext(), 
+                Collections.singleton(</span><span class="s5">&quot;https://www.googleapis.com/auth/calendar&quot;</span><span class="s1">)); 
+        credential.setSelectedAccountName(extras.getString(</span><span class="s5">&quot;userName&quot;</span><span class="s1">)); 
+         
+        fetchEvents();  
+        convertCalendar(); 
+    }</span><span class="s2">//onCreate</span><span class="s1"> 
+     
+    </span><span class="s2">/** 
+     * fetchEvents() 
+     * Calls the Async Task to grab the events from the google calendar. Creates a  
+     * GoogleAccountCredential from the account logged in.  
+     */</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">fetchEvents(){ 
+        Bundle extras= getIntent().getExtras(); </span><span class="s2">//used to grab the account from the other activity</span><span class="s1"> 
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2( 
+                getApplicationContext(), 
+                Collections.singleton(</span><span class="s5">&quot;https://www.googleapis.com/auth/calendar&quot;</span><span class="s1">)); 
+        credential.setSelectedAccountName(extras.getString(</span><span class="s5">&quot;userName&quot;</span><span class="s1">)); 
+        </span><span class="s0">new </span><span class="s1">MakeRequestTask(credential).execute(); </span><span class="s2">//calls AsyncTask</span><span class="s1"> 
+    }</span><span class="s2">//fetchEvents()</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * AddEventToCalendar() 
+     * Method handles pushing a new event to the Google Calendar.  
+     * </span><span class="s4">@param </span><span class="s2">summary - Summary of Event 
+     * </span><span class="s4">@param </span><span class="s2">location - Location of Event 
+     * </span><span class="s4">@param </span><span class="s2">description - Description of Event 
+     * </span><span class="s4">@param </span><span class="s2">start - Start time of event 
+     * </span><span class="s4">@param </span><span class="s2">end - End time of Event 
+     */</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">addEventToCalendar(String summary, String location, String description, 
+                                   String start, String end){ 
+        Bundle extras= getIntent().getExtras();</span><span class="s2">//used to grab account from previous activity</span><span class="s1"> 
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2( 
+                getApplicationContext(), 
+                Collections.singleton(</span><span class="s5">&quot;https://www.googleapis.com/auth/calendar&quot;</span><span class="s1">)); 
+        credential.setSelectedAccountName(extras.getString(</span><span class="s5">&quot;userName&quot;</span><span class="s1">)); 
+         
+        eventTitle = summary; 
+        eventDescription = description; 
+        eventLocation = location; 
+        startEvent = start; 
+        endEvent = end; 
+        </span><span class="s0">new </span><span class="s1">addAnEvent(credential).execute(); </span><span class="s2">//calls async task to push event to calendar</span><span class="s1"> 
+    }</span><span class="s2">//addEventToCalendar</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * setProfielPicture() 
+     * Method takes the user's profile picture from their account data and puts it in the  
+     * profile picture location 
+     */</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">setProfilePicture() { 
+        </span><span class="s0">if</span><span class="s1">(account.getPhotoUrl() != </span><span class="s0">null</span><span class="s1">) { 
+            Glide.with(</span><span class="s0">this</span><span class="s1">) 
+                    .load(account.getPhotoUrl()) 
+                    .into(profilePicture); 
+        } </span><span class="s0">else </span><span class="s1">{ 
+            Glide.with(</span><span class="s0">this</span><span class="s1">) 
+                    .load(</span><span class="s5">&quot;https://i.stack.imgur.com/34AD2.jpg&quot;</span><span class="s1">) 
+                    .into(profilePicture); 
+        } </span><span class="s2">// else</span><span class="s1"> 
+    }</span><span class="s2">//setProfilePicture()</span><span class="s1"> 
+     
+    </span><span class="s2">/** 
+     * convertCalendar() --&gt; void 
+     * Makes android's calendar view the caldroid calendar 
+     * Sets the minimum date to January 1st 2018 and the maximum date to December 31st 2018 
+     */</span><span class="s1"> 
+    </span><span class="s0">private </span><span class="s1">CaldroidFragment convertCalendar() { 
+        CaldroidFragment caldroidFragment = </span><span class="s0">new </span><span class="s1">CaldroidFragment(); 
+        Bundle args = </span><span class="s0">new </span><span class="s1">Bundle(); 
+        Calendar cal = Calendar.getInstance(); 
+         
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + </span><span class="s3">1</span><span class="s1">); 
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR)); 
+        caldroidFragment.setArguments(args); 
+        FragmentTransaction t = getSupportFragmentManager().beginTransaction(); 
+         
+        t.replace(R.id.caldroidCalendar, caldroidFragment); 
+        t.commit(); 
+         
+        Date jan1 = </span><span class="s0">new </span><span class="s1">Date(</span><span class="s3">1514790000000L</span><span class="s1">); 
+        Date dec31 = </span><span class="s0">new </span><span class="s1">Date(</span><span class="s3">1546300800000L</span><span class="s1">); 
+        caldroidFragment.setMinDate(jan1); 
+        caldroidFragment.setMaxDate(dec31); 
+         
+        caldroidFragment 
+                .setCaldroidListener(</span><span class="s0">new </span><span class="s1">CalendarButtonListener(</span><span class="s0">this</span><span class="s1">)); 
+        </span><span class="s0">return </span><span class="s1">caldroidFragment; 
+    }</span><span class="s2">//convertCalendar</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * registerListenersForCalendarUIButtons() --&gt; void 
+     * Sets on click listeners for the add event button, edit event button and the category button 
+     * on the calendar UI screen 
+     */</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">registerListenersForCalendarUIButtons() { 
+        findViewById(R.id.addEventButton).setOnClickListener(</span><span class="s0">new </span><span class="s1">AddEventListener(</span><span class="s0">this</span><span class="s1">)); 
+        findViewById(R.id.editEventButton).setOnClickListener 
+                (</span><span class="s0">new </span><span class="s1">EditEventButtonListener(</span><span class="s0">this</span><span class="s1">)); 
+         
+        </span><span class="s0">if</span><span class="s1">(!extras.getBoolean(</span><span class="s5">&quot;editCalendar&quot;</span><span class="s1">)){ 
+            buttonBlocker.setVisibility(View.VISIBLE); 
+            findViewById(R.id.addEventButton).setVisibility(View.GONE); 
+            findViewById(R.id.editEventButton).setVisibility(View.GONE); 
+        }</span><span class="s2">//if</span><span class="s1"> 
+         
+        findViewById(R.id.categoryButton) 
+                .setOnClickListener(</span><span class="s0">new </span><span class="s1">CategoryButtonListener(</span><span class="s0">this</span><span class="s1">)); 
+        findViewById(R.id.signOutButton) 
+                .setOnClickListener(</span><span class="s0">new </span><span class="s1">SignOutMainActivityListener(</span><span class="s0">this</span><span class="s1">)); 
+    }</span><span class="s2">//registerListenersForButtons</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * MakeRequestTask 
+     * Methods: 
+     *  -doInBackground (void) 
+     *      Handels the background tasks that happens in a new thread 
+     *  -getDataFromAPI() 
+     *      Fetches data from the google calendar 
+     *  -onPostExecute(List</span><span class="s6">&lt;String&gt;</span><span class="s2">) 
+     *      Method happens after the background task is completed. 
+     *  -onCancelled() 
+     *      Method happens if AsynkTask is cancelled 
+     * An asynchronous task that handles the Google Calendar API call. 
+     * Placing the API calls in their own task ensures the UI stays responsive. 
+     */</span><span class="s1"> 
+    </span><span class="s0">private class </span><span class="s1">MakeRequestTask </span><span class="s0">extends </span><span class="s1">AsyncTask&lt;Void, Void, List&lt;String&gt;&gt; { 
+        </span><span class="s0">private </span><span class="s1">com.google.api.services.calendar.Calendar mService = </span><span class="s0">null</span><span class="s1">; 
+        </span><span class="s0">private </span><span class="s1">Exception mLastError = </span><span class="s0">null</span><span class="s1">; 
+ 
+        MakeRequestTask(GoogleAccountCredential credential) {</span><span class="s2">//constructuor</span><span class="s1"> 
+            HttpTransport transport = AndroidHttp.newCompatibleTransport(); 
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance(); 
+            mService = </span><span class="s0">new </span><span class="s1">com.google.api.services.calendar.Calendar.Builder( 
+                    transport, jsonFactory, credential) 
+                    .setApplicationName(</span><span class="s5">&quot;uAlberta Augustana&quot;</span><span class="s1">) 
+                    .build(); 
+        }</span><span class="s2">//MakeRequestTask(GoogleAccountCredential)</span><span class="s1"> 
+ 
+        </span><span class="s2">/** 
+         * doInBackground() 
+         * Background task to call Google Calendar API. 
+         */</span><span class="s1"> 
+        @Override 
+        </span><span class="s0">protected </span><span class="s1">List&lt;String&gt; doInBackground(Void... params) { 
+            </span><span class="s0">try </span><span class="s1">{ 
+                </span><span class="s0">return </span><span class="s1">getDataFromApi(); 
+            } </span><span class="s0">catch </span><span class="s1">(</span><span class="s0">final </span><span class="s1">Exception e) { 
+                mLastError = e; 
+                cancel(</span><span class="s0">true</span><span class="s1">); 
+                </span><span class="s0">return null</span><span class="s1">; 
+            }</span><span class="s2">//catch</span><span class="s1"> 
+        }</span><span class="s2">//doInBackground()</span><span class="s1"> 
+ 
+        </span><span class="s2">/** 
+         * getDataFromApi() 
+         * Grabs the events from given Google Calendar.  
+         * 
+         * </span><span class="s4">@return </span><span class="s2">List of Strings describing returned events. 
+         * </span><span class="s4">@throws </span><span class="s2">IOException 
+         */</span><span class="s1"> 
+        </span><span class="s0">private </span><span class="s1">List&lt;String&gt; getDataFromApi() </span><span class="s0">throws </span><span class="s1">IOException { 
+            DateTime now = </span><span class="s0">new </span><span class="s1">DateTime(System.currentTimeMillis()); 
+            List&lt;String&gt; eventStrings = </span><span class="s0">new </span><span class="s1">ArrayList&lt;String&gt;(); 
+             
+            Events events = mService.events().list(</span><span class="s5">&quot;csc320augapp@gmail.com&quot;</span><span class="s1">) 
+                    .setOrderBy(</span><span class="s5">&quot;startTime&quot;</span><span class="s1">) 
+                    .setTimeMin(</span><span class="s0">new </span><span class="s1">DateTime(</span><span class="s5">&quot;2016-04-17T17:10:00+06:00&quot;</span><span class="s1">)) 
+                    .setSingleEvents(</span><span class="s0">true</span><span class="s1">) 
+                    .execute(); 
+            items = events.getItems(); 
+ 
+            </span><span class="s0">for </span><span class="s1">(Event event : items) { 
+                DateTime start = event.getStart().getDateTime(); 
+                </span><span class="s0">if </span><span class="s1">(start == </span><span class="s0">null</span><span class="s1">) { 
+                    </span><span class="s2">// All-day events don't have start times, so just use</span><span class="s1"> 
+                    </span><span class="s2">// the start date.</span><span class="s1"> 
+                    start = event.getStart().getDate(); 
+                }</span><span class="s2">//if</span><span class="s1"> 
+                eventStrings.add( 
+                        String.format(</span><span class="s5">&quot;%s (%s)&quot;</span><span class="s1">, event.getSummary(), start)); 
+            }</span><span class="s2">//for</span><span class="s1"> 
+            </span><span class="s0">return </span><span class="s1">eventStrings; 
+        }</span><span class="s2">//getDataFromApi()</span><span class="s1"> 
+ 
+        </span><span class="s2">/** 
+         * onPostExecute() 
+         * Handles the output from the AsyncTask to grab the events from the Google Calendar 
+         * </span><span class="s4">@param </span><span class="s2">output - List of Events 
+         */</span><span class="s1"> 
+        @Override 
+        </span><span class="s0">protected void </span><span class="s1">onPostExecute(List&lt;String&gt; output) { 
+            showEventCount(convertCalendar()); 
+        }</span><span class="s2">//onPostExecute()</span><span class="s1"> 
+ 
+        </span><span class="s2">/** 
+         * onCancelled() 
+         * Handles error checking and if the AsyncTask is cancelled. 
+         */</span><span class="s1"> 
+        @Override 
+        </span><span class="s0">protected void </span><span class="s1">onCancelled() { 
+            </span><span class="s0">if </span><span class="s1">(mLastError != </span><span class="s0">null</span><span class="s1">) { 
+                </span><span class="s0">if </span><span class="s1">(mLastError </span><span class="s0">instanceof </span><span class="s1">GooglePlayServicesAvailabilityIOException) { 
+                } </span><span class="s0">else if </span><span class="s1">(mLastError </span><span class="s0">instanceof </span><span class="s1">UserRecoverableAuthIOException) { 
+                    startActivityForResult( 
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(), 
+                            MainActivity.REQUEST_AUTHORIZATION); 
+                } </span><span class="s0">else </span><span class="s1">{ 
+                    Toast.makeText(MainActivity.</span><span class="s0">this</span><span class="s1">, </span><span class="s5">&quot;The following error occurred:</span><span class="s0">\n</span><span class="s5">&quot;</span><span class="s1"> 
+                            + mLastError.getMessage(), Toast.LENGTH_LONG).show(); 
+                }</span><span class="s2">//else</span><span class="s1"> 
+            }</span><span class="s2">//if</span><span class="s1"> 
+        }</span><span class="s2">//onCancelled</span><span class="s1"> 
+         
+    }</span><span class="s2">//makeRequests</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * addAnEvent 
+     * Class handles all the methods required to add a created event from Google Calendar. 
+     *  
+     * Methods: 
+     *  -doInBackground(Object) 
+     *      Calls the method from sending the new event to the Google Calendar 
+     * -createEvent(String, String, String, String, String) 
+     *      Method takes inputs and makes a new event on the Google Calendar. 
+     */</span><span class="s1"> 
+    </span><span class="s0">public class </span><span class="s1">addAnEvent </span><span class="s0">extends </span><span class="s1">AsyncTask { 
+        </span><span class="s0">private </span><span class="s1">com.google.api.services.calendar.Calendar mService2 = </span><span class="s0">null</span><span class="s1">; 
+        </span><span class="s0">private </span><span class="s1">Exception mLastError = </span><span class="s0">null</span><span class="s1">; 
+ 
+        </span><span class="s0">public </span><span class="s1">addAnEvent(GoogleAccountCredential credential) { 
+            HttpTransport transport = AndroidHttp.newCompatibleTransport(); 
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance(); 
+            mService2 = </span><span class="s0">new </span><span class="s1">com.google.api.services.calendar.Calendar.Builder( 
+                    transport, jsonFactory, credential) 
+                    .setApplicationName(</span><span class="s5">&quot;uAlberta Augustana&quot;</span><span class="s1">) 
+                    .build(); 
+        }</span><span class="s2">//addAnEvent(GoogleAccountCredentail)</span><span class="s1"> 
+ 
+        </span><span class="s2">/** 
+         * doInBackground(Object[]) 
+         * Method calls the methods in the background in a new thread 
+         * </span><span class="s4">@param </span><span class="s2">objects 
+         * </span><span class="s4">@return</span><span class="s2"> 
+         */</span><span class="s1"> 
+        @Override 
+        </span><span class="s0">protected </span><span class="s1">Object doInBackground(Object[] objects) { 
+            createEvent(eventTitle, eventLocation, eventDescription, startEvent, endEvent); 
+            </span><span class="s0">return null</span><span class="s1">; 
+        }</span><span class="s2">//doInBackground</span><span class="s1"> 
+ 
+        </span><span class="s2">/** 
+         * createEvent(String, String, String, String, String) 
+         * method takes in the parameters and pushes the events to the Google Calendar 
+         * </span><span class="s4">@param </span><span class="s2">summary - Summary of Event 
+         * </span><span class="s4">@param </span><span class="s2">location - location of Event 
+         * </span><span class="s4">@param </span><span class="s2">description - Description of Event 
+         * </span><span class="s4">@param </span><span class="s2">eventStart - Event of the Start 
+         * </span><span class="s4">@param </span><span class="s2">eventEnd - End of the Event. 
+         */</span><span class="s1"> 
+        </span><span class="s0">public void </span><span class="s1">createEvent(String summary, String location, 
+                                String description, String eventStart, String eventEnd) { 
+     
+            Event event = </span><span class="s0">new </span><span class="s1">Event() 
+                    .setSummary(summary) 
+                    .setLocation(location) 
+                    .setDescription(description); 
+     
+            DateTime startDateTime = </span><span class="s0">new </span><span class="s1">DateTime(eventStart); 
+            EventDateTime start = </span><span class="s0">new </span><span class="s1">EventDateTime() 
+                    .setDateTime(startDateTime); 
+            event.setStart(start); 
+     
+            DateTime endDateTime = </span><span class="s0">new </span><span class="s1">DateTime(eventEnd); 
+            EventDateTime end = </span><span class="s0">new </span><span class="s1">EventDateTime() 
+                    .setDateTime(endDateTime); 
+            event.setEnd(end); 
+     
+            String calendarId = </span><span class="s5">&quot;csc320augapp@gmail.com&quot;</span><span class="s1">; 
+            </span><span class="s0">try </span><span class="s1">{ 
+                mService2.events().insert(calendarId, event).execute(); 
+            } </span><span class="s0">catch </span><span class="s1">(IOException e) { 
+                e.printStackTrace(); 
+            }</span><span class="s2">//catch</span><span class="s1"> 
+        }</span><span class="s2">//createEvent(String, String, String, String, String)</span><span class="s1"> 
+    }</span><span class="s2">//addAnEvent</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * setEventCount(Date, CaldroidFragment) 
+     * </span><span class="s4">@param </span><span class="s2">day - currentDate 
+     * </span><span class="s4">@param </span><span class="s2">caldroidFragment - Calendar 
+     * Method handles adding the drawable to the date that represents the current 
+     * number of events on that date. 
+     */</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">setEventCount(Date day, CaldroidFragment caldroidFragment){ 
+        Drawable count10 = getResources().getDrawable(R.drawable.countplus); 
+         
+        </span><span class="s0">switch </span><span class="s1">(counts.get(day)){ 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">1</span><span class="s1">): 
+                Drawable count1 = getResources().getDrawable(R.drawable.count1); 
+                caldroidFragment.setBackgroundDrawableForDate(count1, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">2</span><span class="s1">): 
+                Drawable count2 = getResources().getDrawable(R.drawable.count2); 
+                caldroidFragment.setBackgroundDrawableForDate(count2, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">3</span><span class="s1">): 
+                Drawable count3 = getResources().getDrawable(R.drawable.count3); 
+                caldroidFragment.setBackgroundDrawableForDate(count3, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">4</span><span class="s1">): 
+                Drawable count4 = getResources().getDrawable(R.drawable.count4); 
+                caldroidFragment.setBackgroundDrawableForDate(count4, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">5</span><span class="s1">): 
+                Drawable count5 = getResources().getDrawable(R.drawable.count5); 
+                caldroidFragment.setBackgroundDrawableForDate(count5, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">6</span><span class="s1">): 
+                Drawable count6 = getResources().getDrawable(R.drawable.count6); 
+                caldroidFragment.setBackgroundDrawableForDate(count6, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">7</span><span class="s1">): 
+                Drawable count7 = getResources().getDrawable(R.drawable.count7); 
+                caldroidFragment.setBackgroundDrawableForDate(count7, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">8</span><span class="s1">): 
+                Drawable count8 = getResources().getDrawable(R.drawable.count8); 
+                caldroidFragment.setBackgroundDrawableForDate(count8, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">9</span><span class="s1">): 
+                Drawable count9 = getResources().getDrawable(R.drawable.count9); 
+                caldroidFragment.setBackgroundDrawableForDate(count9, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">case</span><span class="s1">(</span><span class="s3">10</span><span class="s1">): 
+                caldroidFragment.setBackgroundDrawableForDate(count10, day); 
+                </span><span class="s0">break</span><span class="s1">; 
+            </span><span class="s0">default</span><span class="s1">: 
+                </span><span class="s0">if</span><span class="s1">(counts.get(day) &gt; </span><span class="s3">10</span><span class="s1">) { 
+                    caldroidFragment.setBackgroundDrawableForDate(count10, day); 
+                    </span><span class="s0">break</span><span class="s1">; 
+                }</span><span class="s2">//if</span><span class="s1"> 
+                </span><span class="s0">else</span><span class="s1"> 
+                    </span><span class="s0">break</span><span class="s1">; 
+        }</span><span class="s2">//switch</span><span class="s1"> 
+        caldroidFragment.refreshView(); 
+    }</span><span class="s2">//setEventCount(Date, CaldroidFragment)</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * showEventCount(CaldroidFragment) 
+     * </span><span class="s4">@param </span><span class="s2">caldroidFragment - Calendar 
+     * Checks to see if dates need a new drawable (if they have events)                         
+     */</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">showEventCount(CaldroidFragment caldroidFragment) { 
+        CalendarButtonListener calendarButtonListener = </span><span class="s0">new </span><span class="s1">CalendarButtonListener(</span><span class="s0">this</span><span class="s1">); 
+        counts = </span><span class="s0">new </span><span class="s1">HashMap&lt;&gt;(); 
+        </span><span class="s0">for </span><span class="s1">(Event event : items) { 
+            </span><span class="s0">if </span><span class="s1">(!counts.containsKey(calendarButtonListener.getDateFromDateTime(event))) 
+                counts.put(calendarButtonListener.getDateFromDateTime(event), </span><span class="s3">1</span><span class="s1">); 
+            </span><span class="s0">else</span><span class="s1"> 
+                counts.put(calendarButtonListener.getDateFromDateTime(event), 
+                        counts.get(calendarButtonListener.getDateFromDateTime(event)) + </span><span class="s3">1</span><span class="s1">); 
+        }</span><span class="s2">//for</span><span class="s1"> 
+        </span><span class="s0">for</span><span class="s1">(Date date : counts.keySet()) 
+            setEventCount(date, caldroidFragment); 
+    }</span><span class="s2">//showEventCount(CaldroidFragment)</span><span class="s1"> 
+ 
+    </span><span class="s2">/** 
+     * saveEventTime(TimePicker) --&gt; void 
+     * Stores the time that the user has selected on the select time dialog 
+     * </span><span class="s4">@param </span><span class="s2">hour, minute 
+     */</span><span class="s1"> 
+    </span><span class="s0">public </span><span class="s1">String convertEventTime(</span><span class="s0">int </span><span class="s1">hour, </span><span class="s0">int </span><span class="s1">minute){ 
+        String doubleDigitMinute = String.format(</span><span class="s5">&quot;%02d&quot;</span><span class="s1">, minute); 
+        String amOrPm; 
+        </span><span class="s0">int </span><span class="s1">convertedHour = hour; 
+        </span><span class="s0">if </span><span class="s1">(hour &gt; </span><span class="s3">12</span><span class="s1">) { 
+            convertedHour = (hour - </span><span class="s3">12</span><span class="s1">); 
+            amOrPm = </span><span class="s5">&quot;PM&quot;</span><span class="s1">; 
+        }</span><span class="s2">//if</span><span class="s1"> 
+        </span><span class="s0">else if </span><span class="s1">(hour == </span><span class="s3">0</span><span class="s1">){ 
+            convertedHour = (hour + </span><span class="s3">12</span><span class="s1">); 
+            amOrPm = </span><span class="s5">&quot;AM&quot;</span><span class="s1">; 
+        }</span><span class="s2">//else if</span><span class="s1"> 
+        </span><span class="s0">else if </span><span class="s1">(hour == </span><span class="s3">12</span><span class="s1">){ 
+            amOrPm = </span><span class="s5">&quot;PM&quot;</span><span class="s1">; 
+        }</span><span class="s2">//else if</span><span class="s1"> 
+        </span><span class="s0">else</span><span class="s1">{ 
+            amOrPm = </span><span class="s5">&quot;AM&quot;</span><span class="s1">; 
+        }</span><span class="s2">//else</span><span class="s1"> 
+        </span><span class="s0">return </span><span class="s1">convertedHour + </span><span class="s5">&quot;:&quot; </span><span class="s1">+ doubleDigitMinute + </span><span class="s5">&quot; &quot; </span><span class="s1">+ amOrPm; 
+    }</span><span class="s2">//saveEventTime</span><span class="s1"> 
+}</span><span class="s2">//MainActivity</span></pre>
+</body>
+</html>
