@@ -27,12 +27,11 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/closeWindow"
+        android:id="@+id/closeButton"
         android:layout_width="0dp"
         android:layout_height="73dp"
         android:adjustViewBounds="true"
         android:background="@drawable/greentaskbar"
-        android:onClick="closeWindowListener"
         android:scaleType="centerCrop"
         android:text="Close Window"
         android:textColor="@color/uofaGold"
@@ -73,7 +72,6 @@
         android:hint="Event Title"
         android:inputType="textPersonName"
         android:maxLength="30"
-        android:text="Choir Performance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventBanner" />
@@ -87,7 +85,7 @@
         android:inputType="textPersonName"
         android:maxLength="30"
         android:hint="Event Location"
-        android:text="Performing Arts Centre"
+
         app:layout_constraintLeft_toRightOf="@+id/locationIcon"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventTitle" />
@@ -103,7 +101,6 @@
         android:maxLength="150"
         android:maxLines="5"
         android:scrollbars="vertical"
-        android:text="The Augustana choir will perform at the Performing Arts Centre"
         app:layout_constraintLeft_toRightOf="@+id/descriptionIcon"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventLocation" />
@@ -148,11 +145,13 @@
         android:background="@color/caldroid_transparent"
         android:textColor="#000000"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/closeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/button"
         app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@id/eventDescription" />
+        app:layout_constraintTop_toBottomOf="@id/eventDescription"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/calendaricon"
@@ -174,34 +173,9 @@
         android:background="@color/caldroid_transparent"
         android:textColor="#000000"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@id/closeButton"
         app:layout_constraintStart_toEndOf="@+id/calendaricon"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescription" />
-
-    <CheckBox
-        android:id="@+id/pushToAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:buttonTint="@color/uofaGold"
-        android:text="Push to all devices?"
-        android:textColor="@color/caldroid_black"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timechange" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:background="@color/caldroid_transparent"
-        android:text=" Select A Category "
-        android:textColor="@color/caldroid_black"
-        app:layout_constraintBottom_toTopOf="@+id/closeWindow"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pushToAll"
+        app:layout_constraintTop_toBottomOf="@+id/eventDescription"
         app:layout_constraintVertical_bias="0.0" />
 
 
