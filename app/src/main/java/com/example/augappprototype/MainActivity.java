@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(),
                 Collections.singleton("https://www.googleapis.com/auth/calendar"));
         credential.setSelectedAccountName(extras.getString("userName"));
-        mOutputText = findViewById(R.id.testText);
         fetchEvents();
         convertCalendar();
 
