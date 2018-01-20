@@ -87,10 +87,6 @@ public class MainActivity extends AppCompatActivity {
     String eventDescription;
     String endEvent;
     String startEvent;
-
-    TextView mOutputText;
-
-
     /*--Methods--*/
 
     /**
@@ -131,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(),
                 Collections.singleton("https://www.googleapis.com/auth/calendar"));
         credential.setSelectedAccountName(extras.getString("userName"));
-        mOutputText = findViewById(R.id.testText);
         fetchEvents();
 
 
