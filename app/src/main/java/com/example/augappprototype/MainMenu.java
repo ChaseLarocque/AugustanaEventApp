@@ -76,7 +76,7 @@ public class MainMenu extends AppCompatActivity {
                 goToCalendar.putExtra("userName", extras.getString("com.example.augappprototype.userName"));
                 goToCalendar.putExtra("editCalendar", extras.getBoolean("canEditCalendar"));
                 startActivity(goToCalendar);
-            }
+            }//onClick
         });//findViewById
 
         findViewById(R.id.newsletterImage)
