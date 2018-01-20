@@ -44,7 +44,7 @@ public class SignOutMainActivityListener implements View.OnClickListener {
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            }
+            }//inClick
         });
 
         AlertDialog dialog = builder.create();

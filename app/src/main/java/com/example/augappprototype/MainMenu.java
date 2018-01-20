@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.augappprototype.Listeners.AugustanaLibraryListener;
 import com.example.augappprototype.Listeners.AugustanaNewsletterListener;
 import com.example.augappprototype.Listeners.AugustanaWebsiteListener;
+import com.example.augappprototype.Listeners.OtherMainMenuButtonListeners;
 import com.example.augappprototype.Listeners.SignOutButtonListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,21 +26,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
  *      main menu
  * registerMenuButtons()
  *      sets on click listeners for all buttons on the main menu
+ * onBackPressed()
+ *      Override's method so that the back button cannot be pressed
  */
 public class MainMenu extends AppCompatActivity {
 
     MainMenu mainMenu;
     Bundle extras;
+    GoogleSignInAccount account;
 
-    /*--Methods--*/
     /**
      * onCreate(Bundle) --> void
      * Calls the registerMenuButtons method that sets on click listeners for all buttons in the
      * main menu
      * @param savedInstanceState
      */
-    GoogleSignInAccount account;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +48,7 @@ public class MainMenu extends AppCompatActivity {
         account = GoogleSignIn.getLastSignedInAccount(this);
 
         registerMenuButtons();
-        //findViewById(R.id.eventsCalendarImage)
-         //       .setOnClickListener(new EventCalendarListener(this));
+
         findViewById(R.id.newsletterImage)
                 .setOnClickListener(new AugustanaNewsletterListener(this));
         findViewById(R.id.libraryImage)
@@ -58,10 +58,9 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.signout)
                 .setOnClickListener(new SignOutButtonListener(this));
 
-
         extras = getIntent().getExtras();
-        Toast.makeText(this, "Logged in As:  "+extras.getString("com.example.augappprototype.userName"), Toast.LENGTH_LONG).show();
-
+        Toast.makeText(this, "Logged in As:  "+extras.getString("com.example.augappprototype.userName"),
+                Toast.LENGTH_LONG).show();
     }//onCreate
 
     /**
@@ -77,21 +76,22 @@ public class MainMenu extends AppCompatActivity {
                 goToCalendar.putExtra("userName", extras.getString("com.example.augappprototype.userName"));
                 goToCalendar.putExtra("editCalendar", extras.getBoolean("canEditCalendar"));
                 startActivity(goToCalendar);
-            }
-        });
+            }//onClick
+        });//findViewById
 
         findViewById(R.id.newsletterImage)
-                .setOnClickListener(new AugustanaNewsletterListener(this));
+                .setOnClickListener(new OtherMainMenuButtonListeners(this));
         findViewById(R.id.libraryImage)
-                .setOnClickListener(new AugustanaLibraryListener(this));
+                .setOnClickListener(new OtherMainMenuButtonListeners(this));
         findViewById(R.id.websiteImage)
-                .setOnClickListener(new AugustanaWebsiteListener(this));
+                .setOnClickListener(new OtherMainMenuButtonListeners(this));
         findViewById(R.id.signout)
                 .setOnClickListener(new SignOutButtonListener(this));
     }//registerMenuButtons
 
-
-
+    /**
+     * Method here so the back button cannot be pressed
+     */
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);

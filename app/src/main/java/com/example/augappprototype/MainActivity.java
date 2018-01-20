@@ -1,40 +1,5 @@
 package com.example.augappprototype;
 
-/**
- * MainActivity.java
- * extends AppCompatActivity
- * Resposinble for displaying the caldroid calendar instead of android's calendar view and
- * also responsible for registering all the buttons on the calendar screen.
- * Handles all the methods required for sending and fetching events from the Google Calendar
- *
- * Methods:
- * onCreate(Bundle savedInstanceState)
- * fetchEvents()
- *      Handles the required tasks to fetch events from the Google Calendar
- * addEventToCalendar(String, String, String, String, String)
- *      Handles the required tasks to create a new event and send it to Google
- *      Calendar
- * setProfilePicture()
- *      Fetches and creates the image for the user's profile picture
- * convertCalendar()
- *      Display's caldroid's calendar on the calendar screen and sets an on click listener
- *      for the calendar buttons
- * registerListenersForCalendarButtons()
- *      Sets on click listeners for all buttons on the calendar screen
- * setEventCount(Date, CaldroidFragment)
- *      Handles adding the drawable for the number of events for the given day
- * showEventCount(CaldroidFragment)
- *      Handles displaying the drawable for the number of events
- * convertEventTime(int, int)
- *      Handles data manipulation for our program
- *
- * Nested Classes:
- * makeRequestTask
- *      Grabs all the events from Google Calendar
- * addAnEvent
- *      Pushes the new event to the Google Calendar
- */
-
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -78,7 +43,38 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 
 /**
+ * MainActivity.java
+ * extends AppCompatActivity
+ * Resposinble for displaying the caldroid calendar instead of android's calendar view and
+ * also responsible for registering all the buttons on the calendar screen.
+ * Handles all the methods required for sending and fetching events from the Google Calendar
  *
+ * Methods:
+ * onCreate(Bundle savedInstanceState)
+ * fetchEvents()
+ *      Handles the required tasks to fetch events from the Google Calendar
+ * addEventToCalendar(String, String, String, String, String)
+ *      Handles the required tasks to create a new event and send it to Google
+ *      Calendar
+ * setProfilePicture()
+ *      Fetches and creates the image for the user's profile picture
+ * convertCalendar()
+ *      Display's caldroid's calendar on the calendar screen and sets an on click listener
+ *      for the calendar buttons
+ * registerListenersForCalendarButtons()
+ *      Sets on click listeners for all buttons on the calendar screen
+ * setEventCount(Date, CaldroidFragment)
+ *      Handles adding the drawable for the number of events for the given day
+ * showEventCount(CaldroidFragment)
+ *      Handles displaying the drawable for the number of events
+ * convertEventTime(int, int)
+ *      Handles data manipulation for our program
+ *
+ * Nested Classes:
+ * makeRequestTask
+ *      Grabs all the events from Google Calendar
+ * addAnEvent
+ *      Pushes the new event to the Google Calendar
  */
 public class MainActivity extends AppCompatActivity {
     GoogleSignInAccount account;
