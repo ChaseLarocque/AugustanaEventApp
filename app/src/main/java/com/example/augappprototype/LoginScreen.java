@@ -139,6 +139,8 @@ public class LoginScreen extends AppCompatActivity implements View.OnClickListen
         whiteList.add("vpreyes@ualberta.ca");
         whiteList.add("cwlarocq@ualberta.ca");
         whiteList.add("frithsmi@ualberta.ca");
+        whiteList.add("csc320augapp@gmail.com");
+        whiteList.add("petezung@gmail.com");
         whiteList.add("tlalani@ualberta.ca");
     } // addName()
 
